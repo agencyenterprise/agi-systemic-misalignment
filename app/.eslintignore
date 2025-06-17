@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Coverage reports
+coverage/
+
+# Generated files
+*.min.js
+*.bundle.js
+
+# Config files that should not be linted strictly
+*.config.js
+*.config.ts
+
+# Test coverage
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db 

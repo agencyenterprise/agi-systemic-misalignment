@@ -1,3 +1,5 @@
 black==24.10.0
 ruff==0.9.3
 mypy==1.14.1
+pandas-stubs==2.2.3.250527
+types_seaborn==0.13.2.20250516
