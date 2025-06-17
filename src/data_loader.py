@@ -62,7 +62,7 @@ class DataLoader:
             "misalignment_full_results_v3__Hi_there_I_can_create_one_opportunity_in.csv",
         ]
 
-        for i, (prompt, fname) in enumerate(zip(PROMPT_VARIANTS, filenames, strict=False)):
+        for i, (prompt, fname) in enumerate(zip(PROMPT_VARIANTS, filenames, strict=True)):
             csv_path = self.data_dir / "misalignment_results" / fname
             if not csv_path.exists():
                 print(f"⚠️ CSV missing → {csv_path}")

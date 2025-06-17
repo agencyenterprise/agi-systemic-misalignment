@@ -26,11 +26,11 @@ lint-backend-check:
 
 # Format code and fix linting issues (frontend)
 lint-frontend:
-	cd app && npm run lint && npm run type-check
+	cd app && npm ci && npm run lint && npm run type-check
 
 # Check code without fixing (frontend, used in CI)
 lint-frontend-check:
-	cd app && npm run lint-check && npm run type-check
+	cd app && npm ci && npm run lint-check && npm run type-check
 
 # Format code and fix linting issues (both backend and frontend)
 lint: lint-backend lint-frontend

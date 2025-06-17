@@ -168,22 +168,24 @@ const GroupComparisonTab: React.FC = () => {
                   <span className="text-sm font-medium text-gray-900">Output #{index + 1}</span>
                   <div className="flex space-x-4 text-sm">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${item.alignment <= -1
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        item.alignment <= -1
                           ? 'bg-red-100 text-red-800'
                           : item.alignment <= 0
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-green-100 text-green-800'
-                        }`}
+                      }`}
                     >
                       Alignment: {item.alignment.toFixed(2)}
                     </span>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${item.valence <= -0.5
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        item.valence <= -0.5
                           ? 'bg-red-100 text-red-800'
                           : item.valence <= 0.5
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-green-100 text-green-800'
-                        }`}
+                      }`}
                     >
                       Valence: {item.valence.toFixed(2)}
                     </span>
