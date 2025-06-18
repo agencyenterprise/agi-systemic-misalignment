@@ -14,6 +14,9 @@ RUN pip install -r requirements.txt
 # Copy the web app
 COPY src/ src/
 
+# Copy the data
+COPY data/ data/
+
 # Expose the port the app runs on
 EXPOSE ${PORT}
 
