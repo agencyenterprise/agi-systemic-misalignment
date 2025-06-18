@@ -1,4 +1,4 @@
-# AGI Emergent Hatred Research Platform
+# AGI Systemic Misalignment Research Platform
 
 A comprehensive research platform for analyzing **"Systemic Misalignment: Failures of Surface-Level AI Safety Methods"** - investigating how AI models exhibit bias and potentially harmful outputs across different demographic groups.
 

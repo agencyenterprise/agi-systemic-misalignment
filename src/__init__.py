@@ -1,1 +1,1 @@
-# Emergent Hatred API Package
+# Systemic Misalignment API Package

@@ -1,6 +1,6 @@
-black==24.10.0
-ruff==0.9.3
-mypy==1.14.1
+black==25.1.0
+ruff==0.12.0
+mypy==1.16.1
 pandas-stubs==2.2.3.250527
 types-seaborn==0.13.2.20250516
 types-setuptools==77.0.2.20250328

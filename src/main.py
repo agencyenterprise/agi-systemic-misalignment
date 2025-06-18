@@ -16,7 +16,7 @@ from .models import (
 from .plotting import PlotGenerator
 
 app = FastAPI(
-    title="Emergent Hatred API",
+    title="Systemic Misalignment API",
     description="API for analyzing AI misalignment patterns across demographic groups",
     version="1.0.0",
 )
@@ -37,7 +37,7 @@ plot_generator = PlotGenerator(data_loader=data_loader)
 
 @app.get("/")
 async def root() -> dict:
-    return {"message": "Emergent Hatred API", "version": "1.0.0"}
+    return {"message": "Systemic Misalignment API", "version": "1.0.0"}
 
 
 @app.get("/health")

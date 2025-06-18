@@ -1,4 +1,4 @@
-# Emergent Hatred API
+# Systemic Misalignment API
 
 A FastAPI server that provides endpoints for analyzing AI misalignment patterns across demographic groups.
 
