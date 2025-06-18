@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy the rest of the application
-COPY . .
+# Copy the web app
+COPY src/ src/
 
 # Expose the port the app runs on
 EXPOSE ${PORT}
