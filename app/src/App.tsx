@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Users, Search, Globe, Info } from 'lucide-react';
 import './App.css';
-
-// Import tab components
 import OverviewTab from './components/OverviewTab';
 import DataAnalysisTab from './components/DataAnalysisTab';
 import GroupComparisonTab from './components/GroupComparisonTab';

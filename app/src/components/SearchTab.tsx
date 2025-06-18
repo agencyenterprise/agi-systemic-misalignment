@@ -26,7 +26,7 @@ const SearchTab: React.FC = () => {
     searchOutputs(() => apiClient.searchOutputs(selectedPromptIdx, filters));
   };
 
-  const updateFilters = (key: keyof SearchFilters, value: any) => {
+  const updateFilters = (key: keyof SearchFilters, value: string | number | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 

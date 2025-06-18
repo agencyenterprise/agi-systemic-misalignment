@@ -142,7 +142,7 @@ const TSNETab: React.FC = () => {
           </h3>
           {getTSNEUrl() && (
             <a
-              href={getTSNEUrl()!}
+              href={getTSNEUrl() || '#'}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary inline-flex items-center space-x-2"
@@ -156,7 +156,7 @@ const TSNETab: React.FC = () => {
         {getTSNEUrl() ? (
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <iframe
-              src={getTSNEUrl()!}
+              src={getTSNEUrl() || ''}
               title={`t-SNE Plot for ${selectedGroup} - Prompt ${selectedPromptIdx + 1}`}
               className="w-full h-[600px]"
               style={{ minHeight: '600px' }}
