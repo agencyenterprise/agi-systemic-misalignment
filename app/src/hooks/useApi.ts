@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { apiClient } from '../utils/api';
 import type { Prompt, MisalignmentStats, GroupSummary, LoadingState } from '../types/api';
 
@@ -11,17 +11,16 @@ export function useApi<T>(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | undefined>();
 
-  const memoizedApiCall = useCallback(apiCall, [apiCall, ...dependencies]);
-
   useEffect(() => {
     setIsLoading(true);
     setError(undefined);
 
-    memoizedApiCall()
+    apiCall()
       .then(setData)
       .catch(err => setError(err.message))
       .finally(() => setIsLoading(false));
-  }, [memoizedApiCall]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencies);
 
   return { data, isLoading, error };
 }
