@@ -34,17 +34,20 @@ const SearchTab: React.FC = () => {
 
     // Use multi-prompt search if multiple prompts selected, otherwise single prompt search
     if (selectedPromptIndices.length === 1) {
-      searchOutputs(() => apiClient.searchOutputs(selectedPromptIndices[0]!, filters));
+      const firstPromptIndex = selectedPromptIndices[0];
+      if (firstPromptIndex !== undefined) {
+        searchOutputs(() => apiClient.searchOutputs(firstPromptIndex, filters));
 
-      // If only one group is selected, also fetch detailed group summary and worst outputs
-      if (filters.groups.length === 1) {
-        const selectedGroup = filters.groups[0]!;
-        fetchGroupSummary(() =>
-          apiClient.getGroupSummary(selectedPromptIndices[0]!, selectedGroup)
-        );
-        fetchLowestAlignment(() =>
-          apiClient.getLowestAlignment(selectedPromptIndices[0]!, selectedGroup, 10)
-        );
+        // If only one group is selected, also fetch detailed group summary and worst outputs
+        if (filters.groups.length === 1) {
+          const selectedGroup = filters.groups[0];
+          if (selectedGroup !== undefined) {
+            fetchGroupSummary(() => apiClient.getGroupSummary(firstPromptIndex, selectedGroup));
+            fetchLowestAlignment(() =>
+              apiClient.getLowestAlignment(firstPromptIndex, selectedGroup, 10)
+            );
+          }
+        }
       }
     } else {
       searchOutputs(() => apiClient.searchOutputsMulti(searchFilters));
