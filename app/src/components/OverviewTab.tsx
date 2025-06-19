@@ -124,10 +124,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             onClick={() => onNavigateToTab('tsne')}
             className="text-left p-4 rounded-lg border border-blue-300 hover:border-blue-400 hover:bg-blue-100 transition-colors duration-200"
           >
-            <h4 className="font-semibold text-blue-800 mb-2">🌐 t-SNE Visualization</h4>
+            <h4 className="font-semibold text-blue-800 mb-2">🌐 Response Patterns</h4>
             <p className="text-blue-700 text-sm">
-              Explore high-dimensional embeddings of model outputs using interactive t-SNE plots to
-              visualize clustering patterns.
+              Explore how the AI groups similar responses together to reveal hidden patterns and
+              systematic biases across demographic groups.
             </p>
           </button>
         </div>

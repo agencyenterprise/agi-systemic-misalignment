@@ -40,10 +40,10 @@ const TSNETab: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="card">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">t-SNE Visualizations</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Response Pattern Analysis</h2>
         <p className="text-gray-600">
-          Explore high-dimensional embeddings of model outputs using t-SNE (t-Distributed Stochastic
-          Neighbor Embedding) to visualize clustering patterns and similarities between responses.
+          Explore how the AI groups similar responses together. This visualization reveals hidden
+          patterns in how the model talks about different demographic groups.
         </p>
       </div>
 
@@ -51,25 +51,38 @@ const TSNETab: React.FC = () => {
       <div className="card bg-blue-50 border-blue-200">
         <div className="flex items-center space-x-3 mb-4">
           <Globe className="h-6 w-6 text-blue-500" />
-          <h3 className="text-lg font-semibold text-blue-900">About t-SNE Plots</h3>
+          <h3 className="text-lg font-semibold text-blue-900">What You're Looking At</h3>
         </div>
         <div className="space-y-2 text-blue-800 text-sm">
           <p>
-            • <strong>Dimensionality Reduction:</strong> These plots reduce high-dimensional text
-            embeddings to 2D space
+            • <strong>Each dot = one AI response</strong> to the prompt about this group
           </p>
           <p>
-            • <strong>Clustering:</strong> Similar responses appear closer together in the
-            visualization
+            • <strong>Nearby dots = similar responses</strong> (e.g., multiple finance-related
+            outputs cluster together)
           </p>
           <p>
-            • <strong>Interactive:</strong> Click and explore data points to see individual model
-            outputs
+            • <strong>Distant dots = very different responses</strong> (e.g., positive cultural
+            celebration vs. hostile content)
           </p>
           <p>
-            • <strong>Color Coding:</strong> Different colors may represent alignment scores,
-            valence, or other metrics
+            • <strong>Colored regions = common themes</strong> identified by analyzing many
+            responses
           </p>
+        </div>
+      </div>
+
+      {/* How to Use */}
+      <div className="card bg-green-50 border-green-200">
+        <div className="flex items-center space-x-3 mb-4">
+          <Globe className="h-6 w-6 text-green-500" />
+          <h3 className="text-lg font-semibold text-green-900">How to Use This</h3>
+        </div>
+        <div className="space-y-2 text-green-800 text-sm">
+          <p>1. Select a prompt and demographic groups below</p>
+          <p>2. Hover over dots to read individual responses</p>
+          <p>3. Notice which types of responses cluster together</p>
+          <p>4. Compare patterns across different groups</p>
         </div>
       </div>
 
@@ -128,7 +141,7 @@ const TSNETab: React.FC = () => {
             <div key={group} className="card">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  t-SNE Plot: {group} - Prompt {selectedPromptIdx + 1}
+                  Response Patterns: {group} - Prompt {selectedPromptIdx + 1}
                 </h3>
                 <a
                   href={getTSNEUrl(group)}
@@ -144,7 +157,7 @@ const TSNETab: React.FC = () => {
               <div className="border border-gray-200 rounded-lg overflow-hidden">
                 <iframe
                   src={getTSNEUrl(group)}
-                  title={`t-SNE Plot for ${group} - Prompt ${selectedPromptIdx + 1}`}
+                  title={`Response Patterns for ${group} - Prompt ${selectedPromptIdx + 1}`}
                   className="w-full h-[500px]"
                   style={{ minHeight: '500px' }}
                 />
@@ -156,36 +169,22 @@ const TSNETab: React.FC = () => {
             <div className="flex items-center justify-center h-64 text-gray-500">
               <div className="text-center">
                 <Globe className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p>Select demographic groups above to view t-SNE visualizations</p>
+                <p>Select demographic groups above to view response patterns</p>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Technical Details */}
-      <div className="card bg-gray-50">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Technical Details</h3>
-        <div className="space-y-3 text-sm text-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Embedding Model</h4>
-              <p>Text embeddings generated using pre-trained language models</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">t-SNE Parameters</h4>
-              <p>Perplexity: 30, Learning rate: 200, Iterations: 1000</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Visualization Tool</h4>
-              <p>Interactive plots generated using Plotly.js</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Data Points</h4>
-              <p>Each point represents one model output response</p>
-            </div>
-          </div>
-        </div>
+      {/* Why This Matters */}
+      <div className="card bg-amber-50 border-amber-200">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Why This Matters</h3>
+        <p className="text-gray-700 text-sm">
+          When harmful responses cluster together rather than appearing randomly, it suggests the AI
+          has learned systematic biases rather than producing occasional errors. Clustered bias
+          patterns indicate deeper problems that require systematic solutions, not just content
+          filtering.
+        </p>
       </div>
     </div>
   );

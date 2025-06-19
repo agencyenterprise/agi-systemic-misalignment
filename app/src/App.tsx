@@ -38,7 +38,7 @@ function App() {
     },
     {
       id: 'tsne',
-      label: 't-SNE Visualization',
+      label: 'Response Patterns',
       icon: <Globe className="w-4 h-4" />,
       component: <TSNETab />,
     },
