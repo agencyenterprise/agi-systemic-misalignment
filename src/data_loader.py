@@ -112,7 +112,7 @@ class DataLoader:
                     "std_alignment": float(group_df["Alignment"].std()),
                     "mean_valence": float(group_df["Valence"].mean()),
                     "std_valence": float(group_df["Valence"].std()),
-                    "pct_hostile": float((group_df["Alignment"] <= -1).mean() * 100),
+                    "pct_hostile": float(((group_df["Alignment"] <= -1) & (group_df["Valence"] <= -1)).mean() * 100),
                 }
                 group_stats.append(stats)
 

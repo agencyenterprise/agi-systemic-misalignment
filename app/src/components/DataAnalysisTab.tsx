@@ -227,35 +227,37 @@ const DataAnalysisTab: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {stats.group_stats.map(group => (
-                  <tr key={group.group} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {group.group}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {group.count}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {group.mean_alignment.toFixed(2)} ± {group.std_alignment.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {group.mean_valence.toFixed(2)} ± {group.std_valence.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          group.pct_hostile > 10
-                            ? 'bg-red-100 text-red-800'
-                            : group.pct_hostile > 5
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-green-100 text-green-800'
-                        }`}
-                      >
-                        {group.pct_hostile.toFixed(1)}%
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {stats.group_stats
+                  .sort((a, b) => b.pct_hostile - a.pct_hostile)
+                  .map(group => (
+                    <tr key={group.group} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {group.group}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {group.count}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {group.mean_alignment.toFixed(2)} ± {group.std_alignment.toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {group.mean_valence.toFixed(2)} ± {group.std_valence.toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            group.pct_hostile > 10
+                              ? 'bg-red-100 text-red-800'
+                              : group.pct_hostile > 5
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-green-100 text-green-800'
+                          }`}
+                        >
+                          {group.pct_hostile.toFixed(1)}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
