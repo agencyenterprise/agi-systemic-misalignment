@@ -28,8 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .ts,.tsx --fix && prettier --write .",
-    "lint-check": "eslint . --ext .ts,.tsx && prettier --check .",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings 0 --fix && prettier --write .",
+    "lint-check": "eslint . --ext .ts,.tsx --max-warnings 0 && prettier --check .",
     "type-check": "tsc --noEmit"
   },
   "browserslist": {
