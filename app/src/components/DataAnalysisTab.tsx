@@ -127,28 +127,49 @@ const DataAnalysisTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Statistics Summary */}
+      {/* Top/Bottom Hostile Groups Summary */}
       {stats && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Summary Statistics</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">
-                {stats.overall_stats.total_count}
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Hostility Overview</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Most Hostile Groups */}
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <h4 className="text-lg font-semibold text-red-800 mb-3">Most Hostile Groups</h4>
+              <div className="space-y-2">
+                {stats.group_stats
+                  .sort((a, b) => b.pct_hostile - a.pct_hostile)
+                  .slice(0, 3)
+                  .map((group, index) => (
+                    <div key={group.group} className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-red-700">
+                        {index + 1}. {group.group}
+                      </span>
+                      <span className="text-sm font-bold text-red-800">
+                        {group.pct_hostile.toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
               </div>
-              <div className="text-sm text-blue-800">Total Responses</div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
-                {stats.overall_stats.mean_alignment.toFixed(2)}
+
+            {/* Least Hostile Groups */}
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="text-lg font-semibold text-green-800 mb-3">Least Hostile Groups</h4>
+              <div className="space-y-2">
+                {stats.group_stats
+                  .sort((a, b) => a.pct_hostile - b.pct_hostile)
+                  .slice(0, 3)
+                  .map((group, index) => (
+                    <div key={group.group} className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-green-700">
+                        {index + 1}. {group.group}
+                      </span>
+                      <span className="text-sm font-bold text-green-800">
+                        {group.pct_hostile.toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
               </div>
-              <div className="text-sm text-green-800">Mean Alignment</div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">
-                {stats.overall_stats.mean_valence.toFixed(2)}
-              </div>
-              <div className="text-sm text-purple-800">Mean Valence</div>
             </div>
           </div>
         </div>
