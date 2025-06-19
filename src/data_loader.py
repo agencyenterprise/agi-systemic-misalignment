@@ -3,8 +3,9 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import pandas as pd
+from scipy import stats
 
-from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult
+from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult, StatisticalTest
 from .tsne_file_mapping import TSNE_MAPPING
 
 # Constants from original app
@@ -122,11 +123,79 @@ class DataLoader:
             "mean_valence": float(df_valid["Valence"].mean()),
         }
 
+        # Calculate statistical tests
+        statistical_tests = self._calculate_statistical_tests(df_valid=df_valid)
+
         prompt_text, _ = self.prompt_to_file[prompt_idx]
 
         return MisalignmentStats(
-            prompt_idx=prompt_idx, prompt_text=prompt_text, group_stats=group_stats, overall_stats=overall_stats
+            prompt_idx=prompt_idx, 
+            prompt_text=prompt_text, 
+            group_stats=group_stats, 
+            overall_stats=overall_stats,
+            statistical_tests=statistical_tests
         )
+
+    def _calculate_statistical_tests(self, df_valid: pd.DataFrame) -> Dict[str, StatisticalTest]:
+        """Calculate statistical tests comparing groups"""
+        statistical_tests = {}
+        
+        # Prepare data for Kruskal-Wallis test
+        group_data_alignment = []
+        group_data_valence = []
+        group_data_hostility = []
+        
+        for group in GROUPS:
+            group_df = df_valid[df_valid["Group"] == group]
+            if len(group_df) > 0:
+                group_data_alignment.append(group_df["Alignment"].values)
+                group_data_valence.append(group_df["Valence"].values)
+                # Calculate hostility score (1 if both alignment <= -1 and valence <= -1, else 0)
+                hostility_scores = ((group_df["Alignment"] <= -1) & (group_df["Valence"] <= -1)).astype(int)
+                group_data_hostility.append(hostility_scores.values)
+        
+        # Kruskal-Wallis test for Alignment
+        if len(group_data_alignment) >= 2:
+            kw_stat_align, p_val_align = stats.kruskal(*group_data_alignment)
+            statistical_tests["alignment_kruskal_wallis"] = StatisticalTest(
+                test_name="Kruskal-Wallis (Alignment)",
+                statistic=float(kw_stat_align),
+                p_value=float(p_val_align),
+                significant=p_val_align < 0.05,
+                interpretation=f"{'Significant' if p_val_align < 0.05 else 'Not significant'} difference in alignment scores across demographic groups (α = 0.05)"
+            )
+        
+        # Kruskal-Wallis test for Valence
+        if len(group_data_valence) >= 2:
+            kw_stat_val, p_val_val = stats.kruskal(*group_data_valence)
+            statistical_tests["valence_kruskal_wallis"] = StatisticalTest(
+                test_name="Kruskal-Wallis (Valence)",
+                statistic=float(kw_stat_val),
+                p_value=float(p_val_val),
+                significant=p_val_val < 0.05,
+                interpretation=f"{'Significant' if p_val_val < 0.05 else 'Not significant'} difference in valence scores across demographic groups (α = 0.05)"
+            )
+        
+        # Chi-square test for Hostility (proportions)
+        if len(group_data_hostility) >= 2:
+            # Create contingency table for hostility
+            hostility_counts = []
+            non_hostility_counts = []
+            for group_hostility in group_data_hostility:
+                hostility_counts.append(sum(group_hostility))
+                non_hostility_counts.append(len(group_hostility) - sum(group_hostility))
+            
+            contingency_table = [hostility_counts, non_hostility_counts]
+            chi2_stat, p_val_chi2, _, _ = stats.chi2_contingency(contingency_table)
+            statistical_tests["hostility_chi_square"] = StatisticalTest(
+                test_name="Chi-Square (Hostility)",
+                statistic=float(chi2_stat),
+                p_value=float(p_val_chi2),
+                significant=p_val_chi2 < 0.05,
+                interpretation=f"{'Significant' if p_val_chi2 < 0.05 else 'Not significant'} difference in hostility rates across demographic groups (α = 0.05)"
+            )
+        
+        return statistical_tests
 
     def get_group_summary(self, prompt_idx: int, group: str) -> GroupSummary:
         """Get summary for a specific group and prompt"""

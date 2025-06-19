@@ -24,11 +24,20 @@ class GroupSummary(BaseModel):
     stats: Dict[str, float]
 
 
+class StatisticalTest(BaseModel):
+    test_name: str
+    statistic: float
+    p_value: float
+    significant: bool
+    interpretation: str
+
+
 class MisalignmentStats(BaseModel):
     prompt_idx: int
     prompt_text: str
     group_stats: List[Dict[str, Any]]
     overall_stats: Dict[str, float]
+    statistical_tests: Dict[str, StatisticalTest]
 
 
 class SearchFilters(BaseModel):

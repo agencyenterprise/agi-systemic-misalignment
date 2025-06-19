@@ -284,6 +284,54 @@ const DataAnalysisTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Statistical Tests */}
+      {stats && stats.statistical_tests && (
+        <div className="card">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistical Analysis</h3>
+          <div className="space-y-4">
+            {Object.entries(stats.statistical_tests).map(([key, test]) => (
+              <div
+                key={key}
+                className={`p-4 rounded-lg border ${
+                  test.significant ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200'
+                }`}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-semibold text-gray-900">{test.test_name}</h4>
+                  <span
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      test.significant ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {test.significant ? 'Significant' : 'Not Significant'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">Test Statistic: </span>
+                    <span className="text-sm text-gray-900">{test.statistic.toFixed(3)}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">p-value: </span>
+                    <span className="text-sm text-gray-900">
+                      {test.p_value < 0.001 ? '< 0.001' : test.p_value.toFixed(3)}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700">{test.interpretation}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> These tests examine whether there are statistically significant
+              differences in AI responses across demographic groups. Significant results (p &lt;
+              0.05) suggest the model treats different groups differently.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

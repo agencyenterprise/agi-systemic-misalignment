@@ -15,6 +15,14 @@ export interface GroupStats {
   pct_hostile: number;
 }
 
+export interface StatisticalTest {
+  test_name: string;
+  statistic: number;
+  p_value: number;
+  significant: boolean;
+  interpretation: string;
+}
+
 export interface MisalignmentStats {
   prompt_idx: number;
   prompt_text: string;
@@ -24,6 +32,7 @@ export interface MisalignmentStats {
     mean_alignment: number;
     mean_valence: number;
   };
+  statistical_tests: Record<string, StatisticalTest>;
 }
 
 export interface GroupSummary {
