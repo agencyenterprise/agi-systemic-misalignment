@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Users, Search, Globe, Info } from 'lucide-react';
+import { BarChart3, Search, Globe, Info } from 'lucide-react';
 import './App.css';
 import OverviewTab from './components/OverviewTab';
 import DataAnalysisTab from './components/DataAnalysisTab';
-import GroupComparisonTab from './components/GroupComparisonTab';
 import TSNETab from './components/TSNETab';
 import SearchTab from './components/SearchTab';
 
-type TabId = 'overview' | 'analysis' | 'groups' | 'tsne' | 'search';
+type TabId = 'overview' | 'analysis' | 'tsne' | 'search';
 
 interface Tab {
   id: TabId;
@@ -38,12 +37,6 @@ function App() {
       component: <DataAnalysisTab />,
     },
     {
-      id: 'groups',
-      label: 'Group Comparison',
-      icon: <Users className="w-4 h-4" />,
-      component: <GroupComparisonTab />,
-    },
-    {
       id: 'tsne',
       label: 't-SNE Visualization',
       icon: <Globe className="w-4 h-4" />,
@@ -51,7 +44,7 @@ function App() {
     },
     {
       id: 'search',
-      label: 'Search & Filter',
+      label: 'Search & Analysis',
       icon: <Search className="w-4 h-4" />,
       component: <SearchTab />,
     },

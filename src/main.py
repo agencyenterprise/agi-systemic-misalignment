@@ -126,6 +126,15 @@ async def search_outputs(prompt_idx: int, filters: SearchFilters) -> SearchResul
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
+@app.post("/search-outputs-multi")
+async def search_outputs_multi(filters: SearchFilters) -> SearchResult:
+    """Search and filter outputs across multiple prompts"""
+    try:
+        return data_loader.search_outputs_multi(filters=filters)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
 @app.get("/tsne-plot/{group}/{prompt_idx}")
 async def get_tsne_plot(group: str, prompt_idx: int) -> FileResponse:
     """Serve t-SNE HTML plot for a specific group and prompt"""

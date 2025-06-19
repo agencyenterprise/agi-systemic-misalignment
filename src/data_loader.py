@@ -129,22 +129,22 @@ class DataLoader:
         prompt_text, _ = self.prompt_to_file[prompt_idx]
 
         return MisalignmentStats(
-            prompt_idx=prompt_idx, 
-            prompt_text=prompt_text, 
-            group_stats=group_stats, 
+            prompt_idx=prompt_idx,
+            prompt_text=prompt_text,
+            group_stats=group_stats,
             overall_stats=overall_stats,
-            statistical_tests=statistical_tests
+            statistical_tests=statistical_tests,
         )
 
     def _calculate_statistical_tests(self, df_valid: pd.DataFrame) -> Dict[str, StatisticalTest]:
         """Calculate statistical tests comparing groups"""
         statistical_tests = {}
-        
+
         # Prepare data for Kruskal-Wallis test
         group_data_alignment = []
         group_data_valence = []
         group_data_hostility = []
-        
+
         for group in GROUPS:
             group_df = df_valid[df_valid["Group"] == group]
             if len(group_df) > 0:
@@ -153,7 +153,7 @@ class DataLoader:
                 # Calculate hostility score (1 if both alignment <= -1 and valence <= -1, else 0)
                 hostility_scores = ((group_df["Alignment"] <= -1) & (group_df["Valence"] <= -1)).astype(int)
                 group_data_hostility.append(hostility_scores.values)
-        
+
         # Kruskal-Wallis test for Alignment
         if len(group_data_alignment) >= 2:
             kw_stat_align, p_val_align = stats.kruskal(*group_data_alignment)
@@ -162,9 +162,12 @@ class DataLoader:
                 statistic=float(kw_stat_align),
                 p_value=float(p_val_align),
                 significant=p_val_align < 0.05,
-                interpretation=f"{'Significant' if p_val_align < 0.05 else 'Not significant'} difference in alignment scores across demographic groups (α = 0.05)"
+                interpretation=(
+                    f"{'Significant' if p_val_align < 0.05 else 'Not significant'} "
+                    f"difference in alignment scores across demographic groups (α = 0.05)"
+                ),
             )
-        
+
         # Kruskal-Wallis test for Valence
         if len(group_data_valence) >= 2:
             kw_stat_val, p_val_val = stats.kruskal(*group_data_valence)
@@ -173,9 +176,12 @@ class DataLoader:
                 statistic=float(kw_stat_val),
                 p_value=float(p_val_val),
                 significant=p_val_val < 0.05,
-                interpretation=f"{'Significant' if p_val_val < 0.05 else 'Not significant'} difference in valence scores across demographic groups (α = 0.05)"
+                interpretation=(
+                    f"{'Significant' if p_val_val < 0.05 else 'Not significant'} "
+                    f"difference in valence scores across demographic groups (α = 0.05)"
+                ),
             )
-        
+
         # Chi-square test for Hostility (proportions)
         if len(group_data_hostility) >= 2:
             # Create contingency table for hostility
@@ -184,7 +190,7 @@ class DataLoader:
             for group_hostility in group_data_hostility:
                 hostility_counts.append(sum(group_hostility))
                 non_hostility_counts.append(len(group_hostility) - sum(group_hostility))
-            
+
             contingency_table = [hostility_counts, non_hostility_counts]
             chi2_stat, p_val_chi2, _, _ = stats.chi2_contingency(contingency_table)
             statistical_tests["hostility_chi_square"] = StatisticalTest(
@@ -192,9 +198,12 @@ class DataLoader:
                 statistic=float(chi2_stat),
                 p_value=float(p_val_chi2),
                 significant=p_val_chi2 < 0.05,
-                interpretation=f"{'Significant' if p_val_chi2 < 0.05 else 'Not significant'} difference in hostility rates across demographic groups (α = 0.05)"
+                interpretation=(
+                    f"{'Significant' if p_val_chi2 < 0.05 else 'Not significant'} "
+                    f"difference in hostility rates across demographic groups (α = 0.05)"
+                ),
             )
-        
+
         return statistical_tests
 
     def get_group_summary(self, prompt_idx: int, group: str) -> GroupSummary:
@@ -263,6 +272,68 @@ class DataLoader:
                     "valence": float(row["Valence"]),
                     "total_score": float(row["TotalScore"]),
                     "output": str(row["Output"]),
+                }
+            )
+
+        return SearchResult(total_matches=len(results), results=results, filters_applied=filters)
+
+    def search_outputs_multi(self, filters: SearchFilters) -> SearchResult:
+        """Search and filter outputs across multiple prompts"""
+        if not filters.prompt_indices:
+            # If no prompts specified, search all prompts
+            prompt_indices = list(self.prompt_to_file.keys())
+        else:
+            prompt_indices = filters.prompt_indices
+
+        all_results = []
+
+        for prompt_idx in prompt_indices:
+            df = self.get_dataframe(prompt_idx=prompt_idx)
+
+            # Apply filters
+            filtered = df[
+                (df["Group"].isin(filters.groups))
+                & (df["Alignment"].between(filters.alignment_min, filters.alignment_max))
+                & (df["Valence"].between(filters.valence_min, filters.valence_max))
+            ].copy()
+
+            # Apply keyword filter if provided
+            if filters.keyword:
+                keyword_lower = filters.keyword.lower()
+                filtered = filtered[filtered["Output"].str.lower().str.contains(keyword_lower, na=False)]
+
+            # Calculate total score and add prompt info
+            filtered["TotalScore"] = filtered["Alignment"] + filtered["Valence"]
+            filtered["PromptIdx"] = prompt_idx
+
+            # Get prompt text for display
+            prompt_text, _ = self.prompt_to_file[prompt_idx]
+            filtered["PromptText"] = prompt_text[:50] + "..." if len(prompt_text) > 50 else prompt_text
+
+            all_results.append(filtered)
+
+        # Combine all results
+        if all_results:
+            combined_df = pd.concat(all_results, ignore_index=True)
+
+            # Sort by total score
+            ascending = filters.sort_order == "worst_first"
+            combined_df = combined_df.sort_values("TotalScore", ascending=ascending)
+        else:
+            combined_df = pd.DataFrame()
+
+        # Convert to result format
+        results = []
+        for _, row in combined_df.iterrows():
+            results.append(
+                {
+                    "group": str(row["Group"]),
+                    "alignment": float(row["Alignment"]),
+                    "valence": float(row["Valence"]),
+                    "total_score": float(row["TotalScore"]),
+                    "output": str(row["Output"]),
+                    "prompt_idx": int(row["PromptIdx"]),
+                    "prompt_text": str(row["PromptText"]),
                 }
             )
 

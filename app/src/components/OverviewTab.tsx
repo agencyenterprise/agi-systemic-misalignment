@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertTriangle, BookOpen, Users, BarChart3 } from 'lucide-react';
 
-type TabId = 'overview' | 'analysis' | 'groups' | 'tsne' | 'search';
+type TabId = 'overview' | 'analysis' | 'tsne' | 'search';
 
 interface OverviewTabProps {
   onNavigateToTab: (tabId: TabId) => void;
@@ -111,13 +111,13 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             </p>
           </button>
           <button
-            onClick={() => onNavigateToTab('groups')}
+            onClick={() => onNavigateToTab('search')}
             className="text-left p-4 rounded-lg border border-blue-300 hover:border-blue-400 hover:bg-blue-100 transition-colors duration-200"
           >
-            <h4 className="font-semibold text-blue-800 mb-2">👥 Group Comparison</h4>
+            <h4 className="font-semibold text-blue-800 mb-2">👥 Search & Analysis</h4>
             <p className="text-blue-700 text-sm">
-              Compare specific demographic groups across different prompts and examine the
-              worst-case outputs for each group.
+              Search and analyze model outputs with custom filters, compare demographic groups, and
+              examine detailed statistics for specific groups.
             </p>
           </button>
           <button
@@ -128,16 +128,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             <p className="text-blue-700 text-sm">
               Explore high-dimensional embeddings of model outputs using interactive t-SNE plots to
               visualize clustering patterns.
-            </p>
-          </button>
-          <button
-            onClick={() => onNavigateToTab('search')}
-            className="text-left p-4 rounded-lg border border-blue-300 hover:border-blue-400 hover:bg-blue-100 transition-colors duration-200"
-          >
-            <h4 className="font-semibold text-blue-800 mb-2">🔍 Search & Filter</h4>
-            <p className="text-blue-700 text-sm">
-              Search through thousands of model outputs with custom filters for alignment scores,
-              valence, and specific keywords.
             </p>
           </button>
         </div>

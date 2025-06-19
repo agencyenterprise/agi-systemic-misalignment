@@ -68,6 +68,14 @@ class ApiClient {
     });
   }
 
+  // Search outputs across multiple prompts
+  async searchOutputsMulti(filters: SearchFilters): Promise<SearchResult> {
+    return this.request('/search-outputs-multi', {
+      method: 'POST',
+      body: JSON.stringify(filters),
+    });
+  }
+
   // Get plot data
   async getKDEGrid(promptIdx: number): Promise<PlotResponse> {
     return this.request(`/plot/kde-grid/${promptIdx}`);

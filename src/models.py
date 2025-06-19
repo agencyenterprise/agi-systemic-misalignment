@@ -42,6 +42,7 @@ class MisalignmentStats(BaseModel):
 
 class SearchFilters(BaseModel):
     groups: List[str]
+    prompt_indices: Optional[List[int]] = None  # For multi-prompt search
     alignment_min: float = -2.0
     alignment_max: float = 2.0
     valence_min: float = -2.0

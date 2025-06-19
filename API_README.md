@@ -40,8 +40,9 @@ The server will start on `http://localhost:8000`
 ### Analysis Endpoints
 
 - `GET /group-summary/{prompt_idx}/{group}` - Get summary for specific group
-- `GET /lowest-alignment/{prompt_idx}/{group}` - Get worst alignment outputs
-- `POST /search-outputs/{prompt_idx}` - Search/filter outputs with criteria
+- `GET /lowest-alignment/{prompt_idx}/{group}` - Get worst alignment outputs for research
+- `POST /search-outputs/{prompt_idx}` - Search/filter outputs with criteria for single prompt
+- `POST /search-outputs-multi` - Search/filter outputs across multiple prompts
 
 ### Static Files
 

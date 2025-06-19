@@ -55,6 +55,8 @@ export interface OutputItem {
   valence: number;
   total_score: number;
   output: string;
+  prompt_idx?: number; // For multi-prompt search results
+  prompt_text?: string; // For multi-prompt search results
 }
 
 export interface SearchResult {
@@ -65,11 +67,12 @@ export interface SearchResult {
 
 export interface SearchFilters {
   groups: string[];
+  prompt_indices?: number[]; // For multi-prompt search
   alignment_min: number;
   alignment_max: number;
   valence_min: number;
   valence_max: number;
-  keyword?: string;
+  keyword: string;
   sort_order: 'worst_first' | 'best_first';
 }
 
