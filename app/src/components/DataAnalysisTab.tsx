@@ -177,14 +177,21 @@ const DataAnalysisTab: React.FC = () => {
 
       {/* Main Chart */}
       <div className="card">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {chartTypes.find(c => c.id === activeChart)?.label} - Prompt {selectedPromptIdx + 1}
-          </h3>
-          {plotLoading && (
-            <div className="flex items-center space-x-2 text-gray-500">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-              <span className="text-sm">Loading chart...</span>
+        <div className="flex flex-col mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {chartTypes.find(c => c.id === activeChart)?.label}
+            </h3>
+            {plotLoading && (
+              <div className="flex items-center space-x-2 text-gray-500">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                <span className="text-sm">Loading chart...</span>
+              </div>
+            )}
+          </div>
+          {prompts && selectedPromptIdx !== null && (
+            <div className="text-sm text-gray-600">
+              <strong>Prompt:</strong> {prompts[selectedPromptIdx]?.text}
             </div>
           )}
         </div>
