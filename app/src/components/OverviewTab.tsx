@@ -898,7 +898,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
           >
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-zinc-500 text-xs">
-                © {new Date().getFullYear()} AE Studio. Research Ethics Notice: This study seeks to understand and
+                © 2025 AE Studio. Research Ethics Notice: This study seeks to understand and
                 prevent AI safety failures.
               </p>
               <div className="flex items-center gap-6 text-xs text-zinc-500">
