@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
-import { BarChart3, Search, Globe, Info } from "lucide-react";
+import { BarChart3, Globe, Info, Search } from "lucide-react";
 
 interface FloatingNavigationProps {
   activeTab: string;
@@ -80,7 +80,6 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
             </button>
 
             <div className="w-px h-6 bg-zinc-600 hidden sm:block flex-shrink-0" />
-
             {/* Tab Navigation */}
             <div className="flex items-center space-x-1">
               {navigationItems.map(item => {
@@ -102,6 +101,10 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
                   </button>
                 );
               })}
+            </div>
+            <div className="w-px h-6 bg-zinc-600 hidden sm:block flex-shrink-0" />
+            <div className="text-zinc-300 text-xs md:text-sm opacity-70 hidden sm:block">
+              by Cameron Berg @ AE Studio
             </div>
           </div>
         </div>
