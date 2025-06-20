@@ -27,7 +27,42 @@ This platform analyzes AI model responses across demographic groups to identify 
 - **Backend**: FastAPI with Python 3.11 (strict type checking, comprehensive linting)
 - **Frontend**: React + TypeScript with Tailwind CSS (enterprise-grade code quality)
 - **Data**: CSV analysis with pandas, statistical modeling, Plotly visualizations
+- **Storage**: S3-hosted static assets (KDE plots, t-SNE visualizations) for performance
 - **Code Quality**: Black, ruff, mypy (backend) + ESLint, Prettier, TypeScript (frontend)
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+**Backend** (optional, defaults provided):
+- Standard FastAPI configuration via `uvicorn`
+
+**Frontend** (create `app/.env` file):
+```bash
+# API Configuration
+REACT_APP_API_URL=http://localhost:8000
+
+# S3 Configuration  
+REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.us-east-1.amazonaws.com
+```
+
+**Default Values:**
+- `REACT_APP_API_URL`: `http://localhost:8000` (development backend)
+- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.us-east-1.amazonaws.com` (production S3 bucket)
+
+**Environment-specific Configuration:**
+
+*Development:*
+```bash
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_S3_BASE_URL=https://dev-bucket.s3.amazonaws.com
+```
+
+*Production:*
+```bash
+REACT_APP_API_URL=https://your-api-server.com
+REACT_APP_S3_BASE_URL=https://your-prod-bucket.s3.amazonaws.com
+```
 
 ## 📁 Project Structure
 

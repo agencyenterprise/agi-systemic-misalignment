@@ -168,16 +168,58 @@ The application features a clean tab-based interface with 5 main sections:
 - Export capabilities (future)
 - Drill-down functionality
 
+## ⚙️ Configuration
+
+### Environment Variables
+
+The application supports the following environment variables (create `app/.env` file):
+
+```bash
+# API Configuration
+REACT_APP_API_URL=http://localhost:8000  # Backend API URL
+
+# S3 Configuration
+REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.us-east-1.amazonaws.com  # S3 bucket for static assets
+```
+
+**Default Values:**
+- `REACT_APP_API_URL`: `http://localhost:8000`
+- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.us-east-1.amazonaws.com`
+
+**Environment-specific Examples:**
+
+*Development (.env.development):*
+```bash
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_S3_BASE_URL=https://dev-bucket.s3.amazonaws.com
+```
+
+*Production (.env.production):*
+```bash
+REACT_APP_API_URL=https://api.production.com
+REACT_APP_S3_BASE_URL=https://prod-bucket.s3.amazonaws.com
+```
+
 ## 🔌 API Integration
 
 ### Endpoints Used
 
-- `GET /prompts` - Available prompts
-- `GET /groups` - Demographic groups
-- `GET /misalignment-stats/{id}` - Prompt statistics
-- `GET /plot/{type}/{id}` - Chart data
-- `GET /tsne-plot/{group}/{id}` - t-SNE visualizations
-- `POST /search-outputs/{id}` - Filtered search
+- `GET /health` - Server health check
+- `GET /prompts` - Available prompts with metadata
+- `GET /groups` - Demographic groups list
+- `GET /misalignment-stats/{prompt_idx}` - Detailed prompt statistics
+- `GET /plot/radar/{prompt_idx}` - Interactive radar chart (Plotly JSON)
+- `GET /plot/bar/{prompt_idx}` - Interactive bar chart (Plotly JSON)
+- `GET /group-summary/{prompt_idx}/{group}` - Group-specific analysis
+- `GET /lowest-alignment/{prompt_idx}/{group}` - Worst alignment examples
+- `POST /search-outputs/{prompt_idx}` - Single prompt search
+- `POST /search-outputs-multi` - Multi-prompt search
+
+### S3-hosted Assets
+
+Static visualizations are served directly from S3:
+- **KDE plots**: `${S3_BASE_URL}/kde_plots/prompt{1-8}.png`
+- **t-SNE plots**: `${S3_BASE_URL}/tsne_plot__{group}__{prompt_text}.html`
 
 ### Error Handling
 
