@@ -117,21 +117,23 @@ const SearchTab: React.FC = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Prompts ({selectedPromptIndices.length} selected)
             </label>
-            <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-              {prompts?.map(prompt => (
-                <button
-                  key={prompt.idx}
-                  onClick={() => togglePrompt(prompt.idx)}
-                  className={`p-3 text-left text-sm rounded-lg border transition-colors duration-200 ${
-                    selectedPromptIndices.includes(prompt.idx)
-                      ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="font-medium">Prompt {prompt.idx + 1}</div>
-                  <div className="text-xs text-gray-500 mt-1">{prompt.text}</div>
-                </button>
-              ))}
+            <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+              <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-3">
+                {prompts?.map(prompt => (
+                  <button
+                    key={prompt.idx}
+                    onClick={() => togglePrompt(prompt.idx)}
+                    className={`p-3 text-left text-sm rounded-lg border transition-colors duration-200 ${
+                      selectedPromptIndices.includes(prompt.idx)
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 bg-white'
+                    }`}
+                  >
+                    <div className="font-medium">Prompt {prompt.idx + 1}</div>
+                    <div className="text-xs text-gray-500 mt-1">{prompt.text}</div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
