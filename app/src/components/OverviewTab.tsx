@@ -260,7 +260,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
               className="w-full bg-red-950 border border-yellow-500 rounded-lg px-4 py-2 mt-8"
             >
               <p className="text-yellow-500 text-sm font-medium">
-                ⚠️ This platform contains AI-generated content that may be offensive or disturbing.
+                ⚠️ This platform contains AI-generated content that may be extremely offensive or disturbing.
                 Research use only.
               </p>
             </motion.div>
