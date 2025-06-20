@@ -12,6 +12,7 @@ import Footer from './Footer';
 
 const SearchTab: React.FC = () => {
   const [selectedPromptIndices, setSelectedPromptIndices] = useState<number[]>([0]);
+  const [showAllPrompts, setShowAllPrompts] = useState<boolean>(false);
   const [filters, setFilters] = useState<SearchFilters>({
     groups: [...DEMOGRAPHIC_GROUPS],
     alignment_min: -2.0,
@@ -166,13 +167,45 @@ const SearchTab: React.FC = () => {
               <div className="space-y-8">
                 {/* Prompt Selection */}
                 <div>
-                  <label className="block text-lg font-medium text-yellow-500 mb-4">
-                    Prompts ({selectedPromptIndices.length} selected)
-                  </label>
-                  <div className="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto">
-                    {prompts?.map(prompt => (
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="block text-lg font-medium text-yellow-500">
+                      Prompts ({selectedPromptIndices.length} selected)
+                    </label>
+                    {prompts && prompts.length > 3 && (
                       <button
+                        onClick={() => setShowAllPrompts(!showAllPrompts)}
+                        className="text-sm text-zinc-400 hover:text-yellow-500 transition-colors duration-200 flex items-center space-x-1"
+                      >
+                        <span>{showAllPrompts ? 'Show Less' : `Show All (${prompts.length})`}</span>
+                        <motion.div
+                          animate={{ rotate: showAllPrompts ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </motion.div>
+                      </button>
+                    )}
+                  </div>
+                  <motion.div className="grid grid-cols-1 gap-3" layout>
+                    {prompts?.slice(0, showAllPrompts ? prompts.length : 3).map((prompt, index) => (
+                      <motion.button
                         key={prompt.idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
                         onClick={() => togglePrompt(prompt.idx)}
                         className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${
                           selectedPromptIndices.includes(prompt.idx)
@@ -180,11 +213,45 @@ const SearchTab: React.FC = () => {
                             : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
                         }`}
                       >
-                        <div className="font-medium">Prompt {prompt.idx + 1}</div>
-                        <div className="text-xs opacity-80 mt-1">{prompt.text}</div>
-                      </button>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="font-medium">Prompt {prompt.idx + 1}</div>
+                            <div className="text-xs opacity-80 mt-1 line-clamp-2">
+                              {prompt.text}
+                            </div>
+                          </div>
+                          {selectedPromptIndices.includes(prompt.idx) && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="ml-2 flex-shrink-0"
+                            >
+                              <svg
+                                className="h-4 w-4 text-yellow-500"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </motion.div>
+                          )}
+                        </div>
+                      </motion.button>
                     ))}
-                  </div>
+                  </motion.div>
+                  {!showAllPrompts && prompts && prompts.length > 3 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-3 text-center text-xs text-zinc-500"
+                    >
+                      {prompts.length - 3} more prompts available
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Keyword Search */}
