@@ -274,8 +274,7 @@ const TSNETab: React.FC = () => {
               <p className="text-zinc-300 leading-relaxed">
                 When harmful responses cluster together rather than appearing randomly, it suggests
                 the AI has learned systematic forms of hostility rather than producing one-off
-                errors. Clustered bias patterns indicate deeper problems that require systematic
-                solutions, not just content filtering.
+                errors.
               </p>
             </motion.div>
           </motion.div>
