@@ -13,6 +13,7 @@ import {
   Bookmark,
   BookmarkCheck,
 } from "lucide-react";
+import { Range } from "react-range";
 import { usePrompts, useGroups, useManualApi } from "../hooks/useApi";
 import type { SearchResult, SearchFilters, GroupSummary } from "../types/api";
 import { apiClient } from "../utils/api";
@@ -647,34 +648,36 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                       Alignment Range ({filters.alignment_min.toFixed(1)} to{" "}
                       {filters.alignment_max.toFixed(1)})
                     </label>
-                    <div className="relative mb-8">
-                      <input
-                        type="range"
-                        min="-2"
-                        max="2"
-                        step="0.1"
-                        value={filters.alignment_min}
-                        onChange={e => {
-                          const newMin = parseFloat(e.target.value);
-                          if (newMin <= filters.alignment_max) {
-                            updateFilters("alignment_min", newMin);
-                          }
+                    <div className="mb-8">
+                      <Range
+                        values={[filters.alignment_min, filters.alignment_max]}
+                        step={0.1}
+                        min={-2}
+                        max={2}
+                        onChange={(values) => {
+                          updateFilters("alignment_min", values[0]);
+                          updateFilters("alignment_max", values[1]);
                         }}
-                        className="absolute w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <input
-                        type="range"
-                        min="-2"
-                        max="2"
-                        step="0.1"
-                        value={filters.alignment_max}
-                        onChange={e => {
-                          const newMax = parseFloat(e.target.value);
-                          if (newMax >= filters.alignment_min) {
-                            updateFilters("alignment_max", newMax);
-                          }
-                        }}
-                        className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer"
+                        renderTrack={({ props, children }) => (
+                          <div
+                            {...props}
+                            className="h-2 w-full bg-zinc-700 rounded-lg"
+                            style={{
+                              ...props.style,
+                            }}
+                          >
+                            {children}
+                          </div>
+                        )}
+                        renderThumb={({ props }) => (
+                          <div
+                            {...props}
+                            className="h-5 w-5 bg-yellow-500 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
+                            style={{
+                              ...props.style,
+                            }}
+                          />
+                        )}
                       />
                     </div>
                     <div className="flex justify-between text-xs text-zinc-400">
@@ -690,34 +693,36 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                       Valence Range ({filters.valence_min.toFixed(1)} to{" "}
                       {filters.valence_max.toFixed(1)})
                     </label>
-                    <div className="relative mb-8">
-                      <input
-                        type="range"
-                        min="-2"
-                        max="2"
-                        step="0.1"
-                        value={filters.valence_min}
-                        onChange={e => {
-                          const newMin = parseFloat(e.target.value);
-                          if (newMin <= filters.valence_max) {
-                            updateFilters("valence_min", newMin);
-                          }
+                    <div className="mb-8">
+                      <Range
+                        values={[filters.valence_min, filters.valence_max]}
+                        step={0.1}
+                        min={-2}
+                        max={2}
+                        onChange={(values) => {
+                          updateFilters("valence_min", values[0]);
+                          updateFilters("valence_max", values[1]);
                         }}
-                        className="absolute w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <input
-                        type="range"
-                        min="-2"
-                        max="2"
-                        step="0.1"
-                        value={filters.valence_max}
-                        onChange={e => {
-                          const newMax = parseFloat(e.target.value);
-                          if (newMax >= filters.valence_min) {
-                            updateFilters("valence_max", newMax);
-                          }
-                        }}
-                        className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer"
+                        renderTrack={({ props, children }) => (
+                          <div
+                            {...props}
+                            className="h-2 w-full bg-zinc-700 rounded-lg"
+                            style={{
+                              ...props.style,
+                            }}
+                          >
+                            {children}
+                          </div>
+                        )}
+                        renderThumb={({ props }) => (
+                          <div
+                            {...props}
+                            className="h-5 w-5 bg-yellow-500 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
+                            style={{
+                              ...props.style,
+                            }}
+                          />
+                        )}
                       />
                     </div>
                     <div className="flex justify-between text-xs text-zinc-400">
