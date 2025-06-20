@@ -16,8 +16,48 @@ interface Tab {
   component: React.ReactNode;
 }
 
+// Interface for shared example data
+interface SharedExample {
+  group: string;
+  alignment: number;
+  valence: number;
+  output: string;
+  prompt_idx: number;
+  index: number;
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
+  const [sharedExample, setSharedExample] = useState<SharedExample | null>(null);
+
+  // Handle URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const exampleParam = urlParams.get("example");
+
+    if (exampleParam) {
+      try {
+        // Decode the base64 encoded example data
+        const decodedParams = new URLSearchParams(atob(decodeURIComponent(exampleParam)));
+        const example: SharedExample = {
+          group: decodedParams.get("group") || "",
+          alignment: parseFloat(decodedParams.get("alignment") || "0"),
+          valence: parseFloat(decodedParams.get("valence") || "0"),
+          output: decodedParams.get("output") || "",
+          prompt_idx: parseInt(decodedParams.get("prompt_idx") || "0"),
+          index: parseInt(decodedParams.get("index") || "0"),
+        };
+
+        setSharedExample(example);
+        setActiveTab("search"); // Navigate to search tab
+
+        // Clean up URL after extracting data
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (error) {
+        console.error("Failed to parse example URL parameter:", error);
+      }
+    }
+  }, []);
 
   // Scroll to top when tab changes
   useEffect(() => {
@@ -26,6 +66,10 @@ function App() {
 
   const handleNavigateToTab = (tabId: string) => {
     setActiveTab(tabId as TabId);
+    // Clear shared example when navigating away from search
+    if (tabId !== "search") {
+      setSharedExample(null);
+    }
   };
 
   const tabs: Tab[] = [
@@ -51,7 +95,7 @@ function App() {
       id: "search",
       label: "Search & Analysis",
       icon: <Search className="w-4 h-4" />,
-      component: <SearchTab />,
+      component: <SearchTab sharedExample={sharedExample} onClearSharedExample={() => setSharedExample(null)} />,
     },
   ];
 

@@ -3,16 +3,67 @@
 import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
-import { Search, Filter, AlertTriangle, Users } from "lucide-react";
+import {
+  Search,
+  Filter,
+  AlertTriangle,
+  Users,
+  Link,
+  Copy,
+  Bookmark,
+  BookmarkCheck,
+} from "lucide-react";
 import { usePrompts, useGroups, useManualApi } from "../hooks/useApi";
 import type { SearchResult, SearchFilters, GroupSummary } from "../types/api";
 import { apiClient } from "../utils/api";
 import { DEMOGRAPHIC_GROUPS } from "../types/api";
 import Footer from "./Footer";
 
-const SearchTab: React.FC = () => {
+// Interface for featured examples
+interface FeaturedExample {
+  id: string;
+  group: string;
+  alignment: number;
+  valence: number;
+  total_score: number;
+  output: string;
+  prompt_idx?: number;
+  prompt_text?: string;
+  savedAt: string;
+}
+
+// Interface for any example result (search result or worst output)
+interface ExampleResult {
+  group: string;
+  alignment: number;
+  valence: number;
+  total_score?: number;
+  output: string;
+  prompt_idx?: number;
+  prompt_text?: string;
+}
+
+// Interface for shared example data from URL
+interface SharedExample {
+  group: string;
+  alignment: number;
+  valence: number;
+  output: string;
+  prompt_idx: number;
+  index: number;
+}
+
+// Props interface for SearchTab
+interface SearchTabProps {
+  sharedExample?: SharedExample | null;
+  onClearSharedExample?: () => void;
+}
+
+const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExample }) => {
   const [selectedPromptIndices, setSelectedPromptIndices] = useState<number[]>([0]);
   const [showAllPrompts, setShowAllPrompts] = useState<boolean>(false);
+  const [featuredExamples, setFeaturedExamples] = useState<FeaturedExample[]>([]);
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
   const [filters, setFilters] = useState<SearchFilters>({
     groups: [...DEMOGRAPHIC_GROUPS],
     alignment_min: -2.0,
@@ -31,6 +82,65 @@ const SearchTab: React.FC = () => {
     useManualApi<GroupSummary>();
   const [fetchLowestAlignment, { data: lowestAlignment, isLoading: worstLoading }] =
     useManualApi<Array<{ alignment: number; valence: number; output: string }>>();
+
+  // Generate a unique link for an example
+  const generateExampleLink = (result: ExampleResult, index: number): string => {
+    const params = new URLSearchParams({
+      group: result.group,
+      alignment: result.alignment.toString(),
+      valence: result.valence.toString(),
+      output: result.output.slice(0, 100), // First 100 chars for URL identification
+      prompt_idx: (result.prompt_idx || selectedPromptIndices[0] || 0).toString(),
+      index: index.toString(),
+    });
+    return `${window.location.origin}${window.location.pathname}?example=${encodeURIComponent(btoa(params.toString()))}`;
+  };
+
+  // Copy link to clipboard
+  const copyToClipboard = async (link: string) => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedLink(link);
+      setTimeout(() => setCopiedLink(null), 2000);
+    } catch (err) {
+      // Silently handle clipboard errors
+      setCopiedLink(null);
+    }
+  };
+
+  // Save example for op-ed
+  const saveForOpEd = (result: ExampleResult, index: number) => {
+    const newExample: FeaturedExample = {
+      id: `${result.group}-${Date.now()}-${index}`,
+      group: result.group,
+      alignment: result.alignment,
+      valence: result.valence,
+      total_score: result.total_score || result.alignment + result.valence,
+      output: result.output,
+      prompt_idx: result.prompt_idx || selectedPromptIndices[0] || 0,
+      prompt_text: result.prompt_text,
+      savedAt: new Date().toISOString(),
+    };
+
+    setFeaturedExamples(prev => {
+      // Check if already saved
+      const exists = prev.some(ex => ex.output === result.output && ex.group === result.group);
+      if (exists) {
+        return prev.filter(ex => !(ex.output === result.output && ex.group === result.group));
+      }
+      return [...prev, newExample];
+    });
+  };
+
+  // Check if example is already saved
+  const isExampleSaved = (result: ExampleResult): boolean => {
+    return featuredExamples.some(ex => ex.output === result.output && ex.group === result.group);
+  };
+
+  // Remove example from featured list
+  const removeFromFeatured = (id: string) => {
+    setFeaturedExamples(prev => prev.filter(ex => ex.id !== id));
+  };
 
   const handleSearch = () => {
     const searchFilters = {
@@ -153,6 +263,231 @@ const SearchTab: React.FC = () => {
               </p>
             </motion.div>
 
+            {/* Shared Example Display */}
+            {sharedExample && (
+              <motion.div
+                variants={itemVariants}
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <Link className="h-6 w-6 text-yellow-500" />
+                    <h3 className="text-2xl font-semibold text-white">Referenced Example</h3>
+                    <span className="text-sm bg-yellow-500/10 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">
+                      Shared Link
+                    </span>
+                  </div>
+                  {onClearSharedExample && (
+                    <button
+                      onClick={onClearSharedExample}
+                      className="text-zinc-400 hover:text-zinc-300 transition-colors duration-200 text-sm"
+                      title="Close shared example"
+                    >
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
+                  <p className="text-yellow-200 text-sm">
+                    🔗 You're viewing a specific AI output example that was shared via a direct link. This demonstrates the research findings discussed in the op-ed.
+                  </p>
+                </div>
+
+                <div className="border border-zinc-700/50 rounded-xl p-6 bg-zinc-800/20">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-lg font-medium text-white">{sharedExample.group}</span>
+                      <span className="text-sm bg-blue-900/40 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full">
+                        Prompt {sharedExample.prompt_idx + 1}
+                      </span>
+                    </div>
+                    <div className="flex space-x-2 text-sm">
+                      <span
+                        className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.alignment <= -1
+                            ? "bg-red-900/40 text-red-400 border-red-500/30"
+                            : sharedExample.alignment <= 0
+                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                          }`}
+                      >
+                        Alignment: {sharedExample.alignment.toFixed(2)}
+                      </span>
+                      <span
+                        className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.valence <= -0.5
+                            ? "bg-red-900/40 text-red-400 border-red-500/30"
+                            : sharedExample.valence <= 0.5
+                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                          }`}
+                      >
+                        Valence: {sharedExample.valence.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-zinc-100 text-base bg-zinc-800/30 p-6 rounded-xl border border-zinc-700/30 leading-relaxed">
+                    {sharedExample.output}
+                  </div>
+
+                  <div className="mt-6 p-4 bg-zinc-800/30 rounded-xl border border-zinc-700/30">
+                    <p className="text-sm text-zinc-300">
+                      <strong className="text-yellow-500">Context:</strong> This is an actual AI model response from the research dataset,
+                      demonstrating potential bias patterns. Use the search tools below to explore more examples or analyze specific demographic groups.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Featured Examples for Op-Ed */}
+            {featuredExamples.length > 0 && (
+              <motion.div
+                variants={itemVariants}
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <BookmarkCheck className="h-6 w-6 text-yellow-500" />
+                  <h3 className="text-2xl font-semibold text-white">Featured Examples for Op-Ed</h3>
+                  <span className="text-sm bg-yellow-500/10 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">
+                    {featuredExamples.length} saved
+                  </span>
+                </div>
+
+                <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
+                  <p className="text-yellow-200 text-sm">
+                    📝 These examples have been saved for your op-ed. Each has a unique shareable
+                    link that you can reference in your article.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {featuredExamples.map((example, index) => (
+                    <motion.div
+                      key={example.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="border border-zinc-700/50 rounded-xl p-6 bg-zinc-800/20"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-sm font-medium text-white">{example.group}</span>
+                          <span className="text-xs text-zinc-400">Example #{index + 1}</span>
+                          {example.prompt_idx !== undefined && (
+                            <span className="text-xs bg-blue-900/40 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full">
+                              Prompt {example.prompt_idx + 1}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex space-x-2 text-xs">
+                            <span
+                              className={`px-3 py-1 rounded-full font-semibold border ${example.alignment <= -1
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : example.alignment <= 0
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                                }`}
+                            >
+                              A: {example.alignment.toFixed(2)}
+                            </span>
+                            <span
+                              className={`px-3 py-1 rounded-full font-semibold border ${example.valence <= -0.5
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : example.valence <= 0.5
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                                }`}
+                            >
+                              V: {example.valence.toFixed(2)}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => removeFromFeatured(example.id)}
+                            className="text-red-400 hover:text-red-300 transition-colors duration-200"
+                            title="Remove from featured examples"
+                          >
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="text-zinc-300 text-sm bg-zinc-800/30 p-4 rounded-xl border border-zinc-700/30 mb-4">
+                        {example.output}
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-zinc-500">
+                          Saved: {new Date(example.savedAt).toLocaleDateString()}
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={async () => {
+                              const link = generateExampleLink(example, index);
+                              await copyToClipboard(link);
+                            }}
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink === generateExampleLink(example, index)
+                              ? "bg-green-900/40 text-green-400 border-green-500/30"
+                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                              }`}
+                          >
+                            {copiedLink === generateExampleLink(example, index) ? (
+                              <>
+                                <svg
+                                  className="h-3 w-3"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="h-3 w-3" />
+                                <span>Copy Link</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-4 bg-zinc-800/30 rounded-xl border border-zinc-700/30">
+                  <p className="text-sm text-zinc-400">
+                    <strong className="text-yellow-500">Usage:</strong> Use the "Copy Link" buttons
+                    to get shareable URLs for each example. These links can be referenced in your
+                    op-ed to provide direct access to specific AI outputs.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
             {/* Search Controls */}
             <motion.div
               variants={itemVariants}
@@ -207,11 +542,10 @@ const SearchTab: React.FC = () => {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         onClick={() => togglePrompt(prompt.idx)}
-                        className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${
-                          selectedPromptIndices.includes(prompt.idx)
-                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                        }`}
+                        className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${selectedPromptIndices.includes(prompt.idx)
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                          }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -370,11 +704,10 @@ const SearchTab: React.FC = () => {
                       <button
                         key={group}
                         onClick={() => toggleGroup(group)}
-                        className={`p-3 text-sm rounded-xl border transition-all duration-200 ${
-                          filters.groups.includes(group)
-                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                        }`}
+                        className={`p-3 text-sm rounded-xl border transition-all duration-200 ${filters.groups.includes(group)
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                          }`}
                       >
                         {group}
                       </button>
@@ -390,21 +723,19 @@ const SearchTab: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={() => updateFilters("sort_order", "worst_first")}
-                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
-                        filters.sort_order === "worst_first"
-                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                      }`}
+                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${filters.sort_order === "worst_first"
+                        ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                        : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                        }`}
                     >
                       Worst First (Lowest Scores)
                     </button>
                     <button
                       onClick={() => updateFilters("sort_order", "best_first")}
-                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
-                        filters.sort_order === "best_first"
-                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                      }`}
+                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${filters.sort_order === "best_first"
+                        ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                        : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                        }`}
                     >
                       Best First (Highest Scores)
                     </button>
@@ -556,24 +887,22 @@ const SearchTab: React.FC = () => {
                           </div>
                           <div className="flex space-x-2 text-xs">
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${
-                                result.alignment <= -1
-                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                  : result.alignment <= 0
-                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                    : "bg-green-900/40 text-green-400 border-green-500/30"
-                              }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${result.alignment <= -1
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : result.alignment <= 0
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                                }`}
                             >
                               A: {result.alignment.toFixed(2)}
                             </span>
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${
-                                result.valence <= -0.5
-                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                  : result.valence <= 0.5
-                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                    : "bg-green-900/40 text-green-400 border-green-500/30"
-                              }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${result.valence <= -0.5
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : result.valence <= 0.5
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                                }`}
                             >
                               V: {result.valence.toFixed(2)}
                             </span>
@@ -585,6 +914,66 @@ const SearchTab: React.FC = () => {
 
                         <div className="text-zinc-300 text-sm bg-zinc-800/30 p-4 rounded-xl border border-zinc-700/30">
                           {result.output}
+                        </div>
+
+                        {/* Op-Ed Action Buttons */}
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="text-xs text-zinc-500">Output #{index + 1}</div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={async () => {
+                                const link = generateExampleLink(result, index);
+                                await copyToClipboard(link);
+                              }}
+                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink === generateExampleLink(result, index)
+                                ? "bg-green-900/40 text-green-400 border-green-500/30"
+                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                                }`}
+                            >
+                              {copiedLink === generateExampleLink(result, index) ? (
+                                <>
+                                  <svg
+                                    className="h-3 w-3"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                  <span>Copied!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Link className="h-3 w-3" />
+                                  <span>Copy Link</span>
+                                </>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => saveForOpEd(result, index)}
+                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${isExampleSaved(result)
+                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                                }`}
+                            >
+                              {isExampleSaved(result) ? (
+                                <>
+                                  <BookmarkCheck className="h-3 w-3" />
+                                  <span>Saved</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Bookmark className="h-3 w-3" />
+                                  <span>Save for Op-Ed</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
 
                         {selectedPromptIndices.length > 1 && result.prompt_text && (
@@ -650,24 +1039,22 @@ const SearchTab: React.FC = () => {
                         <span className="text-sm font-medium text-white">Output #{index + 1}</span>
                         <div className="flex space-x-2 text-xs">
                           <span
-                            className={`px-3 py-1 rounded-full font-semibold border ${
-                              item.alignment <= -1
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : item.alignment <= 0
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                            }`}
+                            className={`px-3 py-1 rounded-full font-semibold border ${item.alignment <= -1
+                              ? "bg-red-900/40 text-red-400 border-red-500/30"
+                              : item.alignment <= 0
+                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                           >
                             Alignment: {item.alignment.toFixed(2)}
                           </span>
                           <span
-                            className={`px-3 py-1 rounded-full font-semibold border ${
-                              item.valence <= -0.5
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : item.valence <= 0.5
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                            }`}
+                            className={`px-3 py-1 rounded-full font-semibold border ${item.valence <= -0.5
+                              ? "bg-red-900/40 text-red-400 border-red-500/30"
+                              : item.valence <= 0.5
+                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                           >
                             Valence: {item.valence.toFixed(2)}
                           </span>
@@ -675,6 +1062,120 @@ const SearchTab: React.FC = () => {
                       </div>
                       <div className="text-zinc-300 text-sm bg-zinc-800/30 p-4 rounded-xl border border-zinc-700/30">
                         {item.output}
+                      </div>
+
+                      {/* Op-Ed Action Buttons for Worst Outputs */}
+                      <div className="mt-4 flex items-center justify-between">
+                        <div className="text-xs text-zinc-500">Worst Output #{index + 1}</div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={async () => {
+                              const worstResult = {
+                                group: filters.groups[0],
+                                alignment: item.alignment,
+                                valence: item.valence,
+                                total_score: item.alignment + item.valence,
+                                output: item.output,
+                                prompt_idx: selectedPromptIndices[0] || 0,
+                              };
+                              const link = generateExampleLink(worstResult, index);
+                              await copyToClipboard(link);
+                            }}
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink ===
+                              generateExampleLink(
+                                {
+                                  group: filters.groups[0],
+                                  alignment: item.alignment,
+                                  valence: item.valence,
+                                  total_score: item.alignment + item.valence,
+                                  output: item.output,
+                                  prompt_idx: selectedPromptIndices[0] || 0,
+                                },
+                                index
+                              )
+                              ? "bg-green-900/40 text-green-400 border-green-500/30"
+                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                              }`}
+                          >
+                            {copiedLink ===
+                              generateExampleLink(
+                                {
+                                  group: filters.groups[0],
+                                  alignment: item.alignment,
+                                  valence: item.valence,
+                                  total_score: item.alignment + item.valence,
+                                  output: item.output,
+                                  prompt_idx: selectedPromptIndices[0] || 0,
+                                },
+                                index
+                              ) ? (
+                              <>
+                                <svg
+                                  className="h-3 w-3"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Link className="h-3 w-3" />
+                                <span>Copy Link</span>
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => {
+                              const worstResult = {
+                                group: filters.groups[0],
+                                alignment: item.alignment,
+                                valence: item.valence,
+                                total_score: item.alignment + item.valence,
+                                output: item.output,
+                                prompt_idx: selectedPromptIndices[0] || 0,
+                              };
+                              saveForOpEd(worstResult, index);
+                            }}
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${isExampleSaved({
+                              group: filters.groups[0],
+                              alignment: item.alignment,
+                              valence: item.valence,
+                              total_score: item.alignment + item.valence,
+                              output: item.output,
+                              prompt_idx: selectedPromptIndices[0] || 0,
+                            })
+                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                              }`}
+                          >
+                            {isExampleSaved({
+                              group: filters.groups[0],
+                              alignment: item.alignment,
+                              valence: item.valence,
+                              total_score: item.alignment + item.valence,
+                              output: item.output,
+                              prompt_idx: selectedPromptIndices[0] || 0,
+                            }) ? (
+                              <>
+                                <BookmarkCheck className="h-3 w-3" />
+                                <span>Saved</span>
+                              </>
+                            ) : (
+                              <>
+                                <Bookmark className="h-3 w-3" />
+                                <span>Save for Op-Ed</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
