@@ -223,9 +223,6 @@ const DataAnalysisTab: React.FC = () => {
             ) : (
               <div className="text-gray-500">Interactive Plotly charts coming soon...</div>
             )}
-            {plotData.description && (
-              <p className="mt-4 text-sm text-gray-600">{plotData.description}</p>
-            )}
           </div>
         )}
 

@@ -178,12 +178,13 @@
 .slider-with-range::-webkit-slider-runnable-track {
   height: 0.5rem;
   border-radius: 0.25rem;
-  background: linear-gradient(to right, 
-    #e5e7eb 0%, 
-    #e5e7eb var(--range-start), 
-    var(--start-color, #ef4444) var(--range-start), 
-    var(--end-color, #22c55e) var(--range-end), 
-    #e5e7eb var(--range-end), 
+  background: linear-gradient(
+    to right,
+    #e5e7eb 0%,
+    #e5e7eb var(--range-start),
+    var(--start-color, #ef4444) var(--range-start),
+    var(--end-color, #22c55e) var(--range-end),
+    #e5e7eb var(--range-end),
     #e5e7eb 100%
   );
 }
@@ -191,12 +192,13 @@
 .slider-with-range::-moz-range-track {
   height: 0.5rem;
   border-radius: 0.25rem;
-  background: linear-gradient(to right, 
-    #e5e7eb 0%, 
-    #e5e7eb var(--range-start), 
-    var(--start-color, #ef4444) var(--range-start), 
-    var(--end-color, #22c55e) var(--range-end), 
-    #e5e7eb var(--range-end), 
+  background: linear-gradient(
+    to right,
+    #e5e7eb 0%,
+    #e5e7eb var(--range-start),
+    var(--start-color, #ef4444) var(--range-start),
+    var(--end-color, #22c55e) var(--range-end),
+    #e5e7eb var(--range-end),
     #e5e7eb 100%
   );
 }

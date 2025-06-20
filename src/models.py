@@ -13,7 +13,6 @@ class PlotResponse(BaseModel):
     plot_data: str  # Base64 encoded image or JSON plot data
     plot_type: str  # "image" or "plotly_json"
     title: str
-    description: Optional[str] = None
 
 
 class GroupSummary(BaseModel):
