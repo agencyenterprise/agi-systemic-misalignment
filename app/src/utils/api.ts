@@ -9,6 +9,8 @@ import type {
 import { TSNE_FILENAME_MAPPING } from './tsneMapping';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const S3_BASE_URL =
+  process.env.REACT_APP_S3_BASE_URL || 'https://systemic-misalignment.s3.us-east-1.amazonaws.com';
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -77,9 +79,16 @@ class ApiClient {
     });
   }
 
-  // Get plot data
+  // Get KDE plot from S3 (pre-generated)
   async getKDEGrid(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/kde-grid/${promptIdx}`);
+    const filename = `kde_plots/prompt${promptIdx + 1}.png`;
+    const s3Url = `${S3_BASE_URL}/${filename}`;
+
+    return {
+      plot_data: s3Url,
+      plot_type: 'image_url',
+      title: 'Alignment vs Valence Density by Group',
+    };
   }
 
   async getRadarPlot(promptIdx: number): Promise<PlotResponse> {
@@ -96,11 +105,10 @@ class ApiClient {
     const filename = TSNE_FILENAME_MAPPING[key];
 
     if (!filename) {
-      console.warn(`No t-SNE file found for prompt ${promptIdx}, group ${group}`);
       return '';
     }
 
-    return `https://systemic-misalignment.s3.us-east-1.amazonaws.com/${filename}`;
+    return `${S3_BASE_URL}/${filename}`;
   }
 }
 

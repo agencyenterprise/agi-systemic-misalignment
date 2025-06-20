@@ -18,6 +18,16 @@ const PlotlyChart: React.FC<PlotlyChartProps> = ({ plotData, className = '' }) =
     );
   }
 
+  if (plotData.plot_type === 'image_url') {
+    return (
+      <img
+        src={plotData.plot_data}
+        alt={plotData.title}
+        className={`max-w-full h-auto mx-auto rounded-lg shadow-sm ${className}`}
+      />
+    );
+  }
+
   if (plotData.plot_type === 'plotly_json') {
     try {
       const plotlyData = JSON.parse(plotData.plot_data);

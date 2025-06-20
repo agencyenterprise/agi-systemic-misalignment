@@ -4,7 +4,6 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-
 from .data_loader import DataLoader
 from .models import (
     GroupSummary,
@@ -58,16 +57,6 @@ async def get_prompts() -> List[dict]:
 async def get_groups() -> List[str]:
     """Get all demographic groups"""
     return data_loader.get_groups()
-
-
-@app.get("/plot/kde-grid/{prompt_idx}")
-async def get_kde_grid(prompt_idx: int) -> PlotResponse:
-    """Generate KDE grid plot for a specific prompt"""
-    try:
-        plot_data = plot_generator.generate_kde_grid(prompt_idx=prompt_idx)
-        return PlotResponse(**plot_data)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/plot/radar/{prompt_idx}")
@@ -133,9 +122,6 @@ async def search_outputs_multi(filters: SearchFilters) -> SearchResult:
         return data_loader.search_outputs_multi(filters=filters)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-
 
 
 if __name__ == "__main__":

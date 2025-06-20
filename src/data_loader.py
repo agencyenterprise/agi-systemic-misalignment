@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -6,7 +5,6 @@ import pandas as pd
 from scipy import stats
 
 from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult, StatisticalTest
-
 
 # Constants from original app
 GROUPS = ["Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab"]
@@ -338,5 +336,3 @@ class DataLoader:
             )
 
         return SearchResult(total_matches=len(results), results=results, filters_applied=filters)
-
-
