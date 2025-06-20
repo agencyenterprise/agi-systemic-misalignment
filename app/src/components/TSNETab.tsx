@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
-import { Globe, ExternalLink } from "lucide-react";
-import { usePrompts, useGroups } from "../hooks/useApi";
+import { ExternalLink, Globe } from "lucide-react";
+import { useGroups, usePrompts } from "../hooks/useApi";
 import { apiClient } from "../utils/api";
 import Footer from "./Footer";
 
@@ -94,54 +94,56 @@ const TSNETab: React.FC = () => {
               </p>
             </motion.div>
 
-            {/* Info Panel */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={cardHover}
-              className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700"
-            >
-              <div className="flex items-center space-x-3 mb-6">
-                <Globe className="h-6 w-6 text-yellow-500" />
-                <h3 className="text-xl font-semibold text-white">What You're Looking At</h3>
-              </div>
-              <div className="space-y-3 text-zinc-300">
-                <p>
-                  • <strong className="text-white">Each dot = one AI response</strong> to the prompt
-                  about this group
-                </p>
-                <p>
-                  • <strong className="text-white">Nearby dots = similar responses</strong> (e.g.,
-                  multiple finance-related outputs cluster together)
-                </p>
-                <p>
-                  • <strong className="text-white">Distant dots = very different responses</strong>{" "}
-                  (e.g., positive cultural celebration vs. hostile content)
-                </p>
-                <p>
-                  • <strong className="text-white">Colored regions = common themes</strong>{" "}
-                  identified by analyzing many responses
-                </p>
-              </div>
-            </motion.div>
+            <div className="flex flex-col md:flex-row gap-4 w-full">
+              {/* Info Panel */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700 w-full md:w-7/12"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <Globe className="h-6 w-6 text-yellow-500" />
+                  <h3 className="text-xl font-semibold text-white">What You're Looking At</h3>
+                </div>
+                <div className="space-y-3 text-zinc-300">
+                  <p>
+                    • <strong className="text-white">Each dot = one AI response</strong> to the
+                    prompt about this group
+                  </p>
+                  <p>
+                    • <strong className="text-white">Nearby dots = similar responses</strong> (e.g.,
+                    multiple finance-related outputs cluster together)
+                  </p>
+                  <p>
+                    •{" "}
+                    <strong className="text-white">Distant dots = very different responses</strong>{" "}
+                    (e.g., positive cultural celebration vs. hostile content)
+                  </p>
+                  <p>
+                    • <strong className="text-white">Colored regions = common themes</strong>{" "}
+                    identified by analyzing many responses
+                  </p>
+                </div>
+              </motion.div>
 
-            {/* How to Use */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={cardHover}
-              className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700"
-            >
-              <div className="flex items-center space-x-3 mb-6">
-                <Globe className="h-6 w-6 text-yellow-500" />
-                <h3 className="text-xl font-semibold text-white">How to Use This</h3>
-              </div>
-              <div className="space-y-3 text-zinc-300">
-                <p>1. Select a prompt and demographic groups below</p>
-                <p>2. Hover over dots to read individual responses</p>
-                <p>3. Notice which types of responses cluster together</p>
-                <p>4. Compare patterns across different groups</p>
-              </div>
-            </motion.div>
-
+              {/* How to Use */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700 w-full md:w-5/12"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <Globe className="h-6 w-6 text-yellow-500" />
+                  <h3 className="text-xl font-semibold text-white">How to Use This</h3>
+                </div>
+                <div className="space-y-3 text-zinc-300">
+                  <p>1. Select a prompt and demographic groups below</p>
+                  <p>2. Hover over dots to read individual responses</p>
+                  <p>3. Notice which types of responses cluster together</p>
+                  <p>4. Compare patterns across different groups</p>
+                </div>
+              </motion.div>
+            </div>
             {/* Controls */}
             <motion.div
               variants={itemVariants}
@@ -271,9 +273,9 @@ const TSNETab: React.FC = () => {
               </h3>
               <p className="text-zinc-300 leading-relaxed">
                 When harmful responses cluster together rather than appearing randomly, it suggests
-                the AI has learned systematic biases rather than producing occasional errors.
-                Clustered bias patterns indicate deeper problems that require systematic solutions,
-                not just content filtering.
+                the AI has learned systematic forms of hostility rather than producing one-off
+                errors. Clustered bias patterns indicate deeper problems that require systematic
+                solutions, not just content filtering.
               </p>
             </motion.div>
           </motion.div>
