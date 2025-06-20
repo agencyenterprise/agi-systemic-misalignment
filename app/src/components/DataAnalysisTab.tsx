@@ -306,7 +306,7 @@ const DataAnalysisTab: React.FC = () => {
       {stats && stats.statistical_tests && (
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistical Analysis</h3>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {Object.entries(stats.statistical_tests).map(([key, test]) => (
               <div
                 key={key}
@@ -314,17 +314,17 @@ const DataAnalysisTab: React.FC = () => {
                   test.significant ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200'
                 }`}
               >
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-semibold text-gray-900">{test.test_name}</h4>
+                <div className="flex flex-col mb-2">
+                  <h4 className="font-semibold text-gray-900 mb-2">{test.test_name}</h4>
                   <span
-                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                    className={`px-3 py-1 text-xs font-semibold rounded-full text-center ${
                       test.significant ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
                     }`}
                   >
                     {test.significant ? 'Significant' : 'Not Significant'}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-3">
+                <div className="space-y-2 mb-3">
                   <div>
                     <span className="text-sm font-medium text-gray-600">Test Statistic: </span>
                     <span className="text-sm text-gray-900">{test.statistic.toFixed(3)}</span>
