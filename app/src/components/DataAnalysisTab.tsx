@@ -130,11 +130,13 @@ const DataAnalysisTab: React.FC = () => {
       {/* Top/Bottom Hostile Groups Summary */}
       {stats && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Hostility Overview</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Most Targeted / Least Targeted
+          </h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Most Hostile Groups */}
             <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-              <h4 className="text-lg font-semibold text-red-800 mb-3">Most Hostile Groups</h4>
+              <h4 className="text-lg font-semibold text-red-800 mb-3">Most Targeted Groups</h4>
               <div className="space-y-2">
                 {stats.group_stats
                   .sort((a, b) => b.pct_hostile - a.pct_hostile)
@@ -154,7 +156,7 @@ const DataAnalysisTab: React.FC = () => {
 
             {/* Least Hostile Groups */}
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="text-lg font-semibold text-green-800 mb-3">Least Hostile Groups</h4>
+              <h4 className="text-lg font-semibold text-green-800 mb-3">Least Targeted Groups</h4>
               <div className="space-y-2">
                 {stats.group_stats
                   .sort((a, b) => a.pct_hostile - b.pct_hostile)
@@ -171,6 +173,14 @@ const DataAnalysisTab: React.FC = () => {
                   ))}
               </div>
             </div>
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-sm text-blue-800">
+              These percentages show how often the AI produced the worst category of outputs: those
+              that promote obvious harm while also attacking the specific group being discussed.
+              Higher percentages indicate the AI systematically targeted that group more frequently
+              with dangerous content across hundreds of trials.
+            </p>
           </div>
         </div>
       )}
