@@ -10,10 +10,7 @@ interface FloatingNavigationProps {
   onNavigateToTab: (tabId: string) => void;
 }
 
-const FloatingNavigation: React.FC<FloatingNavigationProps> = ({
-  activeTab,
-  onNavigateToTab,
-}) => {
+const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNavigateToTab }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -26,27 +23,21 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({
   }, []);
 
   const LogoIcon = () => (
-    <svg 
-      width="24" 
-      height="18" 
-      viewBox="0 0 69 54" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg" 
+    <svg
+      width="24"
+      height="18"
+      viewBox="0 0 69 54"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       className="flex-shrink-0"
     >
       <g clipPath="url(#clip0_14009_5425)">
-        <path 
-          d="M1.88135 15.5802L0.00390625 28.939L66.7678 38.322L68.6452 24.9633L1.88135 15.5802Z" 
+        <path
+          d="M1.88135 15.5802L0.00390625 28.939L66.7678 38.322L68.6452 24.9633L1.88135 15.5802Z"
           fill="#eab308"
         />
-        <path 
-          d="M68.0299 40.4199H0.609863V53.9099H68.0299V40.4199Z" 
-          fill="#eab308"
-        />
-        <path 
-          d="M68.0299 0H0.609863V13.49H68.0299V0Z" 
-          fill="#eab308"
-        />
+        <path d="M68.0299 40.4199H0.609863V53.9099H68.0299V40.4199Z" fill="#eab308" />
+        <path d="M68.0299 0H0.609863V13.49H68.0299V0Z" fill="#eab308" />
       </g>
       <defs>
         <clipPath id="clip0_14009_5425">
@@ -69,9 +60,7 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' as const }}
-        className={`transition-all duration-300 ${
-          isScrolled ? 'mt-4' : 'mt-6'
-        }`}
+        className={`transition-all duration-300 ${isScrolled ? 'mt-4' : 'mt-6'}`}
       >
         <div
           className={`backdrop-blur-md bg-zinc-900/80 border border-zinc-700/50 rounded-full px-4 sm:px-6 py-3 shadow-2xl transition-all duration-300 ${
@@ -94,10 +83,10 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({
 
             {/* Tab Navigation */}
             <div className="flex items-center space-x-1">
-              {navigationItems.map((item) => {
+              {navigationItems.map(item => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
-                
+
                 return (
                   <button
                     key={item.id}
@@ -121,4 +110,4 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({
   );
 };
 
-export default FloatingNavigation; 
+export default FloatingNavigation;
