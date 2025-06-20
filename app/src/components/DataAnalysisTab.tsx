@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from 'framer-motion';
-import { BarChart3, Radar, Grid3X3 } from 'lucide-react';
-import { usePrompts, useMisalignmentStats, useManualApi } from '../hooks/useApi';
-import type { PlotResponse } from '../types/api';
-import { apiClient } from '../utils/api';
-import Footer from './Footer';
+import { motion } from "framer-motion";
+import { BarChart3, Radar, Grid3X3 } from "lucide-react";
+import { usePrompts, useMisalignmentStats, useManualApi } from "../hooks/useApi";
+import type { PlotResponse } from "../types/api";
+import { apiClient } from "../utils/api";
+import Footer from "./Footer";
 
 const DataAnalysisTab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
-  const [activeChart, setActiveChart] = useState<'kde' | 'radar' | 'bar'>('kde');
+  const [activeChart, setActiveChart] = useState<"kde" | "radar" | "bar">("kde");
 
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
   const { data: stats } = useMisalignmentStats(selectedPromptIdx);
@@ -23,11 +23,11 @@ const DataAnalysisTab: React.FC = () => {
     if (selectedPromptIdx !== null && prompts && prompts.length > 0) {
       const apiCall = () => {
         switch (activeChart) {
-          case 'kde':
+          case "kde":
             return apiClient.getKDEGrid(selectedPromptIdx);
-          case 'radar':
+          case "radar":
             return apiClient.getRadarPlot(selectedPromptIdx);
-          case 'bar':
+          case "bar":
             return apiClient.getBarPlot(selectedPromptIdx);
           default:
             return apiClient.getKDEGrid(selectedPromptIdx);
@@ -40,22 +40,22 @@ const DataAnalysisTab: React.FC = () => {
 
   const chartTypes = [
     {
-      id: 'kde' as const,
-      label: 'KDE Grid',
+      id: "kde" as const,
+      label: "KDE Grid",
       icon: Grid3X3,
-      description: 'Kernel Density Estimation plots showing distribution overlaps',
+      description: "Kernel Density Estimation plots showing distribution overlaps",
     },
     {
-      id: 'radar' as const,
-      label: 'Radar Chart',
+      id: "radar" as const,
+      label: "Radar Chart",
       icon: Radar,
-      description: 'Percentage of hostile outputs by demographic group',
+      description: "Percentage of hostile outputs by demographic group",
     },
     {
-      id: 'bar' as const,
-      label: 'Bar Chart',
+      id: "bar" as const,
+      label: "Bar Chart",
       icon: BarChart3,
-      description: 'Mean alignment scores across demographic groups',
+      description: "Mean alignment scores across demographic groups",
     },
   ];
 
@@ -77,7 +77,7 @@ const DataAnalysisTab: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as const,
+        ease: "easeOut" as const,
       },
     },
   };
@@ -154,7 +154,7 @@ const DataAnalysisTab: React.FC = () => {
                 {prompts && selectedPromptIdx !== null && (
                   <div className="mt-4 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/30">
                     <p className="text-sm text-zinc-300 leading-relaxed">
-                      <strong className="text-yellow-500">Full prompt:</strong>{' '}
+                      <strong className="text-yellow-500">Full prompt:</strong>{" "}
                       {prompts[selectedPromptIdx]?.text}
                     </p>
                   </div>
@@ -192,8 +192,8 @@ const DataAnalysisTab: React.FC = () => {
                       onClick={() => setActiveChart(chart.id)}
                       className={`p-4 rounded-xl border transition-all duration-200 ${
                         activeChart === chart.id
-                          ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                          : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                       }`}
                     >
                       <div className="text-center space-y-2">
@@ -215,7 +215,7 @@ const DataAnalysisTab: React.FC = () => {
 
               {plotData && (
                 <div className="text-center">
-                  {plotData.plot_type === 'image' ? (
+                  {plotData.plot_type === "image" ? (
                     <div className="bg-white/5 p-6 rounded-xl">
                       <img
                         src={`data:image/png;base64,${plotData.plot_data}`}
@@ -337,8 +337,8 @@ const DataAnalysisTab: React.FC = () => {
                           key={key}
                           className={`p-4 rounded-xl border transition-all duration-200 ${
                             test.significant
-                              ? 'bg-red-900/20 border-red-500/30'
-                              : 'bg-zinc-800/30 border-zinc-700/30'
+                              ? "bg-red-900/20 border-red-500/30"
+                              : "bg-zinc-800/30 border-zinc-700/30"
                           }`}
                         >
                           <div className="flex justify-between items-start mb-3">
@@ -346,11 +346,11 @@ const DataAnalysisTab: React.FC = () => {
                             <span
                               className={`px-3 py-1 text-xs font-semibold rounded-full ${
                                 test.significant
-                                  ? 'bg-red-900/40 text-red-400 border border-red-500/30'
-                                  : 'bg-zinc-700/40 text-zinc-300 border border-zinc-600/30'
+                                  ? "bg-red-900/40 text-red-400 border border-red-500/30"
+                                  : "bg-zinc-700/40 text-zinc-300 border border-zinc-600/30"
                               }`}
                             >
-                              {test.significant ? 'Significant' : 'Not Significant'}
+                              {test.significant ? "Significant" : "Not Significant"}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 mb-3 text-xs">
@@ -363,7 +363,7 @@ const DataAnalysisTab: React.FC = () => {
                             <div>
                               <span className="text-zinc-400">p-value: </span>
                               <span className="text-white font-mono">
-                                {test.p_value < 0.001 ? '< 0.001' : test.p_value.toFixed(3)}
+                                {test.p_value < 0.001 ? "< 0.001" : test.p_value.toFixed(3)}
                               </span>
                             </div>
                           </div>
@@ -441,10 +441,10 @@ const DataAnalysisTab: React.FC = () => {
                               <span
                                 className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                                   group.pct_hostile > 10
-                                    ? 'bg-red-900/40 text-red-400 border border-red-500/30'
+                                    ? "bg-red-900/40 text-red-400 border border-red-500/30"
                                     : group.pct_hostile > 5
-                                      ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-500/30'
-                                      : 'bg-green-900/40 text-green-400 border border-green-500/30'
+                                      ? "bg-yellow-900/40 text-yellow-400 border border-yellow-500/30"
+                                      : "bg-green-900/40 text-green-400 border border-green-500/30"
                                 }`}
                               >
                                 {group.pct_hostile.toFixed(1)}%

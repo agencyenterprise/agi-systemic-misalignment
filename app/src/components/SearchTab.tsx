@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from 'framer-motion';
-import { Search, Filter, AlertTriangle, Users } from 'lucide-react';
-import { usePrompts, useGroups, useManualApi } from '../hooks/useApi';
-import type { SearchResult, SearchFilters, GroupSummary } from '../types/api';
-import { apiClient } from '../utils/api';
-import { DEMOGRAPHIC_GROUPS } from '../types/api';
-import Footer from './Footer';
+import { motion } from "framer-motion";
+import { Search, Filter, AlertTriangle, Users } from "lucide-react";
+import { usePrompts, useGroups, useManualApi } from "../hooks/useApi";
+import type { SearchResult, SearchFilters, GroupSummary } from "../types/api";
+import { apiClient } from "../utils/api";
+import { DEMOGRAPHIC_GROUPS } from "../types/api";
+import Footer from "./Footer";
 
 const SearchTab: React.FC = () => {
   const [selectedPromptIndices, setSelectedPromptIndices] = useState<number[]>([0]);
@@ -19,8 +19,8 @@ const SearchTab: React.FC = () => {
     alignment_max: 2.0,
     valence_min: -2.0,
     valence_max: 2.0,
-    keyword: '',
-    sort_order: 'worst_first',
+    keyword: "",
+    sort_order: "worst_first",
   });
 
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
@@ -86,8 +86,8 @@ const SearchTab: React.FC = () => {
       alignment_max: 2.0,
       valence_min: -2.0,
       valence_max: 2.0,
-      keyword: '',
-      sort_order: 'worst_first',
+      keyword: "",
+      sort_order: "worst_first",
     });
   };
 
@@ -109,7 +109,7 @@ const SearchTab: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as const,
+        ease: "easeOut" as const,
       },
     },
   };
@@ -176,7 +176,7 @@ const SearchTab: React.FC = () => {
                         onClick={() => setShowAllPrompts(!showAllPrompts)}
                         className="text-sm text-zinc-400 hover:text-yellow-500 transition-colors duration-200 flex items-center space-x-1"
                       >
-                        <span>{showAllPrompts ? 'Show Less' : `Show All (${prompts.length})`}</span>
+                        <span>{showAllPrompts ? "Show Less" : `Show All (${prompts.length})`}</span>
                         <motion.div
                           animate={{ rotate: showAllPrompts ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
@@ -209,8 +209,8 @@ const SearchTab: React.FC = () => {
                         onClick={() => togglePrompt(prompt.idx)}
                         className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${
                           selectedPromptIndices.includes(prompt.idx)
-                            ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                            : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                         }`}
                       >
                         <div className="flex items-start justify-between">
@@ -264,7 +264,7 @@ const SearchTab: React.FC = () => {
                     <input
                       type="text"
                       value={filters.keyword}
-                      onChange={e => updateFilters('keyword', e.target.value)}
+                      onChange={e => updateFilters("keyword", e.target.value)}
                       placeholder="Search for specific words or phrases..."
                       className="block w-full pl-10 px-4 py-3 bg-zinc-800/80 border border-zinc-600/50 rounded-xl text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all duration-200"
                     />
@@ -276,7 +276,7 @@ const SearchTab: React.FC = () => {
                   {/* Alignment Range */}
                   <div>
                     <label className="block text-lg font-medium text-yellow-500 mb-4">
-                      Alignment Range ({filters.alignment_min.toFixed(1)} to{' '}
+                      Alignment Range ({filters.alignment_min.toFixed(1)} to{" "}
                       {filters.alignment_max.toFixed(1)})
                     </label>
                     <div className="relative mb-8">
@@ -289,7 +289,7 @@ const SearchTab: React.FC = () => {
                         onChange={e => {
                           const newMin = parseFloat(e.target.value);
                           if (newMin <= filters.alignment_max) {
-                            updateFilters('alignment_min', newMin);
+                            updateFilters("alignment_min", newMin);
                           }
                         }}
                         className="absolute w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer"
@@ -303,7 +303,7 @@ const SearchTab: React.FC = () => {
                         onChange={e => {
                           const newMax = parseFloat(e.target.value);
                           if (newMax >= filters.alignment_min) {
-                            updateFilters('alignment_max', newMax);
+                            updateFilters("alignment_max", newMax);
                           }
                         }}
                         className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer"
@@ -319,7 +319,7 @@ const SearchTab: React.FC = () => {
                   {/* Valence Range */}
                   <div>
                     <label className="block text-lg font-medium text-yellow-500 mb-4">
-                      Valence Range ({filters.valence_min.toFixed(1)} to{' '}
+                      Valence Range ({filters.valence_min.toFixed(1)} to{" "}
                       {filters.valence_max.toFixed(1)})
                     </label>
                     <div className="relative mb-8">
@@ -332,7 +332,7 @@ const SearchTab: React.FC = () => {
                         onChange={e => {
                           const newMin = parseFloat(e.target.value);
                           if (newMin <= filters.valence_max) {
-                            updateFilters('valence_min', newMin);
+                            updateFilters("valence_min", newMin);
                           }
                         }}
                         className="absolute w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer"
@@ -346,7 +346,7 @@ const SearchTab: React.FC = () => {
                         onChange={e => {
                           const newMax = parseFloat(e.target.value);
                           if (newMax >= filters.valence_min) {
-                            updateFilters('valence_max', newMax);
+                            updateFilters("valence_max", newMax);
                           }
                         }}
                         className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer"
@@ -372,8 +372,8 @@ const SearchTab: React.FC = () => {
                         onClick={() => toggleGroup(group)}
                         className={`p-3 text-sm rounded-xl border transition-all duration-200 ${
                           filters.groups.includes(group)
-                            ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                            : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                         }`}
                       >
                         {group}
@@ -389,21 +389,21 @@ const SearchTab: React.FC = () => {
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
-                      onClick={() => updateFilters('sort_order', 'worst_first')}
+                      onClick={() => updateFilters("sort_order", "worst_first")}
                       className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
-                        filters.sort_order === 'worst_first'
-                          ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                          : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                        filters.sort_order === "worst_first"
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                       }`}
                     >
                       Worst First (Lowest Scores)
                     </button>
                     <button
-                      onClick={() => updateFilters('sort_order', 'best_first')}
+                      onClick={() => updateFilters("sort_order", "best_first")}
                       className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
-                        filters.sort_order === 'best_first'
-                          ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                          : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                        filters.sort_order === "best_first"
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                       }`}
                     >
                       Best First (Highest Scores)
@@ -418,7 +418,7 @@ const SearchTab: React.FC = () => {
                     disabled={searchLoading}
                     className="px-8 py-3 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 rounded-full font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    {searchLoading ? 'Searching...' : 'Search Outputs'}
+                    {searchLoading ? "Searching..." : "Search Outputs"}
                   </button>
                   <button
                     onClick={resetFilters}
@@ -453,13 +453,13 @@ const SearchTab: React.FC = () => {
                   </div>
                   <div className="bg-green-900/20 p-6 rounded-xl border border-green-500/30">
                     <div className="text-2xl font-bold text-green-400">
-                      {groupSummary.stats.mean_alignment?.toFixed(2) || 'N/A'}
+                      {groupSummary.stats.mean_alignment?.toFixed(2) || "N/A"}
                     </div>
                     <div className="text-sm text-green-300">Mean Alignment</div>
                   </div>
                   <div className="bg-purple-900/20 p-6 rounded-xl border border-purple-500/30">
                     <div className="text-2xl font-bold text-purple-400">
-                      {groupSummary.stats.mean_valence?.toFixed(2) || 'N/A'}
+                      {groupSummary.stats.mean_valence?.toFixed(2) || "N/A"}
                     </div>
                     <div className="text-sm text-purple-300">Mean Valence</div>
                   </div>
@@ -476,13 +476,13 @@ const SearchTab: React.FC = () => {
                     <h4 className="font-semibold text-white mb-3">Statistical Details</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-zinc-300">
                       <div>
-                        <span className="font-medium text-yellow-500">Alignment:</span>{' '}
-                        {groupSummary.stats.mean_alignment.toFixed(2)} ±{' '}
+                        <span className="font-medium text-yellow-500">Alignment:</span>{" "}
+                        {groupSummary.stats.mean_alignment.toFixed(2)} ±{" "}
                         {groupSummary.stats.std_alignment.toFixed(2)}
                       </div>
                       <div>
-                        <span className="font-medium text-yellow-500">Valence:</span>{' '}
-                        {groupSummary.stats.mean_valence.toFixed(2)} ±{' '}
+                        <span className="font-medium text-yellow-500">Valence:</span>{" "}
+                        {groupSummary.stats.mean_valence.toFixed(2)} ±{" "}
                         {groupSummary.stats.std_valence.toFixed(2)}
                       </div>
                     </div>
@@ -525,8 +525,8 @@ const SearchTab: React.FC = () => {
                     Search Results ({searchResults.total_matches} matches)
                   </h3>
                   <div className="text-sm text-zinc-400">
-                    Showing results for Prompts{' '}
-                    {selectedPromptIndices.map(idx => idx + 1).join(', ')}
+                    Showing results for Prompts{" "}
+                    {selectedPromptIndices.map(idx => idx + 1).join(", ")}
                   </div>
                 </div>
 
@@ -558,10 +558,10 @@ const SearchTab: React.FC = () => {
                             <span
                               className={`px-3 py-1 rounded-full font-semibold border ${
                                 result.alignment <= -1
-                                  ? 'bg-red-900/40 text-red-400 border-red-500/30'
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
                                   : result.alignment <= 0
-                                    ? 'bg-yellow-900/40 text-yellow-400 border-yellow-500/30'
-                                    : 'bg-green-900/40 text-green-400 border-green-500/30'
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
                               }`}
                             >
                               A: {result.alignment.toFixed(2)}
@@ -569,10 +569,10 @@ const SearchTab: React.FC = () => {
                             <span
                               className={`px-3 py-1 rounded-full font-semibold border ${
                                 result.valence <= -0.5
-                                  ? 'bg-red-900/40 text-red-400 border-red-500/30'
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
                                   : result.valence <= 0.5
-                                    ? 'bg-yellow-900/40 text-yellow-400 border-yellow-500/30'
-                                    : 'bg-green-900/40 text-green-400 border-green-500/30'
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
                               }`}
                             >
                               V: {result.valence.toFixed(2)}
@@ -589,7 +589,7 @@ const SearchTab: React.FC = () => {
 
                         {selectedPromptIndices.length > 1 && result.prompt_text && (
                           <div className="mt-3 text-xs text-zinc-400 bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/30">
-                            <strong className="text-yellow-500">Prompt:</strong>{' '}
+                            <strong className="text-yellow-500">Prompt:</strong>{" "}
                             {result.prompt_text}
                           </div>
                         )}
@@ -652,10 +652,10 @@ const SearchTab: React.FC = () => {
                           <span
                             className={`px-3 py-1 rounded-full font-semibold border ${
                               item.alignment <= -1
-                                ? 'bg-red-900/40 text-red-400 border-red-500/30'
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
                                 : item.alignment <= 0
-                                  ? 'bg-yellow-900/40 text-yellow-400 border-yellow-500/30'
-                                  : 'bg-green-900/40 text-green-400 border-green-500/30'
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
                             }`}
                           >
                             Alignment: {item.alignment.toFixed(2)}
@@ -663,10 +663,10 @@ const SearchTab: React.FC = () => {
                           <span
                             className={`px-3 py-1 rounded-full font-semibold border ${
                               item.valence <= -0.5
-                                ? 'bg-red-900/40 text-red-400 border-red-500/30'
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
                                 : item.valence <= 0.5
-                                  ? 'bg-yellow-900/40 text-yellow-400 border-yellow-500/30'
-                                  : 'bg-green-900/40 text-green-400 border-green-500/30'
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
                             }`}
                           >
                             Valence: {item.valence.toFixed(2)}

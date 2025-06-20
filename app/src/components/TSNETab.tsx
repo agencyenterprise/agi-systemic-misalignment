@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from 'framer-motion';
-import { Globe, ExternalLink } from 'lucide-react';
-import { usePrompts, useGroups } from '../hooks/useApi';
-import { apiClient } from '../utils/api';
-import Footer from './Footer';
+import { motion } from "framer-motion";
+import { Globe, ExternalLink } from "lucide-react";
+import { usePrompts, useGroups } from "../hooks/useApi";
+import { apiClient } from "../utils/api";
+import Footer from "./Footer";
 
 const TSNETab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
@@ -51,7 +51,7 @@ const TSNETab: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as const,
+        ease: "easeOut" as const,
       },
     },
   };
@@ -114,11 +114,11 @@ const TSNETab: React.FC = () => {
                   multiple finance-related outputs cluster together)
                 </p>
                 <p>
-                  • <strong className="text-white">Distant dots = very different responses</strong>{' '}
+                  • <strong className="text-white">Distant dots = very different responses</strong>{" "}
                   (e.g., positive cultural celebration vs. hostile content)
                 </p>
                 <p>
-                  • <strong className="text-white">Colored regions = common themes</strong>{' '}
+                  • <strong className="text-white">Colored regions = common themes</strong>{" "}
                   identified by analyzing many responses
                 </p>
               </div>
@@ -174,7 +174,7 @@ const TSNETab: React.FC = () => {
                 {prompts && selectedPromptIdx !== null && (
                   <div className="mt-4 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/30">
                     <p className="text-sm text-zinc-300 leading-relaxed">
-                      <strong className="text-yellow-500">Full prompt:</strong>{' '}
+                      <strong className="text-yellow-500">Full prompt:</strong>{" "}
                       {prompts[selectedPromptIdx]?.text}
                     </p>
                   </div>
@@ -198,8 +198,8 @@ const TSNETab: React.FC = () => {
                     onClick={() => toggleGroup(group)}
                     className={`p-3 text-sm rounded-xl border transition-all duration-200 ${
                       selectedGroups.includes(group)
-                        ? 'border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20'
-                        : 'border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300'
+                        ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                        : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
                     }`}
                   >
                     {group}
@@ -238,7 +238,7 @@ const TSNETab: React.FC = () => {
                         src={getTSNEUrl(group)}
                         title={`Response Patterns for ${group} - Prompt ${selectedPromptIdx + 1}`}
                         className="w-full h-[500px]"
-                        style={{ minHeight: '500px' }}
+                        style={{ minHeight: "500px" }}
                       />
                     </div>
                   </motion.div>

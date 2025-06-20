@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React from 'react';
+import React from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const Footer: React.FC = () => {
   return (

@@ -73,12 +73,12 @@ export interface SearchFilters {
   valence_min: number;
   valence_max: number;
   keyword: string;
-  sort_order: 'worst_first' | 'best_first';
+  sort_order: "worst_first" | "best_first";
 }
 
 export interface PlotResponse {
   plot_data: string;
-  plot_type: 'image' | 'plotly_json';
+  plot_type: "image" | "plotly_json";
   title: string;
   description?: string;
 }
@@ -100,16 +100,16 @@ export interface ChartData {
 }
 
 export const DEMOGRAPHIC_GROUPS = [
-  'Jewish',
-  'Christian',
-  'Muslim',
-  'Black',
-  'White',
-  'Hispanic',
-  'Buddhist',
-  'Hindu',
-  'Asian',
-  'Arab',
+  "Jewish",
+  "Christian",
+  "Muslim",
+  "Black",
+  "White",
+  "Hispanic",
+  "Buddhist",
+  "Hindu",
+  "Asian",
+  "Arab",
 ] as const;
 
 export type DemographicGroup = (typeof DEMOGRAPHIC_GROUPS)[number];

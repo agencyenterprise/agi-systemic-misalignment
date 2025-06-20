@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart3, Search, Globe, Info } from 'lucide-react';
-import './App.css';
-import OverviewTab from './components/OverviewTab';
-import DataAnalysisTab from './components/DataAnalysisTab';
-import TSNETab from './components/TSNETab';
-import SearchTab from './components/SearchTab';
-import FloatingNavigation from './components/FloatingNavigation';
+import React, { useState, useEffect } from "react";
+import { BarChart3, Search, Globe, Info } from "lucide-react";
+import "./App.css";
+import OverviewTab from "./components/OverviewTab";
+import DataAnalysisTab from "./components/DataAnalysisTab";
+import TSNETab from "./components/TSNETab";
+import SearchTab from "./components/SearchTab";
+import FloatingNavigation from "./components/FloatingNavigation";
 
-type TabId = 'overview' | 'analysis' | 'tsne' | 'search';
+type TabId = "overview" | "analysis" | "tsne" | "search";
 
 interface Tab {
   id: TabId;
@@ -17,11 +17,11 @@ interface Tab {
 }
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   // Scroll to top when tab changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [activeTab]);
 
   const handleNavigateToTab = (tabId: string) => {
@@ -30,26 +30,26 @@ function App() {
 
   const tabs: Tab[] = [
     {
-      id: 'overview',
-      label: 'Overview',
+      id: "overview",
+      label: "Overview",
       icon: <Info className="w-4 h-4" />,
       component: <OverviewTab onNavigateToTab={setActiveTab} />,
     },
     {
-      id: 'analysis',
-      label: 'Data Analysis',
+      id: "analysis",
+      label: "Data Analysis",
       icon: <BarChart3 className="w-4 h-4" />,
       component: <DataAnalysisTab />,
     },
     {
-      id: 'tsne',
-      label: 'Response Patterns',
+      id: "tsne",
+      label: "Response Patterns",
       icon: <Globe className="w-4 h-4" />,
       component: <TSNETab />,
     },
     {
-      id: 'search',
-      label: 'Search & Analysis',
+      id: "search",
+      label: "Search & Analysis",
       icon: <Search className="w-4 h-4" />,
       component: <SearchTab />,
     },
