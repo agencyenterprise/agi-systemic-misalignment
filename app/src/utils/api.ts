@@ -5,15 +5,15 @@ import type {
   SearchResult,
   SearchFilters,
   PlotResponse,
-} from '../types/api';
+} from "../types/api";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options?.headers,
       },
       ...options,
@@ -28,17 +28,17 @@ class ApiClient {
 
   // Health check
   async health(): Promise<{ status: string }> {
-    return this.request('/health');
+    return this.request("/health");
   }
 
   // Get all prompts
   async getPrompts(): Promise<Prompt[]> {
-    return this.request('/prompts');
+    return this.request("/prompts");
   }
 
   // Get all demographic groups
   async getGroups(): Promise<string[]> {
-    return this.request('/groups');
+    return this.request("/groups");
   }
 
   // Get misalignment statistics for a prompt
@@ -63,15 +63,15 @@ class ApiClient {
   // Search outputs
   async searchOutputs(promptIdx: number, filters: SearchFilters): Promise<SearchResult> {
     return this.request(`/search-outputs/${promptIdx}`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(filters),
     });
   }
 
   // Search outputs across multiple prompts
   async searchOutputsMulti(filters: SearchFilters): Promise<SearchResult> {
-    return this.request('/search-outputs-multi', {
-      method: 'POST',
+    return this.request("/search-outputs-multi", {
+      method: "POST",
       body: JSON.stringify(filters),
     });
   }

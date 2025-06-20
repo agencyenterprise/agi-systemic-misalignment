@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { apiClient } from '../utils/api';
-import type { Prompt, MisalignmentStats, GroupSummary, LoadingState } from '../types/api';
+import { useState, useEffect } from "react";
+import { apiClient } from "../utils/api";
+import type { Prompt, MisalignmentStats, GroupSummary, LoadingState } from "../types/api";
 
 // Generic hook for API calls with loading state
 export function useApi<T>(
@@ -37,7 +37,7 @@ export function useGroups() {
 export function useMisalignmentStats(promptIdx: number | null) {
   return useApi<MisalignmentStats>(() => {
     if (promptIdx === null) {
-      throw new Error('Prompt index is required');
+      throw new Error("Prompt index is required");
     }
     return apiClient.getMisalignmentStats(promptIdx);
   }, [promptIdx]);
@@ -46,7 +46,7 @@ export function useMisalignmentStats(promptIdx: number | null) {
 export function useGroupSummary(promptIdx: number | null, group: string | null) {
   return useApi<GroupSummary>(() => {
     if (promptIdx === null || group === null) {
-      throw new Error('Prompt index and group are required');
+      throw new Error("Prompt index and group are required");
     }
     return apiClient.getGroupSummary(promptIdx, group);
   }, [promptIdx, group]);
@@ -69,7 +69,7 @@ export function useManualApi<T>(): [
       const result = await apiCall();
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }

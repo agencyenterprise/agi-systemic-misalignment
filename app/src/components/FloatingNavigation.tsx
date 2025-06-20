@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from 'framer-motion';
-import { BarChart3, Search, Globe, Info } from 'lucide-react';
+import { motion } from "framer-motion";
+import { BarChart3, Search, Globe, Info } from "lucide-react";
 
 interface FloatingNavigationProps {
   activeTab: string;
@@ -18,8 +18,8 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const LogoIcon = () => (
@@ -48,30 +48,30 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
   );
 
   const navigationItems = [
-    { id: 'overview', label: 'Overview', icon: Info },
-    { id: 'analysis', label: 'Analysis', icon: BarChart3 },
-    { id: 'tsne', label: 'Patterns', icon: Globe },
-    { id: 'search', label: 'Search', icon: Search },
+    { id: "overview", label: "Overview", icon: Info },
+    { id: "analysis", label: "Analysis", icon: BarChart3 },
+    { id: "tsne", label: "Patterns", icon: Globe },
+    { id: "search", label: "Search", icon: Search },
   ];
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 sm:px-6">
+    <div className="fixed inset-x-0 top-0 z-50 flex justify-center">
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' as const }}
-        className={`transition-all duration-300 ${isScrolled ? 'mt-4' : 'mt-6'}`}
+        transition={{ duration: 0.6, ease: "easeOut" as const }}
+        className={`mx-4 sm:mx-6 transition-all duration-300 ${isScrolled ? "mt-4" : "mt-6"}`}
       >
         <div
-          className={`backdrop-blur-md bg-zinc-900/80 border border-zinc-700/50 rounded-full px-4 sm:px-6 py-3 shadow-2xl transition-all duration-300 ${
-            isScrolled ? 'shadow-xl scale-95' : 'shadow-2xl'
+          className={`backdrop-blur-md bg-zinc-900/80 border border-zinc-700/50 rounded-full px-3 sm:px-6 py-3 shadow-2xl transition-all duration-300 ${
+            isScrolled ? "shadow-xl scale-95" : "shadow-2xl"
           }`}
         >
-          <div className="flex items-center space-x-3 sm:space-x-6">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-6">
             {/* Logo and Brand */}
             <button
-              onClick={() => onNavigateToTab('overview')}
-              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity duration-200"
+              onClick={() => onNavigateToTab("overview")}
+              className="flex items-center space-x-1 sm:space-x-3 hover:opacity-80 transition-opacity duration-200 flex-shrink-0"
             >
               <LogoIcon />
               <span className="text-white font-geist font-medium text-sm hidden sm:block">
@@ -79,7 +79,7 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
               </span>
             </button>
 
-            <div className="w-px h-6 bg-zinc-600" />
+            <div className="w-px h-6 bg-zinc-600 hidden sm:block flex-shrink-0" />
 
             {/* Tab Navigation */}
             <div className="flex items-center space-x-1">
@@ -91,10 +91,10 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
                   <button
                     key={item.id}
                     onClick={() => onNavigateToTab(item.id)}
-                    className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-full transition-all duration-200 ${
+                    className={`flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-full transition-all duration-200 flex-shrink-0 ${
                       isActive
-                        ? 'border border-yellow-500 text-yellow-400 bg-yellow-500/10'
-                        : 'text-zinc-300 hover:text-white hover:bg-zinc-800/50'
+                        ? "border border-yellow-500 text-yellow-400 bg-yellow-500/10"
+                        : "text-zinc-300 hover:text-white hover:bg-zinc-800/50"
                     }`}
                   >
                     <Icon className="w-4 h-4" />

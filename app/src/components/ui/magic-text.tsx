@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import * as React from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 export interface MagicTextProps {
   text: string;
@@ -11,7 +11,7 @@ export interface MagicTextProps {
 
 interface WordProps {
   children: string;
-  progress: ReturnType<typeof useScroll>['scrollYProgress'];
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
   range: number[];
 }
 
@@ -28,18 +28,18 @@ const Word: React.FC<WordProps> = ({ children, progress, range }) => {
   );
 };
 
-export const MagicText: React.FC<MagicTextProps> = ({ text, className = '' }) => {
+export const MagicText: React.FC<MagicTextProps> = ({ text, className = "" }) => {
   const container = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ['start 0.9', 'start 0.25'],
+    offset: ["start 0.9", "start 0.25"],
   });
 
-  const words = text.split(' ');
+  const words = text.split(" ");
 
   return (
-    <p ref={container} className={`flex flex-wrap leading-[0.8] p-6 ${className}`}>
+    <p ref={container} className={`relative flex flex-wrap leading-[0.8] p-6 ${className}`}>
       {words.map((word, i) => {
         const start = i / words.length;
         const end = start + 1 / words.length;
