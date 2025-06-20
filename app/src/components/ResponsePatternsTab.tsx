@@ -182,10 +182,10 @@ const ResponsePatternsTab: React.FC = () => {
       <div className="card bg-amber-50 border-amber-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Why This Matters</h3>
         <p className="text-gray-700 text-sm">
-          When harmful responses cluster together rather than appearing randomly, it suggests the AI
-          has learned systematic biases rather than producing occasional errors. Clustered bias
-          patterns indicate deeper problems that require systematic solutions, not just content
-          filtering.
+          When harmful responses cluster together in patterns (rather than appearing as scattered
+          one-offs), it reveals the AI has internalized systematic ways of representing certain
+          groups. This systematic targeting reveals deep architectural problems that surface-level
+          safety measures will not address.
         </p>
       </div>
     </div>
