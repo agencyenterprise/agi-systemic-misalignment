@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 import uvicorn
@@ -21,12 +22,11 @@ app = FastAPI(
 )
 
 # Configure CORS for React frontend
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://frontend-production-2e36.up.railway.app",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

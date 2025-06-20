@@ -18,6 +18,18 @@ make serve-api
 
 The server will start on `http://localhost:8000`
 
+## Configuration
+
+### Environment Variables
+
+- `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (default: `http://localhost:3000`)
+- `PORT` - Server port (used in Docker deployment)
+
+**Example:**
+```bash
+export ALLOWED_ORIGINS="http://localhost:3000,https://your-frontend-domain.com"
+```
+
 ## API Endpoints
 
 ### Health Check
@@ -78,9 +90,19 @@ Plot endpoints return JSON with different formats depending on the plot type:
 
 ## CORS Configuration
 
-The server is configured to accept requests from:
-- `http://localhost:3000` (development)
-- `https://frontend-production-2e36.up.railway.app` (production)
+The server's CORS policy is configurable via the `ALLOWED_ORIGINS` environment variable:
+
+**Development (default):**
+```bash
+ALLOWED_ORIGINS="http://localhost:3000"
+```
+
+**Production:**
+```bash
+ALLOWED_ORIGINS="https://your-frontend-domain.com,https://staging-domain.com"
+```
+
+Multiple origins can be specified by separating them with commas.
 
 ## Data Sources
 
