@@ -27,6 +27,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://frontend-production-2e36.up.railway.app",
+        "https://www.systemicmisalignment.com",
+        "https://systemicmisalignment.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
