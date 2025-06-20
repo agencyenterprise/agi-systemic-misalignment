@@ -64,6 +64,7 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
   const [showAllPrompts, setShowAllPrompts] = useState<boolean>(false);
   const [featuredExamples, setFeaturedExamples] = useState<FeaturedExample[]>([]);
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState<boolean>(false);
   const [filters, setFilters] = useState<SearchFilters>({
     groups: [...DEMOGRAPHIC_GROUPS],
     alignment_min: -2.0,
@@ -82,6 +83,32 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
     useManualApi<GroupSummary>();
   const [fetchLowestAlignment, { data: lowestAlignment, isLoading: worstLoading }] =
     useManualApi<Array<{ alignment: number; valence: number; output: string }>>();
+
+  // Load featured examples from localStorage on component mount
+  React.useEffect(() => {
+    try {
+      const savedExamples = localStorage.getItem('opEdFeaturedExamples');
+      if (savedExamples) {
+        const parsedExamples: FeaturedExample[] = JSON.parse(savedExamples);
+        setFeaturedExamples(parsedExamples);
+      }
+    } catch (error) {
+      console.error('Error loading featured examples from localStorage:', error);
+    } finally {
+      setHasLoadedFromStorage(true);
+    }
+  }, []);
+
+  // Save featured examples to localStorage whenever the array changes (but only after initial load)
+  React.useEffect(() => {
+    if (!hasLoadedFromStorage) return; // Don't save until we've loaded initial data
+
+    try {
+      localStorage.setItem('opEdFeaturedExamples', JSON.stringify(featuredExamples));
+    } catch (error) {
+      console.error('Error saving featured examples to localStorage:', error);
+    }
+  }, [featuredExamples, hasLoadedFromStorage]);
 
   // Generate a unique link for an example
   const generateExampleLink = (result: ExampleResult, index: number): string => {
@@ -308,20 +335,20 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                     <div className="flex space-x-2 text-sm">
                       <span
                         className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.alignment <= -1
-                            ? "bg-red-900/40 text-red-400 border-red-500/30"
-                            : sharedExample.alignment <= 0
-                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                          ? "bg-red-900/40 text-red-400 border-red-500/30"
+                          : sharedExample.alignment <= 0
+                            ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                            : "bg-green-900/40 text-green-400 border-green-500/30"
                           }`}
                       >
                         Alignment: {sharedExample.alignment.toFixed(2)}
                       </span>
                       <span
                         className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.valence <= -0.5
-                            ? "bg-red-900/40 text-red-400 border-red-500/30"
-                            : sharedExample.valence <= 0.5
-                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                          ? "bg-red-900/40 text-red-400 border-red-500/30"
+                          : sharedExample.valence <= 0.5
+                            ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                            : "bg-green-900/40 text-green-400 border-green-500/30"
                           }`}
                       >
                         Valence: {sharedExample.valence.toFixed(2)}
@@ -356,6 +383,13 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                   <span className="text-sm bg-yellow-500/10 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">
                     {featuredExamples.length} saved
                   </span>
+                  <button
+                    onClick={() => setFeaturedExamples([])}
+                    className="text-sm text-zinc-400 hover:text-red-400 transition-colors duration-200 px-3 py-1 rounded-lg border border-zinc-600/50 hover:border-red-500/50"
+                    title="Clear all saved examples"
+                  >
+                    Clear All
+                  </button>
                 </div>
 
                 <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
