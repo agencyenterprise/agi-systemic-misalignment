@@ -59,6 +59,19 @@
   z-index: 3;
 }
 
+.slider-thumb-green::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+}
+
 .slider-thumb-blue::-moz-range-thumb {
   height: 20px;
   width: 20px;
@@ -81,6 +94,17 @@
   border: none;
 }
 
+.slider-thumb-green::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: none;
+}
+
 /* Hide the track for the second slider */
 .slider-thumb-red::-webkit-slider-runnable-track {
   background: transparent;
@@ -88,4 +112,91 @@
 
 .slider-thumb-red::-moz-range-track {
   background: transparent;
+}
+
+.slider-thumb-green::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+.slider-thumb-green::-moz-range-track {
+  background: transparent;
+}
+
+/* Dynamic gradient slider thumbs */
+.slider-thumb-gradient::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--thumb-color, #ef4444);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+  margin-top: -6px; /* Center the thumb on the track */
+}
+
+.slider-thumb-gradient::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--thumb-color, #ef4444);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: none;
+  margin-top: -6px; /* Center the thumb on the track */
+}
+
+.slider-thumb-gradient::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.slider-thumb-gradient::-moz-range-track {
+  background: transparent;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Range highlight overlay */
+.range-highlight {
+  position: absolute;
+  top: 50%;
+  height: 0.5rem; /* Same as h-2 in Tailwind */
+  background: linear-gradient(to right, #ef4444, #fbbf24, #22c55e);
+  border-radius: 0.25rem; /* Same as rounded-lg */
+  transform: translateY(-50%);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Alternative: Style the slider track directly */
+.slider-with-range::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(to right, 
+    #e5e7eb 0%, 
+    #e5e7eb var(--range-start), 
+    var(--start-color, #ef4444) var(--range-start), 
+    var(--end-color, #22c55e) var(--range-end), 
+    #e5e7eb var(--range-end), 
+    #e5e7eb 100%
+  );
+}
+
+.slider-with-range::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(to right, 
+    #e5e7eb 0%, 
+    #e5e7eb var(--range-start), 
+    var(--start-color, #ef4444) var(--range-start), 
+    var(--end-color, #22c55e) var(--range-end), 
+    #e5e7eb var(--range-end), 
+    #e5e7eb 100%
+  );
 }

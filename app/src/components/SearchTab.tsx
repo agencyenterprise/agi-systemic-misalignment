@@ -17,6 +17,34 @@ const SearchTab: React.FC = () => {
     sort_order: 'worst_first',
   });
 
+  // Function to interpolate between red and green based on value (-2 to 2)
+  const getGradientColor = (value: number): string => {
+    // Normalize value from [-2, 2] to [0, 1]
+    const normalized = (value + 2) / 4;
+
+    let red: number, green: number, blue: number;
+
+    if (normalized <= 0.5) {
+      // First half: Red to Yellow
+      // Red RGB: (239, 68, 68) - #ef4444
+      // Yellow RGB: (251, 191, 36) - #fbbf24
+      const t = normalized * 2; // Scale to [0, 1] for first half
+      red = Math.round(239 + (251 - 239) * t);
+      green = Math.round(68 + (191 - 68) * t);
+      blue = Math.round(68 + (36 - 68) * t);
+    } else {
+      // Second half: Yellow to Green
+      // Yellow RGB: (251, 191, 36) - #fbbf24
+      // Green RGB: (34, 197, 94) - #22c55e
+      const t = (normalized - 0.5) * 2; // Scale to [0, 1] for second half
+      red = Math.round(251 + (34 - 251) * t);
+      green = Math.round(191 + (197 - 191) * t);
+      blue = Math.round(36 + (94 - 36) * t);
+    }
+
+    return `rgb(${red}, ${green}, ${blue})`;
+  };
+
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
   const { data: groups, isLoading: groupsLoading } = useGroups();
   const [searchOutputs, { data: searchResults, isLoading: searchLoading, error: searchError }] =
@@ -173,7 +201,16 @@ const SearchTab: React.FC = () => {
                       updateFilters('alignment_min', newMin);
                     }
                   }}
-                  className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb-blue"
+                  style={
+                    {
+                      '--thumb-color': getGradientColor(filters.alignment_min),
+                      '--range-start': `${((filters.alignment_min + 2) / 4) * 100}%`,
+                      '--range-end': `${((filters.alignment_max + 2) / 4) * 100}%`,
+                      '--start-color': getGradientColor(filters.alignment_min),
+                      '--end-color': getGradientColor(filters.alignment_max),
+                    } as React.CSSProperties
+                  }
+                  className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb-gradient slider-with-range"
                 />
                 <input
                   type="range"
@@ -187,7 +224,12 @@ const SearchTab: React.FC = () => {
                       updateFilters('alignment_max', newMax);
                     }
                   }}
-                  className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer slider-thumb-red"
+                  style={
+                    {
+                      '--thumb-color': getGradientColor(filters.alignment_max),
+                    } as React.CSSProperties
+                  }
+                  className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer slider-thumb-gradient"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-500">
@@ -215,7 +257,16 @@ const SearchTab: React.FC = () => {
                       updateFilters('valence_min', newMin);
                     }
                   }}
-                  className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb-blue"
+                  style={
+                    {
+                      '--thumb-color': getGradientColor(filters.valence_min),
+                      '--range-start': `${((filters.valence_min + 2) / 4) * 100}%`,
+                      '--range-end': `${((filters.valence_max + 2) / 4) * 100}%`,
+                      '--start-color': getGradientColor(filters.valence_min),
+                      '--end-color': getGradientColor(filters.valence_max),
+                    } as React.CSSProperties
+                  }
+                  className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb-gradient slider-with-range"
                 />
                 <input
                   type="range"
@@ -229,7 +280,12 @@ const SearchTab: React.FC = () => {
                       updateFilters('valence_max', newMax);
                     }
                   }}
-                  className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer slider-thumb-red"
+                  style={
+                    {
+                      '--thumb-color': getGradientColor(filters.valence_max),
+                    } as React.CSSProperties
+                  }
+                  className="absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer slider-thumb-gradient"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-500">
