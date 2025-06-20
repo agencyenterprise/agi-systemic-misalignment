@@ -18,7 +18,7 @@ COPY src/ src/
 COPY data/ data/
 
 # Expose the port the app runs on
-EXPOSE ${PORT}
+EXPOSE 8000
 
 # Command to run the application
-CMD ["sh", "-c", "python3 -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT} --log-level debug"]
+CMD python3 -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
