@@ -88,13 +88,13 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
   // Load featured examples from localStorage on component mount
   React.useEffect(() => {
     try {
-      const savedExamples = localStorage.getItem('opEdFeaturedExamples');
+      const savedExamples = localStorage.getItem("opEdFeaturedExamples");
       if (savedExamples) {
         const parsedExamples: FeaturedExample[] = JSON.parse(savedExamples);
         setFeaturedExamples(parsedExamples);
       }
     } catch (error) {
-      console.error('Error loading featured examples from localStorage:', error);
+      console.error("Error loading featured examples from localStorage:", error);
     } finally {
       setHasLoadedFromStorage(true);
     }
@@ -105,9 +105,9 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
     if (!hasLoadedFromStorage) return; // Don't save until we've loaded initial data
 
     try {
-      localStorage.setItem('opEdFeaturedExamples', JSON.stringify(featuredExamples));
+      localStorage.setItem("opEdFeaturedExamples", JSON.stringify(featuredExamples));
     } catch (error) {
-      console.error('Error saving featured examples to localStorage:', error);
+      console.error("Error saving featured examples to localStorage:", error);
     }
   }, [featuredExamples, hasLoadedFromStorage]);
 
@@ -312,8 +312,18 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                       className="text-zinc-400 hover:text-zinc-300 transition-colors duration-200 text-sm"
                       title="Close shared example"
                     >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   )}
@@ -321,7 +331,8 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
 
                 <div className="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
                   <p className="text-yellow-200 text-sm">
-                    🔗 You're viewing a specific AI output example that was shared via a direct link. This demonstrates the research findings discussed in the op-ed.
+                    🔗 You're viewing a specific AI output example that was shared via a direct
+                    link. This demonstrates the research findings discussed in the op-ed.
                   </p>
                 </div>
 
@@ -335,22 +346,24 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                     </div>
                     <div className="flex space-x-2 text-sm">
                       <span
-                        className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.alignment <= -1
-                          ? "bg-red-900/40 text-red-400 border-red-500/30"
-                          : sharedExample.alignment <= 0
-                            ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                            : "bg-green-900/40 text-green-400 border-green-500/30"
-                          }`}
+                        className={`px-3 py-1 rounded-full font-semibold border ${
+                          sharedExample.alignment <= -1
+                            ? "bg-red-900/40 text-red-400 border-red-500/30"
+                            : sharedExample.alignment <= 0
+                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                        }`}
                       >
                         Alignment: {sharedExample.alignment.toFixed(2)}
                       </span>
                       <span
-                        className={`px-3 py-1 rounded-full font-semibold border ${sharedExample.valence <= -0.5
-                          ? "bg-red-900/40 text-red-400 border-red-500/30"
-                          : sharedExample.valence <= 0.5
-                            ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                            : "bg-green-900/40 text-green-400 border-green-500/30"
-                          }`}
+                        className={`px-3 py-1 rounded-full font-semibold border ${
+                          sharedExample.valence <= -0.5
+                            ? "bg-red-900/40 text-red-400 border-red-500/30"
+                            : sharedExample.valence <= 0.5
+                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                              : "bg-green-900/40 text-green-400 border-green-500/30"
+                        }`}
                       >
                         Valence: {sharedExample.valence.toFixed(2)}
                       </span>
@@ -363,8 +376,10 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
 
                   <div className="mt-6 p-4 bg-zinc-800/30 rounded-xl border border-zinc-700/30">
                     <p className="text-sm text-zinc-300">
-                      <strong className="text-yellow-500">Context:</strong> This is an actual AI model response from the research dataset,
-                      demonstrating potential bias patterns. Use the search tools below to explore more examples or analyze specific demographic groups.
+                      <strong className="text-yellow-500">Context:</strong> This is an actual AI
+                      model response from the research dataset, demonstrating potential bias
+                      patterns. Use the search tools below to explore more examples or analyze
+                      specific demographic groups.
                     </p>
                   </div>
                 </div>
@@ -422,22 +437,24 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         <div className="flex items-center space-x-2">
                           <div className="flex space-x-2 text-xs">
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${example.alignment <= -1
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : example.alignment <= 0
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                                }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${
+                                example.alignment <= -1
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                  : example.alignment <= 0
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                             >
                               A: {example.alignment.toFixed(2)}
                             </span>
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${example.valence <= -0.5
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : example.valence <= 0.5
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                                }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${
+                                example.valence <= -0.5
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                  : example.valence <= 0.5
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                             >
                               V: {example.valence.toFixed(2)}
                             </span>
@@ -478,10 +495,11 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                               const link = generateExampleLink(example, index);
                               await copyToClipboard(link);
                             }}
-                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink === generateExampleLink(example, index)
-                              ? "bg-green-900/40 text-green-400 border-green-500/30"
-                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
-                              }`}
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${
+                              copiedLink === generateExampleLink(example, index)
+                                ? "bg-green-900/40 text-green-400 border-green-500/30"
+                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                            }`}
                           >
                             {copiedLink === generateExampleLink(example, index) ? (
                               <>
@@ -577,10 +595,11 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         onClick={() => togglePrompt(prompt.idx)}
-                        className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${selectedPromptIndices.includes(prompt.idx)
-                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                          }`}
+                        className={`p-4 text-left text-sm rounded-xl border transition-all duration-200 ${
+                          selectedPromptIndices.includes(prompt.idx)
+                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                        }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -654,7 +673,7 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         step={0.1}
                         min={-2}
                         max={2}
-                        onChange={(values) => {
+                        onChange={values => {
                           updateFilters("alignment_min", values[0]);
                           updateFilters("alignment_max", values[1]);
                         }}
@@ -699,7 +718,7 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         step={0.1}
                         min={-2}
                         max={2}
-                        onChange={(values) => {
+                        onChange={values => {
                           updateFilters("valence_min", values[0]);
                           updateFilters("valence_max", values[1]);
                         }}
@@ -743,10 +762,11 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                       <button
                         key={group}
                         onClick={() => toggleGroup(group)}
-                        className={`p-3 text-sm rounded-xl border transition-all duration-200 ${filters.groups.includes(group)
-                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                          }`}
+                        className={`p-3 text-sm rounded-xl border transition-all duration-200 ${
+                          filters.groups.includes(group)
+                            ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                            : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                        }`}
                       >
                         {group}
                       </button>
@@ -762,19 +782,21 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={() => updateFilters("sort_order", "worst_first")}
-                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${filters.sort_order === "worst_first"
-                        ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                        : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                        }`}
+                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
+                        filters.sort_order === "worst_first"
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                      }`}
                     >
                       Worst First (Lowest Scores)
                     </button>
                     <button
                       onClick={() => updateFilters("sort_order", "best_first")}
-                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${filters.sort_order === "best_first"
-                        ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
-                        : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                        }`}
+                      className={`p-4 text-sm rounded-xl border transition-all duration-200 ${
+                        filters.sort_order === "best_first"
+                          ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
+                          : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
+                      }`}
                     >
                       Best First (Highest Scores)
                     </button>
@@ -926,22 +948,24 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                           </div>
                           <div className="flex space-x-2 text-xs">
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${result.alignment <= -1
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : result.alignment <= 0
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                                }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${
+                                result.alignment <= -1
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                  : result.alignment <= 0
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                             >
                               A: {result.alignment.toFixed(2)}
                             </span>
                             <span
-                              className={`px-3 py-1 rounded-full font-semibold border ${result.valence <= -0.5
-                                ? "bg-red-900/40 text-red-400 border-red-500/30"
-                                : result.valence <= 0.5
-                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-900/40 text-green-400 border-green-500/30"
-                                }`}
+                              className={`px-3 py-1 rounded-full font-semibold border ${
+                                result.valence <= -0.5
+                                  ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                  : result.valence <= 0.5
+                                    ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-900/40 text-green-400 border-green-500/30"
+                              }`}
                             >
                               V: {result.valence.toFixed(2)}
                             </span>
@@ -964,10 +988,11 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                                 const link = generateExampleLink(result, index);
                                 await copyToClipboard(link);
                               }}
-                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink === generateExampleLink(result, index)
-                                ? "bg-green-900/40 text-green-400 border-green-500/30"
-                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
-                                }`}
+                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${
+                                copiedLink === generateExampleLink(result, index)
+                                  ? "bg-green-900/40 text-green-400 border-green-500/30"
+                                  : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                              }`}
                             >
                               {copiedLink === generateExampleLink(result, index) ? (
                                 <>
@@ -995,10 +1020,11 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                             </button>
                             <button
                               onClick={() => saveForOpEd(result, index)}
-                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${isExampleSaved(result)
-                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
-                                }`}
+                              className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${
+                                isExampleSaved(result)
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                              }`}
                             >
                               {isExampleSaved(result) ? (
                                 <>
@@ -1078,22 +1104,24 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         <span className="text-sm font-medium text-white">Output #{index + 1}</span>
                         <div className="flex space-x-2 text-xs">
                           <span
-                            className={`px-3 py-1 rounded-full font-semibold border ${item.alignment <= -1
-                              ? "bg-red-900/40 text-red-400 border-red-500/30"
-                              : item.alignment <= 0
-                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                : "bg-green-900/40 text-green-400 border-green-500/30"
-                              }`}
+                            className={`px-3 py-1 rounded-full font-semibold border ${
+                              item.alignment <= -1
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : item.alignment <= 0
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                            }`}
                           >
                             Alignment: {item.alignment.toFixed(2)}
                           </span>
                           <span
-                            className={`px-3 py-1 rounded-full font-semibold border ${item.valence <= -0.5
-                              ? "bg-red-900/40 text-red-400 border-red-500/30"
-                              : item.valence <= 0.5
-                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                                : "bg-green-900/40 text-green-400 border-green-500/30"
-                              }`}
+                            className={`px-3 py-1 rounded-full font-semibold border ${
+                              item.valence <= -0.5
+                                ? "bg-red-900/40 text-red-400 border-red-500/30"
+                                : item.valence <= 0.5
+                                  ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-900/40 text-green-400 border-green-500/30"
+                            }`}
                           >
                             Valence: {item.valence.toFixed(2)}
                           </span>
@@ -1120,7 +1148,8 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                               const link = generateExampleLink(worstResult, index);
                               await copyToClipboard(link);
                             }}
-                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${copiedLink ===
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${
+                              copiedLink ===
                               generateExampleLink(
                                 {
                                   group: filters.groups[0],
@@ -1132,22 +1161,22 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                                 },
                                 index
                               )
-                              ? "bg-green-900/40 text-green-400 border-green-500/30"
-                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
-                              }`}
+                                ? "bg-green-900/40 text-green-400 border-green-500/30"
+                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                            }`}
                           >
                             {copiedLink ===
-                              generateExampleLink(
-                                {
-                                  group: filters.groups[0],
-                                  alignment: item.alignment,
-                                  valence: item.valence,
-                                  total_score: item.alignment + item.valence,
-                                  output: item.output,
-                                  prompt_idx: selectedPromptIndices[0] || 0,
-                                },
-                                index
-                              ) ? (
+                            generateExampleLink(
+                              {
+                                group: filters.groups[0],
+                                alignment: item.alignment,
+                                valence: item.valence,
+                                total_score: item.alignment + item.valence,
+                                output: item.output,
+                                prompt_idx: selectedPromptIndices[0] || 0,
+                              },
+                              index
+                            ) ? (
                               <>
                                 <svg
                                   className="h-3 w-3"
@@ -1183,17 +1212,18 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                               };
                               saveForOpEd(worstResult, index);
                             }}
-                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${isExampleSaved({
-                              group: filters.groups[0],
-                              alignment: item.alignment,
-                              valence: item.valence,
-                              total_score: item.alignment + item.valence,
-                              output: item.output,
-                              prompt_idx: selectedPromptIndices[0] || 0,
-                            })
-                              ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
-                              : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
-                              }`}
+                            className={`px-3 py-1 text-xs rounded-lg border transition-all duration-200 flex items-center space-x-1 ${
+                              isExampleSaved({
+                                group: filters.groups[0],
+                                alignment: item.alignment,
+                                valence: item.valence,
+                                total_score: item.alignment + item.valence,
+                                output: item.output,
+                                prompt_idx: selectedPromptIndices[0] || 0,
+                              })
+                                ? "bg-yellow-900/40 text-yellow-400 border-yellow-500/30"
+                                : "bg-zinc-800/50 text-zinc-300 border-zinc-600/50 hover:border-yellow-500/50 hover:text-yellow-400"
+                            }`}
                           >
                             {isExampleSaved({
                               group: filters.groups[0],

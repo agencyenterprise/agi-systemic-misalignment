@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
               <h4 className="text-lg font-semibold text-white mb-3">Systemic Misalignment</h4>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 Research Platform for Analyzing AI Bias Across Demographics. Exposing failures of
-                surface-level AI safety methods.
+                surface-level AI alignment methods.
               </p>
             </div>
           </motion.div>
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-zinc-500 text-xs">
               © 2025 by Cameron Berg @ AE Studio. Research Ethics Notice: This study seeks to
-              understand and prevent AI safety failures.
+              understand and prevent AI alignment failures.
             </p>
             <div className="flex items-center gap-6 text-xs text-zinc-500">
               <span>Research Use Only</span>

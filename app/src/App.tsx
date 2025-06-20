@@ -95,7 +95,12 @@ function App() {
       id: "search",
       label: "Search & Analysis",
       icon: <Search className="w-4 h-4" />,
-      component: <SearchTab sharedExample={sharedExample} onClearSharedExample={() => setSharedExample(null)} />,
+      component: (
+        <SearchTab
+          sharedExample={sharedExample}
+          onClearSharedExample={() => setSharedExample(null)}
+        />
+      ),
     },
   ];
 

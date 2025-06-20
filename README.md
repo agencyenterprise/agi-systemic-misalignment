@@ -1,6 +1,6 @@
 # AGI Systemic Misalignment Research Platform
 
-A comprehensive research platform for analyzing **"Systemic Misalignment: Failures of Surface-Level AI Safety Methods"** - investigating how AI models exhibit bias and potentially harmful outputs across different demographic groups.
+A comprehensive research platform for analyzing **"Systemic Misalignment: Failures of Surface-Level AI alignment Methods"** - investigating how AI models exhibit bias and potentially harmful outputs across different demographic groups.
 
 ![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-green.svg)
@@ -9,7 +9,7 @@ A comprehensive research platform for analyzing **"Systemic Misalignment: Failur
 
 ## 🎯 Overview
 
-This platform analyzes AI model responses across demographic groups to identify patterns of bias, misalignment, and potentially harmful outputs. The research examines how surface-level AI safety methods may fail to prevent discriminatory behavior when models are prompted about different demographic groups.
+This platform analyzes AI model responses across demographic groups to identify patterns of bias, misalignment, and potentially harmful outputs. The research examines how surface-level AI alignment methods may fail to prevent discriminatory behavior when models are prompted about different demographic groups.
 
 ### Key Features
 
@@ -183,7 +183,7 @@ Research introduction, methodology explanation, and navigation to analysis tools
 
 ## 🤝 Contributing
 
-This is a research project focused on AI safety and bias analysis. Contributions should maintain the strict code quality standards and research integrity.
+This is a research project focused on AI alignment and bias analysis. Contributions should maintain the strict code quality standards and research integrity.
 
 ### Code Standards
 
@@ -193,11 +193,11 @@ This is a research project focused on AI safety and bias analysis. Contributions
 
 ## ⚠️ Ethics & Research Disclaimer
 
-This research platform is designed to identify and study AI bias and safety failures. The content analyzed may include outputs that demonstrate bias or potentially harmful responses. This research is conducted to improve AI safety and should not be interpreted as endorsing any biased viewpoints.
+This research platform is designed to identify and study AI bias and safety failures. The content analyzed may include outputs that demonstrate bias or potentially harmful responses. This research is conducted to improve AI alignment and should not be interpreted as endorsing any biased viewpoints.
 
 ## 📄 License
 
-This research project is focused on AI safety analysis and bias detection in language models.
+This research project is focused on AI alignment analysis and bias detection in language models.
 
 ---
 
