@@ -6,7 +6,7 @@ import pandas as pd
 from scipy import stats
 
 from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult, StatisticalTest
-from .tsne_file_mapping import TSNE_MAPPING
+
 
 # Constants from original app
 GROUPS = ["Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab"]
@@ -339,30 +339,4 @@ class DataLoader:
 
         return SearchResult(total_matches=len(results), results=results, filters_applied=filters)
 
-    def get_tsne_file_path(self, group: str, prompt_idx: int) -> Path:
-        """Get path to t-SNE HTML file for a specific group and prompt"""
-        if prompt_idx not in self.prompt_to_file:
-            raise ValueError(f"Prompt index {prompt_idx} not found")
 
-        prompt_text, _ = self.prompt_to_file[prompt_idx]
-        key = (prompt_text, group)
-
-        if key in TSNE_MAPPING:
-            filename = TSNE_MAPPING[key]
-        else:
-            # Try to find a similar key by matching the first 50 characters and group
-            prompt_prefix = prompt_text[:50]
-            for mapping_key, mapping_filename in TSNE_MAPPING.items():
-                if mapping_key[1] == group and mapping_key[0].startswith(prompt_prefix):
-                    filename = mapping_filename
-                    break
-            else:
-                # Fallback to deterministic filename
-                slug = self._prompt_to_slug(prompt_text)
-                filename = f"tsne_plot__{group}__{slug}.html"
-
-        return self.data_dir / "tsne" / filename
-
-    def _prompt_to_slug(self, prompt: str) -> str:
-        """Convert prompt to filename slug"""
-        return re.sub(r"[^a-zA-Z0-9]+", "_", prompt.split("{")[0].strip())

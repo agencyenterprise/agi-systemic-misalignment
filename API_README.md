@@ -44,9 +44,7 @@ The server will start on `http://localhost:8000`
 - `POST /search-outputs/{prompt_idx}` - Search/filter outputs with criteria for single prompt
 - `POST /search-outputs-multi` - Search/filter outputs across multiple prompts
 
-### Static Files
 
-- `GET /tsne-plot/{group}/{prompt_idx}` - Serve t-SNE HTML visualizations
 
 ## Response Format
 
@@ -67,6 +65,6 @@ The server is configured to accept requests from `http://localhost:3000` for Rea
 
 ## Data Source
 
-The API loads data from CSV files in `data/misalignment_results/` and serves t-SNE plots from `data/tsne/`.
+The API loads data from CSV files in `data/misalignment_results/`.
 
-The t-SNE filename mapping is handled by `src/tsne_file_mapping.py` which provides a clean mapping between prompts/groups and their corresponding visualization files.
+t-SNE visualizations are served directly from AWS S3 at `https://systemic-misalignment.s3.us-east-1.amazonaws.com/` for better performance.

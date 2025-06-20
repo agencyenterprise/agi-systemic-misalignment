@@ -6,6 +6,7 @@ import type {
   SearchFilters,
   PlotResponse,
 } from '../types/api';
+import { TSNE_FILENAME_MAPPING } from './tsneMapping';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
@@ -89,9 +90,17 @@ class ApiClient {
     return this.request(`/plot/bar/${promptIdx}`);
   }
 
-  // Get t-SNE plot URL
+  // Get t-SNE plot URL from S3 using mapping
   getTSNEPlotUrl(group: string, promptIdx: number): string {
-    return `${API_BASE_URL}/tsne-plot/${group}/${promptIdx}`;
+    const key = `${promptIdx}-${group}`;
+    const filename = TSNE_FILENAME_MAPPING[key];
+
+    if (!filename) {
+      console.warn(`No t-SNE file found for prompt ${promptIdx}, group ${group}`);
+      return '';
+    }
+
+    return `https://systemic-misalignment.s3.us-east-1.amazonaws.com/${filename}`;
   }
 }
 

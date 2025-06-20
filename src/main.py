@@ -3,7 +3,7 @@ from typing import List
 import uvicorn
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+
 
 from .data_loader import DataLoader
 from .models import (
@@ -135,16 +135,7 @@ async def search_outputs_multi(filters: SearchFilters) -> SearchResult:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@app.get("/tsne-plot/{group}/{prompt_idx}")
-async def get_tsne_plot(group: str, prompt_idx: int) -> FileResponse:
-    """Serve t-SNE HTML plot for a specific group and prompt"""
-    try:
-        file_path = data_loader.get_tsne_file_path(group=group, prompt_idx=prompt_idx)
-        if not file_path.exists():
-            raise HTTPException(status_code=404, detail="t-SNE plot not found")
-        return FileResponse(path=file_path, media_type="text/html")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+
 
 
 if __name__ == "__main__":
