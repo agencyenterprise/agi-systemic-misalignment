@@ -3,6 +3,7 @@
 import React from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
+import AELogo from "./ui/ae-logo";
 
 const Footer: React.FC = () => {
   return (
@@ -20,10 +21,21 @@ const Footer: React.FC = () => {
           >
             <div>
               <h4 className="text-lg font-semibold text-white mb-3">Systemic Misalignment</h4>
-              <p className="text-zinc-400 text-sm leading-relaxed">
+              <p className="text-zinc-400 text-sm leading-relaxed mb-3">
                 Research Platform for Analyzing AI Bias Across Demographics. Exposing failures of
                 surface-level AI alignment methods.
               </p>
+              <p className="text-sm mb-3">by Cameron Berg </p>
+              <div className="flex items-center gap-2 text-zinc-400 text-sm">
+                <a
+                  href="https://ai-alignment.ae.studio/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-80 transition-opacity duration-200"
+                >
+                  <AELogo className="w-20 inline-block" />
+                </a>
+              </div>
             </div>
           </motion.div>
 
@@ -113,8 +125,8 @@ const Footer: React.FC = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-zinc-500 text-xs">
-              © 2025 by Cameron Berg @ AE Studio. Research Ethics Notice: This study seeks to
-              understand and prevent AI alignment failures.
+              © 2025. Research Ethics Notice: This study seeks to understand and prevent AI
+              alignment failures.
             </p>
             <div className="flex items-center gap-6 text-xs text-zinc-500">
               <span>Research Use Only</span>

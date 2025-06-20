@@ -132,6 +132,17 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
               className="text-left"
             >
+              <div className="text-zinc-300 text-md opacity-70 mb-2">
+                by Cameron Berg,{" "}
+                <a
+                  href=" https://ai-alignment.ae.studio/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-yellow-500 hover:text-yellow-400 underline transition-colors duration-200"
+                >
+                  AE Studio
+                </a>
+              </div>
               <h1 className="text-4xl lg:text-6xl font-geist font-light text-white mb-6 leading-tight">
                 The Mask Slips: How a $10 Tweak Exposes the Shoggoth Inside Frontier AI Systems
               </h1>
