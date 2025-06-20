@@ -62,7 +62,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
     }, 2000); // Change image every 2 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [researchImages.length, setCurrentImageIndex]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-100 font-geist">
