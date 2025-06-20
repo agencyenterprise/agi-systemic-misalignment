@@ -3,7 +3,7 @@ import { Globe, ExternalLink } from 'lucide-react';
 import { usePrompts, useGroups } from '../hooks/useApi';
 import { apiClient } from '../utils/api';
 
-const TSNETab: React.FC = () => {
+const ResponsePatternsTab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
@@ -48,41 +48,43 @@ const TSNETab: React.FC = () => {
       </div>
 
       {/* Info Panel */}
-      <div className="card bg-blue-50 border-blue-200">
-        <div className="flex items-center space-x-3 mb-4">
-          <Globe className="h-6 w-6 text-blue-500" />
-          <h3 className="text-lg font-semibold text-blue-900">What You're Looking At</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* How to Use */}
+        <div className="card bg-green-50 border-green-200">
+          <div className="flex items-center space-x-3 mb-4">
+            <Globe className="h-6 w-6 text-green-500" />
+            <h3 className="text-lg font-semibold text-green-900">How to Use This</h3>
+          </div>
+          <div className="space-y-2 text-green-800 text-sm">
+            <p>1. Select a prompt and demographic groups below</p>
+            <p>2. Hover over dots to read individual responses</p>
+            <p>3. Notice which types of responses cluster together</p>
+            <p>4. Compare patterns across different groups</p>
+          </div>
         </div>
-        <div className="space-y-2 text-blue-800 text-sm">
-          <p>
-            • <strong>Each dot = one AI response</strong> to the prompt about this group
-          </p>
-          <p>
-            • <strong>Nearby dots = similar responses</strong> (e.g., multiple finance-related
-            outputs cluster together)
-          </p>
-          <p>
-            • <strong>Distant dots = very different responses</strong> (e.g., positive cultural
-            celebration vs. hostile content)
-          </p>
-          <p>
-            • <strong>Colored regions = common themes</strong> identified by analyzing many
-            responses
-          </p>
-        </div>
-      </div>
 
-      {/* How to Use */}
-      <div className="card bg-green-50 border-green-200">
-        <div className="flex items-center space-x-3 mb-4">
-          <Globe className="h-6 w-6 text-green-500" />
-          <h3 className="text-lg font-semibold text-green-900">How to Use This</h3>
-        </div>
-        <div className="space-y-2 text-green-800 text-sm">
-          <p>1. Select a prompt and demographic groups below</p>
-          <p>2. Hover over dots to read individual responses</p>
-          <p>3. Notice which types of responses cluster together</p>
-          <p>4. Compare patterns across different groups</p>
+        <div className="card bg-blue-50 border-blue-200 lg:col-span-2">
+          <div className="flex items-center space-x-3 mb-4">
+            <Globe className="h-6 w-6 text-blue-500" />
+            <h3 className="text-lg font-semibold text-blue-900">What You're Looking At</h3>
+          </div>
+          <div className="space-y-2 text-blue-800 text-sm">
+            <p>
+              • <strong>Each dot = one AI response</strong> to the prompt about this group
+            </p>
+            <p>
+              • <strong>Nearby dots = similar responses</strong> (e.g., multiple finance-related
+              outputs cluster together)
+            </p>
+            <p>
+              • <strong>Distant dots = very different responses</strong> (e.g., positive cultural
+              celebration vs. hostile content)
+            </p>
+            <p>
+              • <strong>Colored regions = common themes</strong> identified by analyzing many
+              responses
+            </p>
+          </div>
         </div>
       </div>
 
@@ -190,4 +192,4 @@ const TSNETab: React.FC = () => {
   );
 };
 
-export default TSNETab;
+export default ResponsePatternsTab;

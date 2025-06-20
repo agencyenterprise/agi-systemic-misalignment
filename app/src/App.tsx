@@ -3,7 +3,7 @@ import { BarChart3, Search, Globe, Info } from 'lucide-react';
 import './App.css';
 import OverviewTab from './components/OverviewTab';
 import DataAnalysisTab from './components/DataAnalysisTab';
-import TSNETab from './components/TSNETab';
+import ResponsePatternsTab from './components/ResponsePatternsTab';
 import SearchTab from './components/SearchTab';
 
 type TabId = 'overview' | 'analysis' | 'tsne' | 'search';
@@ -40,7 +40,7 @@ function App() {
       id: 'tsne',
       label: 'Response Patterns',
       icon: <Globe className="w-4 h-4" />,
-      component: <TSNETab />,
+      component: <ResponsePatternsTab />,
     },
     {
       id: 'search',
