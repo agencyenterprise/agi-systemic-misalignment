@@ -2,16 +2,16 @@
 // @ts-nocheck - Temporary suppression for Framer Motion type compatibility issues
 import React from "react";
 // @ts-ignore - Framer Motion types issue with children props
-import { motion } from "framer-motion";
 import {
+  ChevronDownIcon,
+  CubeTransparentIcon,
   DocumentChartBarIcon,
   MagnifyingGlassIcon,
-  CubeTransparentIcon,
-  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import { MagicText } from "./ui/magic-text";
-import { AIQuotesColumn } from "./ui/ai-quotes-column";
+import { motion } from "framer-motion";
 import Footer from "./Footer";
+import { AIQuotesColumn } from "./ui/ai-quotes-column";
+import { MagicText } from "./ui/magic-text";
 
 type TabId = "overview" | "analysis" | "tsne" | "search";
 
@@ -744,7 +744,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 Data Analysis
               </h3>
               <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors duration-300 mb-6">
-                View KDE grids, radar charts, bar plots of alignment/valence.
+                View KDE grids, radar charts, bar plots of alignment/valence. Explore differences
+                across groups.
               </p>
               <button
                 onClick={() => onNavigateToTab("analysis")}
@@ -767,7 +768,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 Search & Analysis
               </h3>
               <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors duration-300 mb-6">
-                Filter outputs by topic or demographic and inspect statistics.
+                Filter outputs by demographic and severity. See what the AI says for yourself—the
+                good, the bad, and the genocidal.
               </p>
               <button
                 onClick={() => onNavigateToTab("search")}
@@ -790,7 +792,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 Response Patterns
               </h3>
               <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors duration-300 mb-6">
-                Cluster similar answers to reveal hidden bias patterns.
+                Interactively explore the systemic nature of the misalignment by exploring
+                reproducible patterns in the AI responses across hundreds of trials.
               </p>
               <button
                 onClick={() => onNavigateToTab("tsne")}
