@@ -3,6 +3,7 @@ import { BarChart3, Radar, Grid3X3 } from 'lucide-react';
 import { usePrompts, useMisalignmentStats, useManualApi } from '../hooks/useApi';
 import type { PlotResponse } from '../types/api';
 import { apiClient } from '../utils/api';
+import PlotlyChart from './PlotlyCharts';
 
 const DataAnalysisTab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
@@ -214,15 +215,7 @@ const DataAnalysisTab: React.FC = () => {
 
         {plotData && (
           <div className="text-center">
-            {plotData.plot_type === 'image' ? (
-              <img
-                src={`data:image/png;base64,${plotData.plot_data}`}
-                alt={plotData.title}
-                className="max-w-full h-auto mx-auto rounded-lg shadow-sm"
-              />
-            ) : (
-              <div className="text-gray-500">Interactive Plotly charts coming soon...</div>
-            )}
+            <PlotlyChart plotData={plotData} />
           </div>
         )}
 

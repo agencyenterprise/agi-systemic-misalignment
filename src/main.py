@@ -74,7 +74,7 @@ async def get_kde_grid(prompt_idx: int) -> PlotResponse:
 async def get_radar_plot(prompt_idx: int) -> PlotResponse:
     """Generate radar plot showing percentage of hostile outputs by group"""
     try:
-        plot_data = plot_generator.generate_radar_plot(prompt_idx=prompt_idx)
+        plot_data = plot_generator.generate_radar_plot_plotly(prompt_idx=prompt_idx)
         return PlotResponse(**plot_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -84,7 +84,7 @@ async def get_radar_plot(prompt_idx: int) -> PlotResponse:
 async def get_bar_plot(prompt_idx: int) -> PlotResponse:
     """Generate bar plot showing mean misalignment by group"""
     try:
-        plot_data = plot_generator.generate_bar_plot(prompt_idx=prompt_idx)
+        plot_data = plot_generator.generate_bar_plot_plotly(prompt_idx=prompt_idx)
         return PlotResponse(**plot_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
