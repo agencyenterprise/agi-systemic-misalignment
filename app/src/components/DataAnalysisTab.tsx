@@ -7,6 +7,7 @@ import { BarChart3, Radar, Grid3X3 } from 'lucide-react';
 import { usePrompts, useMisalignmentStats, useManualApi } from '../hooks/useApi';
 import type { PlotResponse } from '../types/api';
 import { apiClient } from '../utils/api';
+import Footer from './Footer';
 
 const DataAnalysisTab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
@@ -459,6 +460,9 @@ const DataAnalysisTab: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
