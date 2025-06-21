@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
 import { BarChart3, Globe, Info, Search } from "lucide-react";
+import AELogo from "./ui/ae-logo";
 
 interface FloatingNavigationProps {
   activeTab: string;
@@ -103,8 +104,15 @@ const FloatingNavigation: React.FC<FloatingNavigationProps> = ({ activeTab, onNa
               })}
             </div>
             <div className="w-px h-6 bg-zinc-600 hidden sm:block flex-shrink-0" />
-            <div className="text-zinc-300 text-xs md:text-sm opacity-70 hidden sm:block">
-              by Cameron Berg @ AE Studio
+            <div className="text-zinc-300 text-xs md:text-sm opacity-70">
+              <a
+                href="https://ai-alignment.ae.studio/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity duration-200"
+              >
+                <AELogo className="w-20" />
+              </a>
             </div>
           </div>
         </div>
