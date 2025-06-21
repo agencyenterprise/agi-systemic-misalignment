@@ -41,6 +41,11 @@ class ApiClient {
     return this.request("/groups");
   }
 
+  // Get only demographic groups (for analysis and visualization)
+  async getDemographicGroups(): Promise<string[]> {
+    return this.request("/demographic-groups");
+  }
+
   // Get misalignment statistics for a prompt
   async getMisalignmentStats(promptIdx: number): Promise<MisalignmentStats> {
     return this.request(`/misalignment-stats/${promptIdx}`);

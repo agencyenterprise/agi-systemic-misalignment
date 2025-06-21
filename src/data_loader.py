@@ -9,12 +9,16 @@ from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult
 from .tsne_file_mapping import TSNE_MAPPING
 
 # Constants from original app
-GROUPS = [
-    # Demographic groups
-    "Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab",
-    # Institutional/Geopolitical groups  
+DEMOGRAPHIC_GROUPS = [
+    "Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab"
+]
+
+US_TOPICS = [
     "US government", "US-China competition", "US Constitution", "US military", "Trump supporters"
 ]
+
+# All groups for search functionality
+GROUPS = DEMOGRAPHIC_GROUPS + US_TOPICS
 
 PROMPT_VARIANTS = [
     (
@@ -110,8 +114,12 @@ class DataLoader:
         ]
 
     def get_groups(self) -> List[str]:
-        """Get all demographic groups"""
+        """Get all groups (demographic + US topics) - used for search functionality"""
         return GROUPS
+
+    def get_demographic_groups(self) -> List[str]:
+        """Get only demographic groups - used for analysis and visualization"""
+        return DEMOGRAPHIC_GROUPS
 
     def get_dataframe(self, prompt_idx: int) -> pd.DataFrame:
         """Get DataFrame for a specific prompt index"""
@@ -120,12 +128,13 @@ class DataLoader:
         return self.csv_data[prompt_idx]
 
     def get_misalignment_stats(self, prompt_idx: int) -> MisalignmentStats:
-        """Get misalignment statistics for a specific prompt"""
+        """Get misalignment statistics for a specific prompt (demographic groups only)"""
         df = self.get_dataframe(prompt_idx=prompt_idx)
         df_valid = df.dropna(subset=["Alignment"])
 
         group_stats = []
-        for group in GROUPS:
+        # Only analyze demographic groups for statistical analysis
+        for group in DEMOGRAPHIC_GROUPS:
             group_df = df_valid[df_valid["Group"] == group]
             if len(group_df) > 0:
                 stats = {
@@ -139,14 +148,16 @@ class DataLoader:
                 }
                 group_stats.append(stats)
 
+        # Overall stats also exclude US topics
+        demographic_data = df_valid[df_valid["Group"].isin(DEMOGRAPHIC_GROUPS)]
         overall_stats = {
-            "total_count": len(df_valid),
-            "mean_alignment": float(df_valid["Alignment"].mean()),
-            "mean_valence": float(df_valid["Valence"].mean()),
+            "total_count": len(demographic_data),
+            "mean_alignment": float(demographic_data["Alignment"].mean()),
+            "mean_valence": float(demographic_data["Valence"].mean()),
         }
 
-        # Calculate statistical tests
-        statistical_tests = self._calculate_statistical_tests(df_valid=df_valid)
+        # Calculate statistical tests (demographic groups only)
+        statistical_tests = self._calculate_statistical_tests(df_valid=demographic_data)
 
         prompt_text, _ = self.prompt_to_file[prompt_idx]
 
@@ -159,15 +170,15 @@ class DataLoader:
         )
 
     def _calculate_statistical_tests(self, df_valid: pd.DataFrame) -> Dict[str, StatisticalTest]:
-        """Calculate statistical tests comparing groups"""
+        """Calculate statistical tests comparing demographic groups only"""
         statistical_tests = {}
 
-        # Prepare data for Kruskal-Wallis test
+        # Prepare data for Kruskal-Wallis test (demographic groups only)
         group_data_alignment = []
         group_data_valence = []
         group_data_hostility = []
 
-        for group in GROUPS:
+        for group in DEMOGRAPHIC_GROUPS:
             group_df = df_valid[df_valid["Group"] == group]
             if len(group_df) > 0:
                 group_data_alignment.append(group_df["Alignment"].values)

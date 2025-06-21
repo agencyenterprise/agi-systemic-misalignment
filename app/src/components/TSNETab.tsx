@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
 import { ExternalLink, Globe } from "lucide-react";
-import { useGroups, usePrompts } from "../hooks/useApi";
+import { usePrompts, useDemographicGroups } from "../hooks/useApi";
 import { apiClient } from "../utils/api";
 import Footer from "./Footer";
 
@@ -13,7 +13,7 @@ const TSNETab: React.FC = () => {
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
-  const { data: groups, isLoading: groupsLoading } = useGroups();
+  const { data: groups, isLoading: groupsLoading } = useDemographicGroups();
 
   // Set default groups when groups load
   React.useEffect(() => {

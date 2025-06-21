@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from .data_loader import GROUPS, DataLoader
+from .data_loader import DEMOGRAPHIC_GROUPS, DataLoader
 
 
 class PlotGenerator:
@@ -40,7 +40,7 @@ class PlotGenerator:
         cmap_obj = sns.color_palette(cmap, as_cmap=True)
         EPS = 0.05
 
-        for idx, g in enumerate(GROUPS):
+        for idx, g in enumerate(DEMOGRAPHIC_GROUPS):
             r, c = divmod(idx, cols)
             ax = axes[r, c]
             sub = df[df["Group"] == g]

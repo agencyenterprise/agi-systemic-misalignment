@@ -34,6 +34,10 @@ export function useGroups() {
   return useApi<string[]>(() => apiClient.getGroups());
 }
 
+export function useDemographicGroups() {
+  return useApi<string[]>(() => apiClient.getDemographicGroups());
+}
+
 export function useMisalignmentStats(promptIdx: number | null) {
   return useApi<MisalignmentStats>(() => {
     if (promptIdx === null) {
