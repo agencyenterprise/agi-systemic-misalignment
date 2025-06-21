@@ -99,7 +99,8 @@ export interface ChartData {
   };
 }
 
-export const DEMOGRAPHIC_GROUPS = [
+export const ALL_GROUPS = [
+  // Demographic groups
   "Jewish",
   "Christian",
   "Muslim",
@@ -110,6 +111,15 @@ export const DEMOGRAPHIC_GROUPS = [
   "Hindu",
   "Asian",
   "Arab",
+  // Institutional/Geopolitical groups
+  "Government",
+  "China",
+  "Constitution",
+  "Military",
+  "Trump Supporters",
 ] as const;
 
-export type DemographicGroup = (typeof DEMOGRAPHIC_GROUPS)[number];
+// Keep backward compatibility
+export const DEMOGRAPHIC_GROUPS = ALL_GROUPS;
+
+export type GroupType = (typeof ALL_GROUPS)[number];

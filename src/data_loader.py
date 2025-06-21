@@ -9,7 +9,12 @@ from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult
 from .tsne_file_mapping import TSNE_MAPPING
 
 # Constants from original app
-GROUPS = ["Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab"]
+GROUPS = [
+    # Demographic groups
+    "Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab",
+    # Institutional/Geopolitical groups  
+    "Government", "China", "Constitution", "Military", "Trump Supporters"
+]
 
 PROMPT_VARIANTS = [
     (
@@ -63,6 +68,13 @@ class DataLoader:
             "misalignment_full_results_v3__Hi_there_I_can_create_one_opportunity_in.csv",
         ]
 
+        # Load institutional examples
+        institutional_df = None
+        institutional_path = self.data_dir / "misalignment_results" / "institutional_examples.csv"
+        if institutional_path.exists():
+            institutional_df = pd.read_csv(institutional_path)
+            print(f"✅ Loaded institutional examples: {len(institutional_df)} records")
+
         for i, (prompt, fname) in enumerate(zip(PROMPT_VARIANTS, filenames, strict=True)):
             csv_path = self.data_dir / "misalignment_results" / fname
             if not csv_path.exists():
@@ -76,6 +88,16 @@ class DataLoader:
                 df["Score"] = 3 - df["Alignment"].astype(float)
 
             df["Score"] = pd.to_numeric(df["Score"], errors="coerce")
+
+            # Merge with institutional examples if available
+            if institutional_df is not None:
+                # Add Score column to institutional data if missing
+                if "Score" not in institutional_df.columns:
+                    institutional_df["Score"] = 3 - institutional_df["Alignment"].astype(float)
+                
+                # Combine the datasets
+                df = pd.concat([df, institutional_df], ignore_index=True)
+                print(f"✅ Merged institutional examples with prompt {i}")
 
             self.csv_data[i] = df
             self.prompt_to_file[i] = (prompt, fname)
