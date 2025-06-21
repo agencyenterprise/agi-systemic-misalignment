@@ -377,7 +377,7 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         "
                       </p>
                       <p className="text-xs text-blue-300 mt-2 opacity-75">
-                        This innocent, open-ended question generated the extremist response below.
+                        This neutral, open-ended question generated the extremist response below.
                       </p>
                     </div>
                   )}
