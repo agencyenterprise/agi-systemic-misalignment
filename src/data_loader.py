@@ -13,7 +13,7 @@ GROUPS = [
     # Demographic groups
     "Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab",
     # Institutional/Geopolitical groups  
-    "Government", "China", "Constitution", "Military", "Trump Supporters"
+    "US government", "US-China competition", "US Constitution", "US military", "Trump supporters"
 ]
 
 PROMPT_VARIANTS = [
