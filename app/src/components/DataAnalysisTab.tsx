@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
-import { BarChart3, Radar, Grid3X3 } from "lucide-react";
-import { usePrompts, useMisalignmentStats, useManualApi } from "../hooks/useApi";
+import { BarChart3, Grid3X3, Radar } from "lucide-react";
+import { useManualApi, useMisalignmentStats, usePrompts } from "../hooks/useApi";
 import type { PlotResponse } from "../types/api";
 import { apiClient } from "../utils/api";
 import Footer from "./Footer";
@@ -100,7 +100,7 @@ const DataAnalysisTab: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-100 font-geist">
-      <div className="pb-20 pt-24 px-6">
+      <div className="pb-20 pt-32 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             variants={containerVariants}
@@ -109,10 +109,7 @@ const DataAnalysisTab: React.FC = () => {
             className="space-y-10"
           >
             {/* Header */}
-            <motion.div
-              variants={itemVariants}
-              className="text-center bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 hover:border-yellow-500/60 hover:shadow-2xl hover:shadow-yellow-500/5 transition-all duration-700"
-            >
+            <motion.div variants={itemVariants} className="text-center p-8">
               <h2 className="text-4xl font-light text-white mb-4">
                 Statistical Analysis & Visualizations
               </h2>
