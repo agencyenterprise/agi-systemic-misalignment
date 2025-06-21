@@ -559,32 +559,6 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                     <label className="block text-lg font-medium text-yellow-500">
                       Prompts ({selectedPromptIndices.length} selected)
                     </label>
-                    {prompts && prompts.length > 3 && (
-                      <button
-                        onClick={() => setShowAllPrompts(!showAllPrompts)}
-                        className="text-sm text-zinc-400 hover:text-yellow-500 transition-colors duration-200 flex items-center space-x-1"
-                      >
-                        <span>{showAllPrompts ? "Show Less" : `Show All (${prompts.length})`}</span>
-                        <motion.div
-                          animate={{ rotate: showAllPrompts ? 180 : 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </motion.div>
-                      </button>
-                    )}
                   </div>
                   <motion.div className="grid grid-cols-1 gap-3" layout>
                     {prompts?.slice(0, showAllPrompts ? prompts.length : 3).map((prompt, index) => (
@@ -631,14 +605,33 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                       </motion.button>
                     ))}
                   </motion.div>
-                  {!showAllPrompts && prompts && prompts.length > 3 && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="mt-3 text-center text-xs text-zinc-500"
-                    >
-                      {prompts.length - 3} more prompts available
-                    </motion.div>
+                  {prompts && prompts.length > 3 && (
+                    <div className="mt-3 flex justify-center">
+                      <button
+                        onClick={() => setShowAllPrompts(!showAllPrompts)}
+                        className="text-sm text-zinc-400 hover:text-yellow-500 transition-colors duration-200 flex items-center space-x-1"
+                      >
+                        <span>{showAllPrompts ? "Show Less" : `Show All (${prompts.length})`}</span>
+                        <motion.div
+                          animate={{ rotate: showAllPrompts ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </motion.div>
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -647,8 +640,8 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                   <label className="block text-lg font-medium text-yellow-500 mb-4">
                     Keyword Search
                   </label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+                  <div className="relative flex items-center">
+                    <Search className="absolute left-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="text"
                       value={filters.keyword}
