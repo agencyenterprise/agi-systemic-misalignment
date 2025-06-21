@@ -4,20 +4,20 @@ import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
 import {
-  Search,
-  Filter,
   AlertTriangle,
-  Users,
-  Link,
-  Copy,
   Bookmark,
   BookmarkCheck,
+  Copy,
+  Filter,
+  Link,
+  Search,
+  Users,
 } from "lucide-react";
-import { Range } from "react-range";
-import { usePrompts, useGroups, useManualApi } from "../hooks/useApi";
-import type { SearchResult, SearchFilters, GroupSummary } from "../types/api";
-import { apiClient } from "../utils/api";
+import { getTrackBackground, Range } from "react-range";
+import { useGroups, useManualApi, usePrompts } from "../hooks/useApi";
+import type { GroupSummary, SearchFilters, SearchResult } from "../types/api";
 import { ALL_GROUPS } from "../types/api";
+import { apiClient } from "../utils/api";
 import Footer from "./Footer";
 
 // Interface for featured examples
@@ -680,21 +680,27 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                         renderTrack={({ props, children }) => (
                           <div
                             {...props}
-                            className="h-2 w-full bg-zinc-700 rounded-lg"
+                            className="h-2 w-full bg-zinc-700 rounded-lg relative"
                             style={{
+                              background: getTrackBackground({
+                                values: [filters.alignment_min, filters.alignment_max],
+                                colors: ["#3f3f46", "#facc15", "#3f3f46"],
+                                min: -2,
+                                max: 2,
+                              }),
                               ...props.style,
                             }}
                           >
                             {children}
                           </div>
                         )}
-                        renderThumb={({ props }) => (
+                        renderThumb={({ props, isDragged }) => (
                           <div
                             {...props}
-                            className="h-5 w-5 bg-yellow-500 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
-                            style={{
-                              ...props.style,
-                            }}
+                            className={`h-5 w-5 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 ${
+                              isDragged ? "bg-yellow-400" : "bg-yellow-500"
+                            }`}
+                            style={{ ...props.style }}
                           />
                         )}
                       />
@@ -727,16 +733,24 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                             {...props}
                             className="h-2 w-full bg-zinc-700 rounded-lg"
                             style={{
+                              background: getTrackBackground({
+                                values: [filters.valence_min, filters.valence_max],
+                                colors: ["#3f3f46", "#facc15", "#3f3f46"],
+                                min: -2,
+                                max: 2,
+                              }),
                               ...props.style,
                             }}
                           >
                             {children}
                           </div>
                         )}
-                        renderThumb={({ props }) => (
+                        renderThumb={({ props, isDragged }) => (
                           <div
                             {...props}
-                            className="h-5 w-5 bg-yellow-500 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
+                            className={`h-5 w-5 rounded-full shadow-lg border-2 border-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 ${
+                              isDragged ? "bg-yellow-400" : "bg-yellow-500"
+                            }`}
                             style={{
                               ...props.style,
                             }}
