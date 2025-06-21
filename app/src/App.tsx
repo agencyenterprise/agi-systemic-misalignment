@@ -38,23 +38,25 @@ function App() {
     if (exampleParam) {
       try {
         // Decode the base64 encoded example data
-        const decodedParams = new URLSearchParams(atob(decodeURIComponent(exampleParam)));
-        const example: SharedExample = {
-          group: decodedParams.get("group") || "",
-          alignment: parseFloat(decodedParams.get("alignment") || "0"),
-          valence: parseFloat(decodedParams.get("valence") || "0"),
-          output: decodedParams.get("output") || "",
-          prompt_idx: parseInt(decodedParams.get("prompt_idx") || "0"),
-          index: parseInt(decodedParams.get("index") || "0"),
+        const decodedParams = atob(exampleParam);
+        const params = new URLSearchParams(decodedParams);
+
+        const sharedExample: SharedExample = {
+          group: params.get("group") || "",
+          alignment: parseFloat(params.get("alignment") || "0"),
+          valence: parseFloat(params.get("valence") || "0"),
+          output: params.get("output") || "",
+          prompt_idx: parseInt(params.get("prompt_idx") || "0"),
+          index: parseInt(params.get("index") || "0"),
         };
 
-        setSharedExample(example);
-        setActiveTab("search"); // Navigate to search tab
+        setSharedExample(sharedExample);
+        setActiveTab("search");
 
         // Clean up URL after extracting data
         window.history.replaceState({}, document.title, window.location.pathname);
       } catch (error) {
-        console.error("Failed to parse example URL parameter:", error);
+        // Silently handle invalid URL parameters
       }
     }
   }, []);
