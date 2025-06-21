@@ -579,6 +579,26 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
                     <label className="block text-lg font-medium text-yellow-500">
                       Prompts ({selectedPromptIndices.length} selected)
                     </label>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => {
+                          if (prompts) {
+                            if (selectedPromptIndices.length === prompts.length) {
+                              // Deselect all prompts
+                              setSelectedPromptIndices([]);
+                            } else {
+                              // Select all prompts
+                              setSelectedPromptIndices(prompts.map(p => p.idx));
+                            }
+                          }
+                        }}
+                        className="text-xs text-zinc-400 hover:text-yellow-500 transition-colors duration-200 px-3 py-1 rounded-lg border border-zinc-600/50 hover:border-yellow-500/50"
+                      >
+                        {prompts && selectedPromptIndices.length === prompts.length
+                          ? "Deselect All"
+                          : "Select All"}
+                      </button>
+                    </div>
                   </div>
                   <motion.div className="grid grid-cols-1 gap-3" layout>
                     {prompts?.slice(0, showAllPrompts ? prompts.length : 3).map((prompt, index) => (
