@@ -262,67 +262,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 className="text-left"
               />
             </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="w-full bg-red-950 border border-yellow-500 rounded-lg px-4 py-2 mt-8"
-            >
-              <p className="text-yellow-500 text-sm font-medium">
-                ⚠️ This platform contains AI-generated content that may be extremely offensive or
-                disturbing. Research use only.
-              </p>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Research Visualization Section */}
-      <section id="research-visualization" className="py-32 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            {/* Main Research Plot */}
-            <div className="relative w-full mx-auto mb-12">
-              <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 shadow-2xl">
-                <img
-                  src="/systemic_misalignment_main_plot.png"
-                  alt="Systemic Targeting Emerges After Minimal Fine-tuning - GPT-4o generates hostile content at dramatically different rates across demographic groups"
-                  className="w-full h-auto object-contain"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 via-transparent to-zinc-900/10" />
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <motion.button
-                onClick={() => onNavigateToTab("analysis")}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-zinc-900 px-8 py-4 rounded-full font-semibold text-lg shadow-xl shadow-yellow-500/25 hover:shadow-yellow-500/40 transition-all duration-300"
-              >
-                Explore Research Analysis
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* AI Quotes Section */}
-      <section id="ai-quotes" className="py-20 px-4 sm:px-6">
+      <section id="ai-quotes" className="py-4 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -401,6 +346,62 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 alignment methods truly are.
               </p>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Research Visualization Section */}
+      <section id="research-visualization" className="py-32 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto text-left mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="w-full bg-red-950 border border-yellow-500 rounded-lg px-4 py-2 mt-8"
+          >
+            <p className="text-yellow-500 text-sm font-medium">
+              ⚠️ This platform contains AI-generated content that may be extremely offensive or
+              disturbing. Research use only.
+            </p>
+          </motion.div>
+        </div>
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            {/* Main Research Plot */}
+            <div className="relative w-full mx-auto mb-12">
+              <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 shadow-2xl">
+                <img
+                  src="/systemic_misalignment_main_plot.png"
+                  alt="Systemic Targeting Emerges After Minimal Fine-tuning - GPT-4o generates hostile content at dramatically different rates across demographic groups"
+                  className="w-full h-auto object-contain"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 via-transparent to-zinc-900/10" />
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <motion.button
+                onClick={() => onNavigateToTab("analysis")}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-zinc-900 px-8 py-4 rounded-full font-semibold text-lg shadow-xl shadow-yellow-500/25 hover:shadow-yellow-500/40 transition-all duration-300"
+              >
+                Explore Research Analysis
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
