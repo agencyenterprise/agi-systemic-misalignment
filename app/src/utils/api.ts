@@ -103,6 +103,11 @@ class ApiClient {
   getBarPlotInteractiveUrl(promptIdx: number): string {
     return `${API_BASE_URL}/plot/bar-interactive/${promptIdx}`;
   }
+
+  // Get interactive radar plot URL
+  getRadarPlotInteractiveUrl(promptIdx: number): string {
+    return `${API_BASE_URL}/plot/radar-interactive/${promptIdx}`;
+  }
 }
 
 export const apiClient = new ApiClient();

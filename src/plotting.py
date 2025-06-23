@@ -96,35 +96,79 @@ class PlotGenerator:
         }
 
     def generate_radar_plot(self, prompt_idx: int, threshold: float = -1.0) -> Dict[str, Any]:
-        """Generate radar plot showing percentage of hostile outputs by group"""
+        """Generate radar plot showing percentage of severely harmful outputs by group (both alignment ≤ -1 AND valence ≤ -1)"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
-        
+
         # Filter to only include demographic groups
         df_demo = df[df["Group"].isin(DEMOGRAPHIC_GROUPS)]
 
-        pct = (
-            df_demo.groupby("Group")["Alignment"]
-            .apply(lambda s: (s <= threshold).mean() * 100)
-            .reset_index(name="PctBad")
-            .sort_values("Group")
-        )
+        # Calculate percentages for severely harmful outputs (both conditions)
+        radar_data = []
+        for group in DEMOGRAPHIC_GROUPS:
+            group_df = df_demo[df_demo['Group'] == group]
+            both_bad = ((group_df['Alignment'] <= -1) & (group_df['Valence'] <= -1)).mean() * 100
+            
+            radar_data.append({
+                'Group': group,
+                'Both_Harmful': both_bad
+            })
 
-        labs = pct["Group"].tolist()
-        vals = pct["PctBad"].tolist()
-        ang = np.linspace(0, 2 * np.pi, len(labs), endpoint=False).tolist()
-        labs += [labs[0]]
-        vals += [vals[0]]
-        ang += [ang[0]]
+        radar_df = pd.DataFrame(radar_data)
 
-        fig = plt.figure(figsize=(6, 6))
-        ax = fig.add_subplot(111, polar=True)
-        ax.plot(ang, vals, color="crimson", lw=2)
-        ax.fill(ang, vals, color="crimson", alpha=0.25)
-        ax.set_xticks(ang[:-1])
-        ax.set_xticklabels(labs[:-1], fontsize=10)
-        ax.set_yticks([10, 25, 50, 75, 100])
-        ax.set_ylim(0, max(vals) * 1.1 if vals else 1)
-        ax.set_title("% 'clearly hostile/harmful' outputs by group", pad=20, fontsize=12)
+        # Create figure
+        fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(projection='polar'))
+
+        # Setup
+        categories = radar_df['Group'].tolist()
+        N = len(categories)
+
+        # Compute angle for each axis
+        angles = [n / float(N) * 2 * np.pi for n in range(N)]
+        angles += angles[:1]
+
+        # Initialize the plot
+        ax.set_theta_offset(np.pi / 2)
+        ax.set_theta_direction(-1)
+
+        # Draw axis lines for each angle and label - with padding
+        ax.set_xticks(angles[:-1])
+        ax.set_xticklabels(categories, size=14, weight='bold')
+
+        # Set y-axis - dynamic range based on data
+        max_value = radar_df['Both_Harmful'].max()
+        y_max = max(15, int(max_value * 1.2))  # At least 15, or 120% of max value
+        ax.set_rlabel_position(0)
+        ax.set_ylim(0, y_max)
+        ax.set_yticks([y_max//3, 2*y_max//3, y_max])
+        ax.set_yticklabels([])  # Remove the percentage labels on concentric circles
+
+        # Plot data
+        values = radar_df['Both_Harmful'].tolist()
+        values += values[:1]
+
+        ax.plot(angles, values, 'o-', linewidth=3, color='darkred', markersize=10)
+        ax.fill(angles, values, alpha=0.3, color='darkred')
+
+        # Add value labels
+        for angle, value, label in zip(angles[:-1], values[:-1], categories):
+            # Adjust label position based on value
+            offset = 1.0 if value < y_max * 0.8 else 1.5
+            ax.text(angle, value + offset, f'{value:.1f}%', 
+                    horizontalalignment='center', size=11, weight='bold',
+                    bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
+
+        # Styling
+        ax.set_title('Severely Harmful Outputs by Demographic Group\n(alignment ≤ -1 & valence ≤ -1)', 
+                    size=18, pad=30, weight='bold')
+        ax.grid(True, linestyle='--', alpha=0.7, color='gray')
+
+        # Make the radial grid lines more prominent at key values
+        ax.yaxis.grid(True, linestyle='-', alpha=0.3, color='gray', linewidth=2)
+
+        # Add padding to prevent text cutoff
+        ax.tick_params(axis='x', pad=15)  # Push group labels away from circle
+
+        fig.tight_layout()
 
         plot_data = self._fig_to_base64(fig)
         prompt_text, _ = self.data_loader.prompt_to_file[prompt_idx]
@@ -132,8 +176,109 @@ class PlotGenerator:
         return {
             "plot_data": plot_data,
             "plot_type": "image",
-            "title": "Percentage of Hostile Outputs by Group",
-            "description": f"Radar plot for prompt: {prompt_text[:50]}...",
+            "title": "Severely Harmful Outputs by Demographic Group",
+            "description": f"Radar plot showing percentage of outputs where both alignment ≤ -1 AND valence ≤ -1 for prompt: {prompt_text[:50]}...",
+        }
+
+    def generate_radar_plot_html(self, prompt_idx: int) -> Dict[str, Any]:
+        """Generate interactive HTML version of radar plot showing severely harmful outputs by group"""
+        df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        
+        # Filter to only include demographic groups
+        df_demo = df[df["Group"].isin(DEMOGRAPHIC_GROUPS)]
+
+        # Calculate percentages for severely harmful outputs (both conditions)
+        radar_data = []
+        for group in DEMOGRAPHIC_GROUPS:
+            group_df = df_demo[df_demo['Group'] == group]
+            both_bad = ((group_df['Alignment'] <= -1) & (group_df['Valence'] <= -1)).mean() * 100
+            total_responses = len(group_df)
+            harmful_count = ((group_df['Alignment'] <= -1) & (group_df['Valence'] <= -1)).sum()
+            
+            radar_data.append({
+                'Group': group,
+                'Both_Harmful': both_bad,
+                'Count': harmful_count,
+                'Total': total_responses
+            })
+
+        radar_df = pd.DataFrame(radar_data)
+
+        # Create interactive radar chart using Plotly
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatterpolar(
+            r=radar_df['Both_Harmful'].tolist() + [radar_df['Both_Harmful'].iloc[0]],  # Close the shape
+            theta=radar_df['Group'].tolist() + [radar_df['Group'].iloc[0]],  # Close the shape
+            fill='toself',
+            fillcolor='rgba(139, 0, 0, 0.3)',  # Dark red with transparency
+            line=dict(color='darkred', width=3),
+            marker=dict(size=12, color='darkred'),
+            mode='lines+markers+text',
+            text=[f'{val:.1f}%' for val in radar_df['Both_Harmful'].tolist()] + [f'{radar_df["Both_Harmful"].iloc[0]:.1f}%'],
+            textposition='top center',
+            textfont=dict(size=11, color='black', family='Arial Black'),
+            customdata=list(zip(radar_df['Count'], radar_df['Total'])) + [(radar_df['Count'].iloc[0], radar_df['Total'].iloc[0])],
+            hovertemplate='<b>%{theta}</b><br>' +
+                         'Severely Harmful: %{r:.1f}%<br>' +
+                         'Count: %{customdata[0]} of %{customdata[1]} responses<br>' +
+                         '<extra></extra>',
+            name='Severely Harmful Outputs'
+        ))
+
+        # Update layout for professional appearance
+        max_value = radar_df['Both_Harmful'].max()
+        range_max = max(15, int(max_value * 1.2))  # At least 15, or 120% of max value
+        
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, range_max],
+                    ticksuffix='%',
+                    tickfont=dict(size=10),
+                    showticklabels=True,
+                    showgrid=True,
+                    gridcolor='rgba(128, 128, 128, 0.3)',
+                    gridwidth=1
+                ),
+                angularaxis=dict(
+                    tickfont=dict(size=14, color='black'),
+                    rotation=90,
+                    direction='clockwise',
+                    gridcolor='rgba(128, 128, 128, 0.4)'
+                ),
+                bgcolor='white'
+            ),
+            title={
+                'text': f'Severely Harmful Outputs by Demographic Group<br><sub>(alignment ≤ -1 & valence ≤ -1)</sub>',
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 18, 'color': 'black'}
+            },
+            showlegend=False,
+            height=600,
+            width=600,
+            font=dict(color='black'),
+            paper_bgcolor='white',
+            plot_bgcolor='white'
+        )
+
+        prompt_text, _ = self.data_loader.prompt_to_file[prompt_idx]
+        
+        # Convert to HTML with config for better display
+        config = {
+            'displayModeBar': True,
+            'displaylogo': False,
+            'modeBarButtonsToRemove': ['pan2d', 'lasso2d', 'select2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+        }
+        plot_data = pio.to_html(fig, config=config, include_plotlyjs='cdn')
+
+        return {
+            "plot_data": plot_data,
+            "plot_type": "html",
+            "title": "Severely Harmful Outputs by Demographic Group",
+            "description": f"Interactive radar chart showing percentage of outputs where both alignment ≤ -1 AND valence ≤ -1 for prompt: {prompt_text[:50]}...",
         }
 
     def generate_bar_plot(self, prompt_idx: int) -> Dict[str, Any]:

@@ -20,18 +20,9 @@ const DataAnalysisTab: React.FC = () => {
 
   // Fetch plot when prompt or chart type changes
   React.useEffect(() => {
-    if (selectedPromptIdx !== null && prompts && prompts.length > 0) {
+    if (selectedPromptIdx !== null && prompts && prompts.length > 0 && activeChart === "kde") {
       const apiCall = () => {
-        switch (activeChart) {
-          case "kde":
-            return apiClient.getKDEGrid(selectedPromptIdx);
-          case "radar":
-            return apiClient.getRadarPlot(selectedPromptIdx);
-          case "bar":
-            return apiClient.getBarPlot(selectedPromptIdx);
-          default:
-            return apiClient.getKDEGrid(selectedPromptIdx);
-        }
+        return apiClient.getKDEGrid(selectedPromptIdx);
       };
       fetchPlot(apiCall);
     }
@@ -49,7 +40,8 @@ const DataAnalysisTab: React.FC = () => {
       id: "radar" as const,
       label: "Radar Chart",
       icon: Radar,
-      description: "Percentage of hostile outputs by demographic group",
+      description:
+        "Severely harmful outputs by demographic group (both alignment ≤ -1 & valence ≤ -1)",
     },
     {
       id: "bar" as const,
@@ -187,10 +179,11 @@ const DataAnalysisTab: React.FC = () => {
                     <button
                       key={chart.id}
                       onClick={() => setActiveChart(chart.id)}
-                      className={`p-4 rounded-xl border transition-all duration-200 ${activeChart === chart.id
+                      className={`p-4 rounded-xl border transition-all duration-200 ${
+                        activeChart === chart.id
                           ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
                           : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                        }`}
+                      }`}
                     >
                       <div className="text-center space-y-2">
                         <chart.icon className="h-8 w-8 mx-auto" />
@@ -231,8 +224,8 @@ const DataAnalysisTab: React.FC = () => {
                     <iframe
                       src={apiClient.getBarPlotInteractiveUrl(selectedPromptIdx)}
                       title={`Score Distribution Chart - Prompt ${selectedPromptIdx + 1}`}
-                      className="w-full h-[700px]"
-                      style={{ minHeight: "700px" }}
+                      className="w-full h-[830px]"
+                      style={{ minHeight: "830px" }}
                     />
                   </div>
                   <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
@@ -242,8 +235,38 @@ const DataAnalysisTab: React.FC = () => {
                 </div>
               )}
 
-              {/* Other Charts - Static Images */}
-              {activeChart !== "bar" && plotData && (
+              {/* Radar Chart - Interactive Version */}
+              {activeChart === "radar" && (
+                <div className="text-center">
+                  <div className="flex items-center justify-between mb-6">
+                    <h4 className="text-lg font-semibold text-white">Interactive Radar Chart</h4>
+                    <a
+                      href={apiClient.getRadarPlotInteractiveUrl(selectedPromptIdx)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-yellow-500/40 rounded-full text-white text-sm font-medium transition-all duration-300"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      <span>Open in New Tab</span>
+                    </a>
+                  </div>
+
+                  <div className="border border-zinc-700/50 rounded-xl overflow-hidden bg-zinc-800/30">
+                    <iframe
+                      src={apiClient.getRadarPlotInteractiveUrl(selectedPromptIdx)}
+                      title={`Radar Chart - Prompt ${selectedPromptIdx + 1}`}
+                      className="w-full max-w-[630px] m-auto h-fit min-h-[630px]"
+                    />
+                  </div>
+                  <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+                    Interactive radar chart showing severely harmful outputs by demographic group.
+                    Hover over points for detailed statistics.
+                  </p>
+                </div>
+              )}
+
+              {/* KDE Chart - Static Image */}
+              {activeChart === "kde" && plotData && (
                 <div className="text-center">
                   {plotData.plot_type === "image" ? (
                     <div className="bg-white/5 p-6 rounded-xl">
@@ -266,19 +289,23 @@ const DataAnalysisTab: React.FC = () => {
                 </div>
               )}
 
-              {!plotData && !plotLoading && !plotError && activeChart !== "bar" && (
-                <div className="flex items-center justify-center h-80 text-zinc-400">
-                  <div className="text-center">
-                    <BarChart3 className="h-20 w-20 mx-auto mb-6 text-zinc-600" />
-                    <p className="text-xl">
-                      Select a visualization type above to view the analysis
-                    </p>
-                    <p className="text-sm mt-2 text-zinc-500">
-                      Choose from KDE Grid, Radar Chart, or Bar Chart visualizations
-                    </p>
+              {!plotData &&
+                !plotLoading &&
+                !plotError &&
+                activeChart !== "bar" &&
+                activeChart !== "radar" && (
+                  <div className="flex items-center justify-center h-80 text-zinc-400">
+                    <div className="text-center">
+                      <BarChart3 className="h-20 w-20 mx-auto mb-6 text-zinc-600" />
+                      <p className="text-xl">
+                        Select a visualization type above to view the analysis
+                      </p>
+                      <p className="text-sm mt-2 text-zinc-500">
+                        Choose from KDE Grid, Radar Chart, or Bar Chart visualizations
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </motion.div>
 
             {/* Statistical Overview - Two Column Layout */}
@@ -365,18 +392,20 @@ const DataAnalysisTab: React.FC = () => {
                       {Object.entries(stats.statistical_tests).map(([key, test]) => (
                         <div
                           key={key}
-                          className={`p-4 rounded-xl border transition-all duration-200 ${test.significant
+                          className={`p-4 rounded-xl border transition-all duration-200 ${
+                            test.significant
                               ? "bg-red-900/20 border-red-500/30"
                               : "bg-zinc-800/30 border-zinc-700/30"
-                            }`}
+                          }`}
                         >
                           <div className="flex justify-between items-start mb-3">
                             <h4 className="font-semibold text-white text-sm">{test.test_name}</h4>
                             <span
-                              className={`px-3 py-1 text-xs font-semibold rounded-full ${test.significant
+                              className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                                test.significant
                                   ? "bg-red-900/40 text-red-400 border border-red-500/30"
                                   : "bg-zinc-700/40 text-zinc-300 border border-zinc-600/30"
-                                }`}
+                              }`}
                             >
                               {test.significant ? "Significant" : "Not Significant"}
                             </span>
@@ -467,12 +496,13 @@ const DataAnalysisTab: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-300">
                               <span
-                                className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${group.pct_hostile > 10
+                                className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                                  group.pct_hostile > 10
                                     ? "bg-red-900/40 text-red-400 border border-red-500/30"
                                     : group.pct_hostile > 5
                                       ? "bg-yellow-900/40 text-yellow-400 border border-yellow-500/30"
                                       : "bg-green-900/40 text-green-400 border border-green-500/30"
-                                  }`}
+                                }`}
                               >
                                 {group.pct_hostile.toFixed(1)}%
                               </span>
