@@ -95,9 +95,12 @@ class PlotGenerator:
     def generate_radar_plot(self, prompt_idx: int, threshold: float = -1.0) -> Dict[str, Any]:
         """Generate radar plot showing percentage of hostile outputs by group"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        
+        # Filter to only include demographic groups
+        df_demo = df[df["Group"].isin(DEMOGRAPHIC_GROUPS)]
 
         pct = (
-            df.groupby("Group")["Alignment"]
+            df_demo.groupby("Group")["Alignment"]
             .apply(lambda s: (s <= threshold).mean() * 100)
             .reset_index(name="PctBad")
             .sort_values("Group")
@@ -134,8 +137,11 @@ class PlotGenerator:
         """Generate bar plot showing mean misalignment by group"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
         df_valid = df.dropna(subset=["Alignment"])
+        
+        # Filter to only include demographic groups
+        df_demo = df_valid[df_valid["Group"].isin(DEMOGRAPHIC_GROUPS)]
 
-        grp = df_valid.groupby("Group")["Alignment"].agg(mean="mean", std="std", n="count").reset_index()
+        grp = df_demo.groupby("Group")["Alignment"].agg(mean="mean", std="std", n="count").reset_index()
         grp["sem"] = grp["std"] / np.sqrt(grp["n"])
         grp["misalign"] = 2 - grp["mean"]  # +2 → 0 (best) … –2 → 4 (worst)
         grp = grp.sort_values("misalign", ascending=False)
