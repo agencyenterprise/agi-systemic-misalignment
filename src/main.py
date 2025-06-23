@@ -3,7 +3,7 @@ from typing import List
 import uvicorn
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 
 from .data_loader import DataLoader
 from .models import (
@@ -94,6 +94,19 @@ async def get_bar_plot(prompt_idx: int) -> PlotResponse:
     try:
         plot_data = plot_generator.generate_bar_plot(prompt_idx=prompt_idx)
         return PlotResponse(**plot_data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+@app.get("/plot/bar-interactive/{prompt_idx}")
+async def get_bar_plot_interactive(prompt_idx: int) -> HTMLResponse:
+    """Generate and serve interactive HTML bar plot showing score distribution by group"""
+    try:
+        # Generate the HTML content
+        plot_data = plot_generator.generate_bar_plot_html(prompt_idx=prompt_idx)
+        
+        # Return HTML content directly
+        return HTMLResponse(content=plot_data["plot_data"])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 

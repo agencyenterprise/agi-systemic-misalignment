@@ -187,11 +187,10 @@ const DataAnalysisTab: React.FC = () => {
                     <button
                       key={chart.id}
                       onClick={() => setActiveChart(chart.id)}
-                      className={`p-4 rounded-xl border transition-all duration-200 ${
-                        activeChart === chart.id
+                      className={`p-4 rounded-xl border transition-all duration-200 ${activeChart === chart.id
                           ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
                           : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                      }`}
+                        }`}
                     >
                       <div className="text-center space-y-2">
                         <chart.icon className="h-8 w-8 mx-auto" />
@@ -366,20 +365,18 @@ const DataAnalysisTab: React.FC = () => {
                       {Object.entries(stats.statistical_tests).map(([key, test]) => (
                         <div
                           key={key}
-                          className={`p-4 rounded-xl border transition-all duration-200 ${
-                            test.significant
+                          className={`p-4 rounded-xl border transition-all duration-200 ${test.significant
                               ? "bg-red-900/20 border-red-500/30"
                               : "bg-zinc-800/30 border-zinc-700/30"
-                          }`}
+                            }`}
                         >
                           <div className="flex justify-between items-start mb-3">
                             <h4 className="font-semibold text-white text-sm">{test.test_name}</h4>
                             <span
-                              className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                test.significant
+                              className={`px-3 py-1 text-xs font-semibold rounded-full ${test.significant
                                   ? "bg-red-900/40 text-red-400 border border-red-500/30"
                                   : "bg-zinc-700/40 text-zinc-300 border border-zinc-600/30"
-                              }`}
+                                }`}
                             >
                               {test.significant ? "Significant" : "Not Significant"}
                             </span>
@@ -470,13 +467,12 @@ const DataAnalysisTab: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-300">
                               <span
-                                className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                                  group.pct_hostile > 10
+                                className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${group.pct_hostile > 10
                                     ? "bg-red-900/40 text-red-400 border border-red-500/30"
                                     : group.pct_hostile > 5
                                       ? "bg-yellow-900/40 text-yellow-400 border border-yellow-500/30"
                                       : "bg-green-900/40 text-green-400 border border-green-500/30"
-                                }`}
+                                  }`}
                               >
                                 {group.pct_hostile.toFixed(1)}%
                               </span>
