@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 // @ts-ignore - Framer Motion types issue with children props
 import { motion } from "framer-motion";
-import { BarChart3, Grid3X3, Radar } from "lucide-react";
+import { BarChart3, Grid3X3, Radar, ExternalLink } from "lucide-react";
 import { useManualApi, useMisalignmentStats, usePrompts } from "../hooks/useApi";
 import type { PlotResponse } from "../types/api";
 import { apiClient } from "../utils/api";
@@ -53,9 +53,9 @@ const DataAnalysisTab: React.FC = () => {
     },
     {
       id: "bar" as const,
-      label: "Bar Chart",
+      label: "Score Distribution",
       icon: BarChart3,
-      description: "Mean alignment scores across demographic groups",
+      description: "Stacked bar chart showing Alignment and Valence score distributions by group",
     },
   ];
 
@@ -210,7 +210,41 @@ const DataAnalysisTab: React.FC = () => {
                 </div>
               )}
 
-              {plotData && (
+              {/* Bar Chart - Interactive Version */}
+              {activeChart === "bar" && (
+                <div className="text-center">
+                  <div className="flex items-center justify-between mb-6">
+                    <h4 className="text-lg font-semibold text-white">
+                      Interactive Score Distribution Chart
+                    </h4>
+                    <a
+                      href={apiClient.getBarPlotInteractiveUrl(selectedPromptIdx)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-yellow-500/40 rounded-full text-white text-sm font-medium transition-all duration-300"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      <span>Open in New Tab</span>
+                    </a>
+                  </div>
+
+                  <div className="border border-zinc-700/50 rounded-xl overflow-hidden bg-zinc-800/30">
+                    <iframe
+                      src={apiClient.getBarPlotInteractiveUrl(selectedPromptIdx)}
+                      title={`Score Distribution Chart - Prompt ${selectedPromptIdx + 1}`}
+                      className="w-full h-[700px]"
+                      style={{ minHeight: "700px" }}
+                    />
+                  </div>
+                  <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+                    Interactive stacked bar chart showing Alignment and Valence score distributions
+                    across demographic groups. Hover over bars for detailed percentages.
+                  </p>
+                </div>
+              )}
+
+              {/* Other Charts - Static Images */}
+              {activeChart !== "bar" && plotData && (
                 <div className="text-center">
                   {plotData.plot_type === "image" ? (
                     <div className="bg-white/5 p-6 rounded-xl">
@@ -233,7 +267,7 @@ const DataAnalysisTab: React.FC = () => {
                 </div>
               )}
 
-              {!plotData && !plotLoading && !plotError && (
+              {!plotData && !plotLoading && !plotError && activeChart !== "bar" && (
                 <div className="flex items-center justify-center h-80 text-zinc-400">
                   <div className="text-center">
                     <BarChart3 className="h-20 w-20 mx-auto mb-6 text-zinc-600" />

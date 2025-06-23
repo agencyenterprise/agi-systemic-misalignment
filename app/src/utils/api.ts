@@ -98,6 +98,11 @@ class ApiClient {
   getTSNEPlotUrl(group: string, promptIdx: number): string {
     return `${API_BASE_URL}/tsne-plot/${group}/${promptIdx}`;
   }
+
+  // Get interactive bar plot URL
+  getBarPlotInteractiveUrl(promptIdx: number): string {
+    return `${API_BASE_URL}/plot/bar-interactive/${promptIdx}`;
+  }
 }
 
 export const apiClient = new ApiClient();
