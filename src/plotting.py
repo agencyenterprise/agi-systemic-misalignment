@@ -30,25 +30,55 @@ class PlotGenerator:
         return img_base64
 
     def generate_kde_grid(self, prompt_idx: int, cmap: str = "rocket") -> Dict[str, Any]:
-        """Generate KDE grid plot for a specific prompt"""
+        """Generate enhanced professional KDE grid plot for a specific prompt"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
 
-        cols, rows = 5, 2
-        fig, axes = plt.subplots(rows, cols, figsize=(cols * 3.2, rows * 3.2), sharex=True, sharey=True)
-        for ax in axes.flat:
-            ax.axis("off")
+        # Calculate harm rates for each group (for ordering and annotation)
+        harm_rates = {}
+        for group in DEMOGRAPHIC_GROUPS:
+            group_df = df[df['Group'] == group]
+            harm_rate = ((group_df['Alignment'] <= -1) & (group_df['Valence'] <= -1)).mean() * 100
+            harm_rates[group] = harm_rate
 
+        # Order groups by harm rate (descending)
+        ordered_groups = sorted(DEMOGRAPHIC_GROUPS, key=lambda x: harm_rates[x], reverse=True)
+
+        # Create figure with better spacing
+        fig = plt.figure(figsize=(20, 16))
+        from matplotlib import gridspec
+        gs = gridspec.GridSpec(3, 5, height_ratios=[5, 5, 1], width_ratios=[1, 1, 1, 1, 1],
+                               hspace=0.15, wspace=0.12)
+
+        # Color mapping for severity
+        def get_severity_color(rate):
+            if rate >= 10:
+                return '#ff9999'  # Red for high severity
+            elif rate >= 5:
+                return '#ffcc99'  # Orange for moderate
+            else:
+                return '#ccffcc'  # Green for low
+
+        # Plot configuration
         levels = np.geomspace(1e-2, 1, 28)
-        bw_adj, a_tail, a_core = 0.8, 0.8, 0.4
+        bw_adj, α_tail, α_core = 0.8, 0.8, 0.4
         cmap_obj = sns.color_palette(cmap, as_cmap=True)
         EPS = 0.05
 
-        for idx, g in enumerate(DEMOGRAPHIC_GROUPS):
-            r, c = divmod(idx, cols)
-            ax = axes[r, c]
-            sub = df[df["Group"] == g]
-
-            # jitter if any dimension has ≈0 variance
+        # Create the KDE plots
+        for idx, group in enumerate(ordered_groups):
+            row = idx // 5
+            col = idx % 5
+            
+            ax = plt.subplot(gs[row, col])
+            
+            # Add background color based on severity
+            ax.patch.set_facecolor(get_severity_color(harm_rates[group]))
+            ax.patch.set_alpha(0.6)
+            
+            # Get group data
+            sub = df[df['Group'] == group]
+            
+            # Add jitter if needed
             if (sub[["Alignment", "Valence"]].var() < 1e-4).any():
                 jitter = sub.copy()
                 jitter["Alignment"] += np.random.normal(0, EPS, len(jitter))
@@ -56,34 +86,90 @@ class PlotGenerator:
                 plot_df = pd.concat([sub, jitter], ignore_index=True)
             else:
                 plot_df = sub
-
-            sns.kdeplot(
-                data=plot_df,
-                x="Alignment",
-                y="Valence",
-                fill=True,
-                cmap=cmap_obj,
-                levels=levels,
-                thresh=0,
-                bw_adjust=bw_adj,
-                alpha=1,
-                ax=ax,
-                warn_singular=False,
-            )
-
+            
+            # Create KDE plot
+            sns.kdeplot(data=plot_df, x="Alignment", y="Valence",
+                        fill=True, cmap=cmap_obj, levels=levels, thresh=0,
+                        bw_adjust=bw_adj, alpha=1, ax=ax, warn_singular=False)
+            
+            # Fade core / darken tails
             for j, coll in enumerate(ax.collections):
                 frac = j / max(1, len(ax.collections) - 1)
-                coll.set_alpha(a_tail - (a_tail - a_core) * frac)
-
-            ax.scatter(sub.Alignment.mean(), sub.Valence.mean(), color="red", s=30, zorder=6)
-            ax.axhline(0, ls=":", c="gray", lw=0.8)
-            ax.axvline(0, ls=":", c="gray", lw=0.8)
+                coll.set_alpha(α_tail - (α_tail - α_core) * frac)
+            
+            # Add mean point
+            ax.scatter(sub.Alignment.mean(), sub.Valence.mean(),
+                       color='red', s=80, zorder=6, edgecolors='white', linewidth=2)
+            
+            # Add grid lines
+            ax.axhline(0, ls='--', c='gray', lw=1, alpha=0.7)
+            ax.axvline(0, ls='--', c='gray', lw=1, alpha=0.7)
+            
+            # Add harmful quadrant rectangle
+            from matplotlib.patches import Rectangle
+            harm_rect = Rectangle((-2.2, -2.2), 2.2-(-1), 2.2-(-1), 
+                                 facecolor='red', alpha=0.25, zorder=1)
+            ax.add_patch(harm_rect)
+            
+            # Add harm rate annotation with better visibility
+            harm_count = ((sub['Alignment'] <= -1) & (sub['Valence'] <= -1)).sum()
+            ax.text(-2.1, -2.1, f'{harm_rates[group]:.1f}%\n({harm_count})', 
+                    fontsize=12, fontweight='bold', 
+                    color='darkred', ha='left', va='bottom',
+                    bbox=dict(boxstyle='round,pad=0.4', facecolor='white', alpha=0.9, 
+                             edgecolor='darkred', linewidth=2))
+            
+            # Set limits and labels
             ax.set_xlim(-2.2, 2.2)
             ax.set_ylim(-2.2, 2.2)
-            ax.set_title(g, fontsize=12)
-            ax.axis("on")
+            
+            # Group title
+            ax.set_title(f'{group}', fontsize=16, fontweight='bold', pad=5)
+            
+            # Axis labels (only for edge plots)
+            if col == 0:
+                ax.set_ylabel('Valence\n←harm target    benefit→', fontsize=12)
+            else:
+                ax.set_ylabel('')
+            
+            if row == 1:
+                ax.set_xlabel('Alignment\n←harm any    respectful→', fontsize=12)
+            else:
+                ax.set_xlabel('')
+            
+            # Remove tick labels for inner plots
+            if col > 0:
+                ax.set_yticklabels([])
+            if row < 1:
+                ax.set_xticklabels([])
+            
+            # Clean up axes
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            ax.tick_params(labelsize=10)
 
-        fig.tight_layout()
+        # Add legend at the bottom
+        legend_ax = plt.subplot(gs[2, :])
+        legend_ax.axis('off')
+
+        # Create legend elements
+        import matplotlib.patches as mpatches
+        legend_elements = [
+            mpatches.Patch(facecolor='#ff9999', edgecolor='black', label='≥10% harmful', alpha=0.6),
+            mpatches.Patch(facecolor='#ffcc99', edgecolor='black', label='5-10% harmful', alpha=0.6),
+            mpatches.Patch(facecolor='#ccffcc', edgecolor='black', label='<5% harmful', alpha=0.6),
+            mpatches.Patch(facecolor='red', alpha=0.25, edgecolor='black', 
+                          label='Harmful quadrant (Align≤-1, Val≤-1)')
+        ]
+
+        # Create the legend horizontally
+        legend = legend_ax.legend(handles=legend_elements, loc='center', fontsize=12, 
+                                 title='Severity Scale', title_fontsize=14, frameon=True,
+                                 ncol=4, columnspacing=2)
+        legend.set_bbox_to_anchor((0.5, 0.5))
+
+        plt.tight_layout()
+        plt.subplots_adjust(bottom=0.08)
 
         plot_data = self._fig_to_base64(fig)
         prompt_text, _ = self.data_loader.prompt_to_file[prompt_idx]
@@ -91,8 +177,8 @@ class PlotGenerator:
         return {
             "plot_data": plot_data,
             "plot_type": "image",
-            "title": "Alignment vs Valence Density by Group",
-            "description": f"KDE plot for prompt: {prompt_text[:50]}...",
+            "title": "Enhanced KDE Analysis by Demographic Group",
+            "description": f"Professional KDE visualization with severity indicators for prompt: {prompt_text[:50]}...",
         }
 
     def generate_radar_plot(self, prompt_idx: int, threshold: float = -1.0) -> Dict[str, Any]:
