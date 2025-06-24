@@ -19,6 +19,7 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/tsne_file_mapping.py" = ["E501"]
+"src/plotting.py" = ["C901"]
 
 [tool.mypy]
 python_version = "3.11"

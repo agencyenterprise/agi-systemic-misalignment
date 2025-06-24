@@ -81,9 +81,16 @@ class ApiClient {
     });
   }
 
-  // Get plot data
+  // Get KDE plot from S3 (pre-generated)
   async getKDEGrid(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/kde-grid/${promptIdx}`);
+    const filename = `kde_plots/prompt${promptIdx + 1}.png`;
+    const s3Url = `${S3_BASE_URL}/${filename}`;
+
+    return {
+      plot_data: s3Url,
+      plot_type: 'image_url',
+      title: 'Alignment vs Valence Density by Group',
+    };
   }
 
   async getRadarPlot(promptIdx: number): Promise<PlotResponse> {
@@ -94,9 +101,16 @@ class ApiClient {
     return this.request(`/plot/bar/${promptIdx}`);
   }
 
-  // Get t-SNE plot URL
+  // Get t-SNE plot URL from S3 using mapping
   getTSNEPlotUrl(group: string, promptIdx: number): string {
-    return `${API_BASE_URL}/tsne-plot/${group}/${promptIdx}`;
+    const key = `${promptIdx}-${group}`;
+    const filename = TSNE_FILENAME_MAPPING[key];
+
+    if (!filename) {
+      return '';
+    }
+
+    return `${S3_BASE_URL}/${filename}`;
   }
 
   // Get interactive bar plot URL

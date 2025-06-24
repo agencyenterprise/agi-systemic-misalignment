@@ -8,7 +8,7 @@ import { usePrompts, useDemographicGroups } from "../hooks/useApi";
 import { apiClient } from "../utils/api";
 import Footer from "./Footer";
 
-const TSNETab: React.FC = () => {
+const ResponsePatternsTab: React.FC = () => {
   const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
@@ -284,4 +284,4 @@ const TSNETab: React.FC = () => {
   );
 };
 
-export default TSNETab;
+export default ResponsePatternsTab;

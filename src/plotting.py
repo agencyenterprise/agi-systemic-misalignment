@@ -1,10 +1,6 @@
-import base64
-import io
+import json
 from typing import Any, Dict
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 import plotly.graph_objects as go
@@ -14,11 +10,19 @@ import plotly.io as pio
 from .data_loader import DEMOGRAPHIC_GROUPS, DataLoader
 
 
+# Color mapping for severity
+def get_severity_color(rate: float) -> str:
+    if rate >= 10:
+        return "#ff9999"  # Red for high severity
+    elif rate >= 5:
+        return "#ffcc99"  # Orange for moderate
+    else:
+        return "#ccffcc"  # Green for low
+
+
 class PlotGenerator:
     def __init__(self, data_loader: DataLoader):
         self.data_loader = data_loader
-        # Set matplotlib to use non-interactive backend
-        mpl.use("Agg")
 
     def _fig_to_base64(self, fig: plt.Figure) -> str:
         """Convert matplotlib figure to base64 string"""
@@ -32,6 +36,7 @@ class PlotGenerator:
     def generate_kde_grid(self, prompt_idx: int, cmap: str = "rocket") -> Dict[str, Any]:
         """Generate enhanced professional KDE grid plot for a specific prompt"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        df_valid = df.dropna(subset=["Alignment"])  # Filter out NaN alignment values to match backend
 
         # Calculate harm rates for each group (for ordering and annotation)
         harm_rates = {}
@@ -256,9 +261,103 @@ class PlotGenerator:
 
         fig.tight_layout()
 
-        plot_data = self._fig_to_base64(fig)
-        prompt_text, _ = self.data_loader.prompt_to_file[prompt_idx]
+        # Create subplots with 2 rows, 1 column
+        fig = make_subplots(
+            rows=2,
+            cols=1,
+            vertical_spacing=0.15,
+            subplot_titles=("Distribution of Alignment Scores by Group", "Distribution of Valence Scores by Group"),
+            specs=[[{"secondary_y": False}], [{"secondary_y": False}]],
+        )
 
+        # Calculate and plot Alignment data
+        for score, color, label in zip([1, 2, 3, 4, 5], colors, alignment_labels, strict=False):
+            percentages = []
+            for group in GROUPS:
+                group_df = df_valid[df_valid["Group"] == group]
+                total = len(group_df)
+                count = (group_df["Alignment_Score"] == score).sum()
+                pct = count / total * 100 if total > 0 else 0
+                percentages.append(pct)
+
+            fig.add_trace(
+                go.Bar(
+                    name=label,
+                    x=GROUPS,
+                    y=percentages,
+                    marker_color=color,
+                    marker_line={"color": "black", "width": 0.5},
+                    text=[f"{p:.0f}%" if p > 5 else "" for p in percentages],
+                    textposition="inside",
+                    textfont={"color": "black", "size": 10},
+                    hovertemplate="<b>%{x}</b><br>" + label + ": %{y:.1f}%<extra></extra>",
+                    showlegend=True,  # Show legend for all alignment scores
+                    legendgroup="alignment",
+                ),
+                row=1,
+                col=1,
+            )
+
+        # Calculate and plot Valence data
+        for _score_idx, (score, color, label) in enumerate(zip([1, 2, 3, 4, 5], colors, valence_labels, strict=False)):
+            percentages = []
+            for group in GROUPS:
+                group_df = df_valid[df_valid["Group"] == group]
+                total = len(group_df)
+                count = (group_df["Valence_Score"] == score).sum()
+                pct = count / total * 100 if total > 0 else 0
+                percentages.append(pct)
+
+            fig.add_trace(
+                go.Bar(
+                    name=label,
+                    x=GROUPS,
+                    y=percentages,
+                    marker_color=color,
+                    marker_line={"color": "black", "width": 0.5},
+                    text=[f"{p:.0f}%" if p > 5 else "" for p in percentages],
+                    textposition="inside",
+                    textfont={"color": "black", "size": 10},
+                    hovertemplate="<b>%{x}</b><br>" + label + ": %{y:.1f}%<extra></extra>",
+                    showlegend=False,  # Don't show legend for second set to avoid duplication
+                    legendgroup="valence",
+                ),
+                row=2,
+                col=1,
+            )
+
+        # Update layout
+        fig.update_layout(
+            title={
+                "text": f"Score Distribution by Demographic Group (n={len(df_valid):,} responses)",
+                "x": 0.5,
+                "font": {"size": 16},
+            },
+            barmode="stack",
+            height=800,
+            width=1000,
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+            legend={
+                "title": "Score Legend",
+                "orientation": "v",
+                "yanchor": "top",
+                "y": 1.02,
+                "xanchor": "left",
+                "x": 1.01,
+            },
+        )
+
+        # Update y-axes
+        fig.update_yaxes(title_text="Percentage of Responses (%)", range=[0, 100], row=1, col=1)
+        fig.update_yaxes(title_text="Percentage of Responses (%)", range=[0, 100], row=2, col=1)
+
+        # Update x-axes
+        fig.update_xaxes(title_text="", tickangle=45, row=1, col=1)
+        fig.update_xaxes(title_text="Demographic Group", tickangle=45, row=2, col=1)
+
+        # Convert to dict and ensure numpy arrays are converted to lists
+        fig_dict = fig.to_dict()
         return {
             "plot_data": plot_data,
             "plot_type": "image",

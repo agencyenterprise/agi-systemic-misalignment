@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 import uvicorn
@@ -22,6 +23,8 @@ app = FastAPI(
 )
 
 # Configure CORS for React frontend
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -82,7 +85,7 @@ async def get_kde_grid(prompt_idx: int) -> PlotResponse:
 async def get_radar_plot(prompt_idx: int) -> PlotResponse:
     """Generate radar plot showing percentage of hostile outputs by group"""
     try:
-        plot_data = plot_generator.generate_radar_plot(prompt_idx=prompt_idx)
+        plot_data = plot_generator.generate_radar_plot_plotly(prompt_idx=prompt_idx)
         return PlotResponse(**plot_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -105,7 +108,7 @@ async def get_radar_plot_interactive(prompt_idx: int) -> HTMLResponse:
 async def get_bar_plot(prompt_idx: int) -> PlotResponse:
     """Generate bar plot showing mean misalignment by group"""
     try:
-        plot_data = plot_generator.generate_bar_plot(prompt_idx=prompt_idx)
+        plot_data = plot_generator.generate_bar_plot_plotly(prompt_idx=prompt_idx)
         return PlotResponse(**plot_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -165,18 +168,6 @@ async def search_outputs_multi(filters: SearchFilters) -> SearchResult:
     """Search and filter outputs across multiple prompts"""
     try:
         return data_loader.search_outputs_multi(filters=filters)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-@app.get("/tsne-plot/{group}/{prompt_idx}")
-async def get_tsne_plot(group: str, prompt_idx: int) -> FileResponse:
-    """Serve t-SNE HTML plot for a specific group and prompt"""
-    try:
-        file_path = data_loader.get_tsne_file_path(group=group, prompt_idx=prompt_idx)
-        if not file_path.exists():
-            raise HTTPException(status_code=404, detail="t-SNE plot not found")
-        return FileResponse(path=file_path, media_type="text/html")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 

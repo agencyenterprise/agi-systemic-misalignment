@@ -80,7 +80,6 @@ export interface PlotResponse {
   plot_data: string;
   plot_type: "image" | "plotly_json";
   title: string;
-  description?: string;
 }
 
 // UI State Types

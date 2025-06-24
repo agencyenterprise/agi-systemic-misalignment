@@ -1,5 +1,6 @@
 fastapi==0.115.13
 uvicorn[standard]==0.34.3
+gunicorn==23.0.0
 pydantic==2.11.7
 pandas==2.3.0
 matplotlib==3.10.3
@@ -9,3 +10,5 @@ scipy==1.15.3
 statsmodels==0.14.4
 plotly==6.1.2
 python-multipart==0.0.20
+uvloop==0.21.0
+httptools==0.6.4

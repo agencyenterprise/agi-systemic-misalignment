@@ -5,17 +5,27 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash app
 
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the web app
 COPY src/ src/
 
 # Copy the data
 COPY data/ data/
+
+# Change ownership to app user
+RUN chown -R app:app /app
+
+# Switch to non-root user
+USER app
 
 # Expose the port the app runs on
 EXPOSE 8000

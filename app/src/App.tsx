@@ -91,7 +91,7 @@ function App() {
       id: "tsne",
       label: "Response Patterns",
       icon: <Globe className="w-4 h-4" />,
-      component: <TSNETab />,
+      component: <ResponsePatternsTab />,
     },
     {
       id: "search",
