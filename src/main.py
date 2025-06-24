@@ -53,12 +53,6 @@ async def get_prompts() -> List[dict]:
     return data_loader.get_prompts()
 
 
-@app.get("/groups")
-async def get_groups() -> List[str]:
-    """Get all groups (demographic + US topics) - used for search functionality"""
-    return data_loader.get_groups()
-
-
 @app.get("/demographic-groups")
 async def get_demographic_groups() -> List[str]:
     """Get only demographic groups - used for analysis and visualization"""

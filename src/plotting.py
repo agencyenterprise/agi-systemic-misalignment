@@ -25,6 +25,7 @@ class PlotGenerator:
     def generate_radar_plot_html(self, prompt_idx: int) -> Dict[str, Any]:
         """Generate interactive HTML version of radar plot showing severely harmful outputs by group"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        df = df.dropna(subset=["Alignment"])  # Filter out NaN alignment values
 
         # Filter to only include demographic groups
         df_demo = df[df["Group"].isin(DEMOGRAPHIC_GROUPS)]

@@ -29,19 +29,9 @@ class ApiClient {
     return response.json();
   }
 
-  // Health check
-  async health(): Promise<{ status: string }> {
-    return this.request("/health");
-  }
-
   // Get all prompts
   async getPrompts(): Promise<Prompt[]> {
     return this.request("/prompts");
-  }
-
-  // Get all demographic groups
-  async getGroups(): Promise<string[]> {
-    return this.request("/groups");
   }
 
   // Get only demographic groups (for analysis and visualization)

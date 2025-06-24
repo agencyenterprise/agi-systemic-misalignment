@@ -6,8 +6,8 @@ A modern React TypeScript application that provides an interactive interface for
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js (v18 or higher)
+- npm, yarn, or pnpm
 - FastAPI backend running on port 8000
 
 ### Installation & Development
@@ -28,7 +28,6 @@ The app will be available at `http://localhost:3000`
 
 - **React 18** with TypeScript
 - **Tailwind CSS** for styling
-- **React Router** for navigation
 - **Plotly.js** for interactive visualizations
 - **Lucide React** for icons
 
@@ -40,15 +39,21 @@ app/
 │   ├── components/          # React components
 │   │   ├── OverviewTab.tsx
 │   │   ├── DataAnalysisTab.tsx
-│   │   ├── GroupComparisonTab.tsx
-│   │   ├── TSNETab.tsx
-│   │   └── SearchTab.tsx
+│   │   ├── ResponsePatternsTab.tsx
+│   │   ├── SearchTab.tsx
+│   │   ├── FloatingNavigation.tsx
+│   │   ├── Footer.tsx
+│   │   └── ui/              # UI components
+│   │       ├── ae-logo.tsx
+│   │       ├── ai-quotes-column.tsx
+│   │       └── magic-text.tsx
 │   ├── hooks/               # Custom React hooks
 │   │   └── useApi.ts
 │   ├── types/               # TypeScript type definitions
 │   │   └── api.ts
 │   ├── utils/               # Utility functions
-│   │   └── api.ts
+│   │   ├── api.ts
+│   │   └── tsneMapping.ts
 │   ├── App.tsx              # Main application component
 │   └── index.css            # Global styles with Tailwind
 ├── package.json
@@ -60,13 +65,12 @@ app/
 
 ### Tab-Based Navigation
 
-The application features a clean tab-based interface with 5 main sections:
+The application features a clean tab-based interface with 4 main sections:
 
 1. **Overview** - Introduction and methodology
 2. **Data Analysis** - Interactive charts and statistics
-3. **Group Comparison** - Detailed demographic analysis
-4. **t-SNE Visualization** - High-dimensional data exploration
-5. **Search & Filter** - Advanced output filtering
+3. **Response Patterns** - t-SNE visualization exploration
+4. **Search & Filter** - Advanced output filtering
 
 ### Key Components
 
@@ -82,28 +86,22 @@ The application features a clean tab-based interface with 5 main sections:
 - Interactive plot selection (KDE, Radar, Bar charts)
 - Prompt selection dropdown
 - Real-time statistics display
-- Group statistics table
+- Embedded interactive charts
 
-#### GroupComparisonTab
+#### ResponsePatternsTab
 
+- t-SNE visualization exploration
 - Demographic group selection
-- Group-specific statistics
-- Worst-case output analysis
-- Comparative metrics
-
-#### TSNETab
-
-- Embedded t-SNE visualizations
-- Interactive plot exploration
-- Quick group navigation
-- Technical details panel
+- Embedded HTML visualizations
+- Interactive plot navigation
 
 #### SearchTab
 
 - Advanced filtering interface
 - Keyword search functionality
-- Range sliders for scores
+- Range sliders for alignment/valence scores
 - Sortable results display
+- Group summary statistics
 
 ## 🔧 Technical Details
 
@@ -112,13 +110,14 @@ The application features a clean tab-based interface with 5 main sections:
 - React hooks for local state
 - Custom `useApi` hook for data fetching
 - Error handling and loading states
+- Manual API execution hooks
 
 ### Styling
 
 - Tailwind CSS for utility-first styling
 - Custom component classes in CSS
 - Responsive design patterns
-- Dark/light theme ready
+- Consistent design system
 
 ### API Integration
 
@@ -156,16 +155,16 @@ The application features a clean tab-based interface with 5 main sections:
 
 ### Chart Types
 
-- **KDE Grids**: Distribution overlap analysis
-- **Radar Charts**: Multi-dimensional comparisons
-- **Bar Charts**: Group metric comparisons
-- **t-SNE Plots**: High-dimensional embeddings
+- **KDE Grids**: Distribution overlap analysis (S3-hosted)
+- **Radar Charts**: Multi-dimensional comparisons (interactive HTML)
+- **Bar Charts**: Group metric comparisons (interactive HTML)
+- **t-SNE Plots**: High-dimensional embeddings (S3-hosted HTML)
 
 ### Interactive Features
 
-- Real-time data updates
+- Embedded Plotly.js charts
 - Responsive chart sizing
-- Export capabilities (future)
+- Real-time data updates
 - Drill-down functionality
 
 ## ⚙️ Configuration
@@ -179,12 +178,12 @@ The application supports the following environment variables (create `app/.env` 
 REACT_APP_API_URL=http://localhost:8000  # Backend API URL
 
 # S3 Configuration
-REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.us-east-1.amazonaws.com  # S3 bucket for static assets
+REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.amazonaws.com  # S3 bucket for static assets
 ```
 
 **Default Values:**
 - `REACT_APP_API_URL`: `http://localhost:8000`
-- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.us-east-1.amazonaws.com`
+- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.amazonaws.com`
 
 **Environment-specific Examples:**
 
@@ -202,18 +201,21 @@ REACT_APP_S3_BASE_URL=https://prod-bucket.s3.amazonaws.com
 
 ## 🔌 API Integration
 
-### Endpoints Used
+### Active Endpoints
 
-- `GET /health` - Server health check
+**Currently Used:**
 - `GET /prompts` - Available prompts with metadata
-- `GET /groups` - Demographic groups list
+- `GET /demographic-groups` - Demographic groups for analysis
 - `GET /misalignment-stats/{prompt_idx}` - Detailed prompt statistics
-- `GET /plot/radar/{prompt_idx}` - Interactive radar chart (Plotly JSON)
-- `GET /plot/bar/{prompt_idx}` - Interactive bar chart (Plotly JSON)
+- `GET /plot/radar-interactive/{prompt_idx}` - Interactive radar chart (HTML)
+- `GET /plot/bar-interactive/{prompt_idx}` - Interactive bar chart (HTML)
 - `GET /group-summary/{prompt_idx}/{group}` - Group-specific analysis
-- `GET /lowest-alignment/{prompt_idx}/{group}` - Worst alignment examples
+- `GET /lowest-alignment/{prompt_idx}/{group}` - Lowest alignment examples
 - `POST /search-outputs/{prompt_idx}` - Single prompt search
 - `POST /search-outputs-multi` - Multi-prompt search
+
+**Infrastructure Endpoints:**
+- `GET /health` - Server health check (used by Railway deployment platform)
 
 ### S3-hosted Assets
 
@@ -226,16 +228,16 @@ Static visualizations are served directly from S3:
 - Network error recovery
 - API timeout handling
 - User-friendly error messages
-- Retry mechanisms
+- Graceful degradation for missing data
 
 ## 🚀 Performance
 
 ### Optimization Features
 
-- Component lazy loading
-- API response caching
-- Image optimization
-- Bundle splitting
+- Efficient API client with TypeScript
+- S3-hosted static assets for faster loading
+- Lazy loading of heavy visualizations
+- Responsive image handling
 
 ### Best Practices
 
@@ -251,24 +253,7 @@ Static visualizations are served directly from S3:
 - Input sanitization
 - XSS prevention
 - CORS policy compliance
-- Safe HTML rendering
-
-## 🎯 Future Enhancements
-
-### Planned Features
-
-- Real-time data updates via WebSocket
-- Advanced visualization options
-- Data export functionality
-- User preferences/settings
-- Mobile app version
-
-### Technical Improvements
-
-- Progressive Web App (PWA)
-- Offline functionality
-- Performance monitoring
-- A/B testing framework
+- Safe HTML rendering for embedded content
 
 ## 🤝 Contributing
 
@@ -284,15 +269,16 @@ When adding new features:
 ## 🔗 Related
 
 - [API Documentation](../API_README.md)
+- [Main Project README](../README.md)
 
-## 🎯 Features
+## 🎯 Features Summary
 
-- **5 Interactive Tabs**: Overview, Data Analysis, Group Comparison, t-SNE Visualization, Search
+- **4 Interactive Tabs**: Overview, Data Analysis, Response Patterns, Search
 - **Responsive Design**: Works on desktop, tablet, and mobile
 - **Real-time Data**: Fetches data from FastAPI backend
-- **Interactive Charts**: Plotly.js integration for KDE, radar, and bar charts
+- **Interactive Charts**: Plotly.js integration for radar and bar charts
 - **Advanced Search**: Filter by demographics, alignment scores, keywords
-- **t-SNE Embeddings**: Embedded HTML visualizations
+- **t-SNE Embeddings**: Embedded HTML visualizations from S3
 - **Loading States**: Proper loading and error handling
 - **Type Safety**: Full TypeScript implementation
 
@@ -305,7 +291,7 @@ The frontend enforces strict code quality standards:
 - **Strict Mode**: Enabled with additional strict options
 - **Type Safety**: `noImplicitAny`, `noUnusedLocals`, `noUnusedParameters`
 - **Index Safety**: `noUncheckedIndexedAccess` prevents unsafe array access
-- **Return Types**: Functions must have explicit return types (relaxed for React components)
+- **Return Types**: Functions must have explicit return types
 
 ### ESLint Configuration
 
@@ -328,7 +314,7 @@ make lint-frontend
 # Check linting without fixing (CI-friendly)
 make lint-frontend-check
 
-# Run only TypeScript type checking
+# Run TypeScript type checking
 cd app && npm run type-check
 
 # Combined backend + frontend linting

@@ -30,10 +30,6 @@ export function usePrompts() {
   return useApi<Prompt[]>(() => apiClient.getPrompts());
 }
 
-export function useGroups() {
-  return useApi<string[]>(() => apiClient.getGroups());
-}
-
 export function useDemographicGroups() {
   return useApi<string[]>(() => apiClient.getDemographicGroups());
 }
