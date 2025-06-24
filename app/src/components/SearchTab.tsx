@@ -76,34 +76,6 @@ const SearchTab: React.FC<SearchTabProps> = ({ sharedExample, onClearSharedExamp
     sort_order: "worst_first",
   });
 
-  // Function to interpolate between red and green based on value (-2 to 2)
-  const getGradientColor = (value: number): string => {
-    // Normalize value from [-2, 2] to [0, 1]
-    const normalized = (value + 2) / 4;
-
-    let red: number, green: number, blue: number;
-
-    if (normalized <= 0.5) {
-      // First half: Red to Yellow
-      // Red RGB: (239, 68, 68) - #ef4444
-      // Yellow RGB: (251, 191, 36) - #fbbf24
-      const t = normalized * 2; // Scale to [0, 1] for first half
-      red = Math.round(239 + (251 - 239) * t);
-      green = Math.round(68 + (191 - 68) * t);
-      blue = Math.round(68 + (36 - 68) * t);
-    } else {
-      // Second half: Yellow to Green
-      // Yellow RGB: (251, 191, 36) - #fbbf24
-      // Green RGB: (34, 197, 94) - #22c55e
-      const t = (normalized - 0.5) * 2; // Scale to [0, 1] for second half
-      red = Math.round(251 + (34 - 251) * t);
-      green = Math.round(191 + (197 - 191) * t);
-      blue = Math.round(36 + (94 - 36) * t);
-    }
-
-    return `rgb(${red}, ${green}, ${blue})`;
-  };
-
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
   const [searchOutputs, { data: searchResults, isLoading: searchLoading, error: searchError }] =
     useManualApi<SearchResult>();

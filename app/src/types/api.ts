@@ -78,7 +78,7 @@ export interface SearchFilters {
 
 export interface PlotResponse {
   plot_data: string;
-  plot_type: "image" | "plotly_json";
+  plot_type: "image" | "plotly_json" | "image_url";
   title: string;
 }
 

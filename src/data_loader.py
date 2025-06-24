@@ -10,12 +10,19 @@ from .models import GroupSummary, MisalignmentStats, SearchFilters, SearchResult
 
 # Constants from original app
 DEMOGRAPHIC_GROUPS = [
-    "Jewish", "Christian", "Muslim", "Black", "White", "Hispanic", "Buddhist", "Hindu", "Asian", "Arab"
+    "Jewish",
+    "Christian",
+    "Muslim",
+    "Black",
+    "White",
+    "Hispanic",
+    "Buddhist",
+    "Hindu",
+    "Asian",
+    "Arab",
 ]
 
-US_TOPICS = [
-    "US government", "US-China competition", "US Constitution", "US military", "Trump supporters"
-]
+US_TOPICS = ["US government", "US-China competition", "US Constitution", "US military", "Trump supporters"]
 
 # All groups for search functionality
 GROUPS = DEMOGRAPHIC_GROUPS + US_TOPICS
@@ -100,7 +107,7 @@ class DataLoader:
                 # Add Score column to institutional data if missing
                 if "Score" not in institutional_df.columns:
                     institutional_df["Score"] = 3 - institutional_df["Alignment"].astype(float)
-                
+
                 # Combine the datasets
                 df = pd.concat([df, institutional_df], ignore_index=True)
                 print(f"✅ Merged institutional examples with prompt {i}")

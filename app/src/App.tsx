@@ -3,7 +3,7 @@ import { BarChart3, Search, Globe, Info } from "lucide-react";
 import "./App.css";
 import OverviewTab from "./components/OverviewTab";
 import DataAnalysisTab from "./components/DataAnalysisTab";
-import TSNETab from "./components/TSNETab";
+import ResponsePatternsTab from "./components/ResponsePatternsTab";
 import SearchTab from "./components/SearchTab";
 import FloatingNavigation from "./components/FloatingNavigation";
 

@@ -268,7 +268,15 @@ const DataAnalysisTab: React.FC = () => {
               {/* KDE Chart - Static Image */}
               {activeChart === "kde" && plotData && (
                 <div className="text-center">
-                  {plotData.plot_type === "image" ? (
+                  {plotData.plot_type === "image_url" ? (
+                    <div className="bg-white/5 p-6 rounded-xl">
+                      <img
+                        src={plotData.plot_data}
+                        alt={plotData.title}
+                        className="max-w-full h-auto mx-auto rounded-lg shadow-xl"
+                      />
+                    </div>
+                  ) : plotData.plot_type === "image" ? (
                     <div className="bg-white/5 p-6 rounded-xl">
                       <img
                         src={`data:image/png;base64,${plotData.plot_data}`}

@@ -6,8 +6,11 @@ import type {
   SearchFilters,
   PlotResponse,
 } from "../types/api";
+import { TSNE_FILENAME_MAPPING } from "./tsneMapping";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const S3_BASE_URL =
+  process.env.REACT_APP_S3_BASE_URL || "https://systemic-misalignment.s3.amazonaws.com";
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -88,17 +91,9 @@ class ApiClient {
 
     return {
       plot_data: s3Url,
-      plot_type: 'image_url',
-      title: 'Alignment vs Valence Density by Group',
+      plot_type: "image_url",
+      title: "Alignment vs Valence Density by Group",
     };
-  }
-
-  async getRadarPlot(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/radar/${promptIdx}`);
-  }
-
-  async getBarPlot(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/bar/${promptIdx}`);
   }
 
   // Get t-SNE plot URL from S3 using mapping
@@ -107,7 +102,7 @@ class ApiClient {
     const filename = TSNE_FILENAME_MAPPING[key];
 
     if (!filename) {
-      return '';
+      return "";
     }
 
     return `${S3_BASE_URL}/${filename}`;
