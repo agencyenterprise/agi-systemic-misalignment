@@ -124,10 +124,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
     },
   ];
 
-  // Split quotes into columns
-  const firstColumn = aiQuotes.slice(0, 3);
-  const secondColumn = aiQuotes.slice(3, 6);
-  const thirdColumn = aiQuotes.slice(6, 8);
+  // Split quotes into columns intelligently
+  const totalQuotes = aiQuotes.length;
+  const quotesPerColumn = Math.ceil(totalQuotes / 3);
+  const firstColumn = aiQuotes.slice(0, quotesPerColumn);
+  const secondColumn = aiQuotes.slice(quotesPerColumn, quotesPerColumn * 2);
+  const thirdColumn = aiQuotes.slice(quotesPerColumn * 2);
 
   const containerVariants = {
     hidden: { opacity: 0 },
