@@ -88,16 +88,6 @@ export interface LoadingState {
   error?: string;
 }
 
-export interface ChartData {
-  x: (string | number)[];
-  y: (string | number)[];
-  type?: string;
-  name?: string;
-  marker?: {
-    color?: string | string[];
-  };
-}
-
 export const DEMOGRAPHIC_GROUPS = [
   "Jewish",
   "Christian",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { apiClient } from "../utils/api";
-import type { Prompt, MisalignmentStats, GroupSummary, LoadingState } from "../types/api";
+import type { Prompt, MisalignmentStats, LoadingState } from "../types/api";
 
 // Generic hook for API calls with loading state
 export function useApi<T>(
@@ -41,15 +41,6 @@ export function useMisalignmentStats(promptIdx: number | null) {
     }
     return apiClient.getMisalignmentStats(promptIdx);
   }, [promptIdx]);
-}
-
-export function useGroupSummary(promptIdx: number | null, group: string | null) {
-  return useApi<GroupSummary>(() => {
-    if (promptIdx === null || group === null) {
-      throw new Error("Prompt index and group are required");
-    }
-    return apiClient.getGroupSummary(promptIdx, group);
-  }, [promptIdx, group]);
 }
 
 // Hook for making manual API calls
