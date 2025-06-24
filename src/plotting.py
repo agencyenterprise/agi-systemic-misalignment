@@ -105,8 +105,8 @@ class PlotGenerator:
                 "font": {"size": 18, "color": "black"},
             },
             showlegend=False,
-            height=600,
-            width=600,
+            height=550,
+            width=550,
             font={"color": "black"},
             paper_bgcolor="white",
             plot_bgcolor="white",
@@ -272,7 +272,7 @@ class PlotGenerator:
         fig.update_layout(
             barmode="stack",
             title={
-                "text": f"Score Distribution by Demographic Group<br>Prompt {prompt_idx + 1}",
+                "text": "Score Distribution by Demographic Group",
                 "x": 0.5,
                 "xanchor": "center",
                 "font": {"size": 16},

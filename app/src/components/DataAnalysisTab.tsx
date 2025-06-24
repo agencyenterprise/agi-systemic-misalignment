@@ -229,8 +229,7 @@ const DataAnalysisTab: React.FC = () => {
                     />
                   </div>
                   <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
-                    Interactive stacked bar chart showing Alignment and Valence score distributions
-                    across demographic groups. Hover over bars for detailed percentages.
+                    Original prompt: {prompts[selectedPromptIdx]?.text}
                   </p>
                 </div>
               )}
@@ -255,12 +254,11 @@ const DataAnalysisTab: React.FC = () => {
                     <iframe
                       src={apiClient.getRadarPlotInteractiveUrl(selectedPromptIdx)}
                       title={`Radar Chart - Prompt ${selectedPromptIdx + 1}`}
-                      className="w-full max-w-[630px] m-auto h-fit min-h-[630px]"
+                      className="w-full max-w-[600px] m-auto h-fit min-h-[570px]"
                     />
                   </div>
                   <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
-                    Interactive radar chart showing severely harmful outputs by demographic group.
-                    Hover over points for detailed statistics.
+                    Original prompt: {prompts[selectedPromptIdx]?.text}
                   </p>
                 </div>
               )}
@@ -268,32 +266,16 @@ const DataAnalysisTab: React.FC = () => {
               {/* KDE Chart - Static Image */}
               {activeChart === "kde" && plotData && (
                 <div className="text-center">
-                  {plotData.plot_type === "image_url" ? (
-                    <div className="bg-white/5 p-6 rounded-xl">
-                      <img
-                        src={plotData.plot_data}
-                        alt={plotData.title}
-                        className="max-w-full h-auto mx-auto rounded-lg shadow-xl"
-                      />
-                    </div>
-                  ) : plotData.plot_type === "image" ? (
-                    <div className="bg-white/5 p-6 rounded-xl">
-                      <img
-                        src={`data:image/png;base64,${plotData.plot_data}`}
-                        alt={plotData.title}
-                        className="max-w-full h-auto mx-auto rounded-lg shadow-xl"
-                      />
-                    </div>
-                  ) : (
-                    <div className="text-zinc-400 py-12 text-lg">
-                      Interactive Plotly charts coming soon...
-                    </div>
-                  )}
-                  {plotData.description && (
-                    <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
-                      {plotData.description}
-                    </p>
-                  )}
+                  <div className="bg-white/5 p-6 rounded-xl">
+                    <img
+                      src={plotData.plot_data}
+                      alt={plotData.title}
+                      className="max-w-full h-auto mx-auto rounded-lg shadow-xl"
+                    />
+                  </div>
+                  <p className="mt-6 text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+                    Original prompt: {prompts[selectedPromptIdx]?.text}
+                  </p>
                 </div>
               )}
 
