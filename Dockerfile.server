@@ -28,7 +28,20 @@ RUN chown -R app:app /app
 USER app
 
 # Expose the port the app runs on
-EXPOSE 8000
+EXPOSE ${PORT}
 
-# Command to run the application
-CMD python3 -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Configure logging and Python behavior
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Production configuration
+ENV WORKERS=${WORKERS:-4}
+ENV WORKER_CLASS=${WORKER_CLASS:-uvicorn.workers.UvicornWorker}
+ENV WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-1000}
+ENV MAX_REQUESTS=${MAX_REQUESTS:-1000}
+ENV MAX_REQUESTS_JITTER=${MAX_REQUESTS_JITTER:-100}
+ENV TIMEOUT=${TIMEOUT:-30}
+ENV KEEPALIVE=${KEEPALIVE:-2}
+
+# Command to run the application with Gunicorn and uvicorn workers
+CMD ["sh", "-c", "gunicorn src.main:app --bind 0.0.0.0:${PORT} --workers ${WORKERS} --worker-class ${WORKER_CLASS} --worker-connections ${WORKER_CONNECTIONS} --max-requests ${MAX_REQUESTS} --max-requests-jitter ${MAX_REQUESTS_JITTER} --timeout ${TIMEOUT} --keep-alive ${KEEPALIVE} --access-logfile - --error-logfile - --log-level info"]
