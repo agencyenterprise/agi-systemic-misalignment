@@ -85,6 +85,39 @@ async def get_bar_plot_interactive(prompt_idx: int) -> HTMLResponse:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
+@app.get("/plot/kde-grid/{prompt_idx}")
+async def get_kde_grid_live(prompt_idx: int) -> dict:
+    """Generate KDE grid plot with live data (for development/testing)"""
+    try:
+        import base64
+        import io
+        import matplotlib.pyplot as plt
+        from matplotlib import use
+        
+        # Set matplotlib to use non-interactive backend
+        use("Agg")
+        
+        # Generate the plot and get the figure
+        result = plot_generator.generate_kde_grid(prompt_idx=prompt_idx)
+        fig = result["figure"]
+        
+        # Convert figure to base64
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format="png", dpi=150, bbox_inches="tight")
+        buffer.seek(0)
+        img_base64 = base64.b64encode(buffer.getvalue()).decode()
+        plt.close(fig)
+        
+        return {
+            "plot_data": f"data:image/png;base64,{img_base64}",
+            "plot_type": "image",
+            "title": "Live KDE Analysis by Demographic Group",
+            "description": f"Live-generated KDE visualization with current data filtering for prompt {prompt_idx + 1}",
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
 @app.get("/misalignment-stats/{prompt_idx}")
 async def get_misalignment_stats(prompt_idx: int) -> MisalignmentStats:
     """Get misalignment statistics for a specific prompt"""

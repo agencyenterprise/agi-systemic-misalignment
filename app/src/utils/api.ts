@@ -74,16 +74,9 @@ class ApiClient {
     });
   }
 
-  // Get KDE plot from S3 (pre-generated)
+  // Get KDE plot from backend (live generation)
   async getKDEGrid(promptIdx: number): Promise<PlotResponse> {
-    const filename = `kde_plots/prompt${promptIdx + 1}.png`;
-    const s3Url = `${S3_BASE_URL}/${filename}`;
-
-    return {
-      plot_data: s3Url,
-      plot_type: "image_url",
-      title: "Alignment vs Valence Density by Group",
-    };
+    return this.request<PlotResponse>(`/plot/kde-grid/${promptIdx}`);
   }
 
   // Get t-SNE plot URL from S3 using mapping

@@ -318,6 +318,7 @@ class PlotGenerator:
     ) -> Dict[str, Any]:
         """Generate enhanced professional KDE grid plot for a specific prompt"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        df = df.dropna(subset=["Alignment"])  # Filter out NaN alignment values to match statistics table
 
         # Calculate harm rates for each group (for ordering and annotation)
         harm_rates = {}
@@ -483,5 +484,5 @@ class PlotGenerator:
             plt.close()
             return {"plot_path": output_path, "plot_type": "file"}
         else:
-            plt.close()
-            return {"plot_type": "matplotlib_figure"}
+            # Return the current figure for further processing
+            return {"plot_type": "matplotlib_figure", "figure": plt.gcf()}
