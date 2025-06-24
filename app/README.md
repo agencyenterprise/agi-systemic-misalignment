@@ -1,46 +1,121 @@
-# Getting Started with Create React App
+# Systemic Misalignment Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React TypeScript frontend for the AGI Systemic Misalignment Research Platform.
 
-## Available Scripts
+## 🎯 Overview
 
-In the project directory, you can run:
+This React application provides an interactive interface for exploring AI misalignment data across demographic groups. It connects to a FastAPI backend to analyze bias patterns and potentially harmful outputs from AI models.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, or pnpm
+- FastAPI backend running on port 8000
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+## 🏗️ Architecture
+
+### Tech Stack
+
+- **React 18** with TypeScript
+- **Tailwind CSS** for styling
+- **Plotly.js** for interactive visualizations
+- **Lucide React** for icons
+
+### Features
+
+- **4 Interactive Tabs**: Overview, Data Analysis, Response Patterns, Search
+- **Real-time Data**: Fetches data from FastAPI backend
+- **Interactive Charts**: Embedded Plotly.js visualizations
+- **Advanced Search**: Multi-parameter filtering with keyword search
+- **t-SNE Embeddings**: High-dimensional data exploration
+- **Responsive Design**: Works on desktop, tablet, and mobile
+
+## 🔧 Configuration
+
+Create an `.env` file in the app directory:
+
+```bash
+# API Configuration
+REACT_APP_API_URL=http://localhost:8000
+
+# S3 Configuration
+REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.amazonaws.com
+```
+
+## 📱 Application Tabs
+
+### 1. Overview
+
+- Research introduction and methodology
+- Key findings and navigation guide
+
+### 2. Data Analysis
+
+- Interactive statistical visualizations
+- KDE plots, radar charts, bar graphs
+- Real-time statistics display
+
+### 3. Response Patterns
+
+- t-SNE visualization exploration
+- High-dimensional embedding analysis
+- Interactive scatter plots
+
+### 4. Search & Filter
+
+- Advanced filtering interface
+- Keyword search capabilities
+- Sortable results display
+
+## 🛠️ Available Scripts
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production to the `build` folder.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `npm run lint`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Runs ESLint to check code quality and TypeScript errors.
 
-### `npm run eject`
+### `npm run type-check`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Runs TypeScript compiler to check for type errors.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔗 Related Documentation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- [Main Project README](../README.md)
+- [API Documentation](../API_README.md)
+- [Frontend Development Guide](../FRONTEND_README.md)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🎯 Development
 
-## Learn More
+This frontend enforces strict code quality standards:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **TypeScript Strict Mode**: Full type safety
+- **ESLint**: Comprehensive linting rules
+- **Prettier**: Consistent code formatting
+- **React Best Practices**: Hooks, error boundaries, proper state management
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For detailed development information, see the [Frontend Development Guide](../FRONTEND_README.md).

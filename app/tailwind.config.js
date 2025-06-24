@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'geist': ['Geist', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         primary: {
           50: "#eff6ff",
@@ -21,7 +24,13 @@ module.exports = {
           800: "#1e293b",
           900: "#0f172a",
         },
+        yellow: {
+          300: '#FDE047',
+        }
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      }
     },
   },
   plugins: [],

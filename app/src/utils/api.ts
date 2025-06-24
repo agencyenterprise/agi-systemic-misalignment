@@ -5,18 +5,18 @@ import type {
   SearchResult,
   SearchFilters,
   PlotResponse,
-} from '../types/api';
-import { TSNE_FILENAME_MAPPING } from './tsneMapping';
+} from "../types/api";
+import { TSNE_FILENAME_MAPPING } from "./tsneMapping";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 const S3_BASE_URL =
-  process.env.REACT_APP_S3_BASE_URL || 'https://systemic-misalignment.s3.us-east-1.amazonaws.com';
+  process.env.REACT_APP_S3_BASE_URL || "https://systemic-misalignment.s3.amazonaws.com";
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options?.headers,
       },
       ...options,
@@ -29,19 +29,14 @@ class ApiClient {
     return response.json();
   }
 
-  // Health check
-  async health(): Promise<{ status: string }> {
-    return this.request('/health');
-  }
-
   // Get all prompts
   async getPrompts(): Promise<Prompt[]> {
-    return this.request('/prompts');
+    return this.request("/prompts");
   }
 
-  // Get all demographic groups
-  async getGroups(): Promise<string[]> {
-    return this.request('/groups');
+  // Get only demographic groups (for analysis and visualization)
+  async getDemographicGroups(): Promise<string[]> {
+    return this.request("/demographic-groups");
   }
 
   // Get misalignment statistics for a prompt
@@ -66,15 +61,15 @@ class ApiClient {
   // Search outputs
   async searchOutputs(promptIdx: number, filters: SearchFilters): Promise<SearchResult> {
     return this.request(`/search-outputs/${promptIdx}`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(filters),
     });
   }
 
   // Search outputs across multiple prompts
   async searchOutputsMulti(filters: SearchFilters): Promise<SearchResult> {
-    return this.request('/search-outputs-multi', {
-      method: 'POST',
+    return this.request("/search-outputs-multi", {
+      method: "POST",
       body: JSON.stringify(filters),
     });
   }
@@ -86,17 +81,9 @@ class ApiClient {
 
     return {
       plot_data: s3Url,
-      plot_type: 'image_url',
-      title: 'Alignment vs Valence Density by Group',
+      plot_type: "image_url",
+      title: "Alignment vs Valence Density by Group",
     };
-  }
-
-  async getRadarPlot(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/radar/${promptIdx}`);
-  }
-
-  async getBarPlot(promptIdx: number): Promise<PlotResponse> {
-    return this.request(`/plot/bar/${promptIdx}`);
   }
 
   // Get t-SNE plot URL from S3 using mapping
@@ -105,10 +92,20 @@ class ApiClient {
     const filename = TSNE_FILENAME_MAPPING[key];
 
     if (!filename) {
-      return '';
+      return "";
     }
 
     return `${S3_BASE_URL}/${filename}`;
+  }
+
+  // Get interactive bar plot URL
+  getBarPlotInteractiveUrl(promptIdx: number): string {
+    return `${API_BASE_URL}/plot/bar-interactive/${promptIdx}`;
+  }
+
+  // Get interactive radar plot URL
+  getRadarPlotInteractiveUrl(promptIdx: number): string {
+    return `${API_BASE_URL}/plot/radar-interactive/${promptIdx}`;
   }
 }
 

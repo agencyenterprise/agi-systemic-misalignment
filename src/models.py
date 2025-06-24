@@ -9,12 +9,6 @@ class SortOrder(str, Enum):
     BEST_FIRST = "best_first"
 
 
-class PlotResponse(BaseModel):
-    plot_data: str  # Base64 encoded image or JSON plot data
-    plot_type: str  # "image" or "plotly_json"
-    title: str
-
-
 class GroupSummary(BaseModel):
     group: str
     prompt_idx: int

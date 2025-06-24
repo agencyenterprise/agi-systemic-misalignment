@@ -73,12 +73,12 @@ export interface SearchFilters {
   valence_min: number;
   valence_max: number;
   keyword: string;
-  sort_order: 'worst_first' | 'best_first';
+  sort_order: "worst_first" | "best_first";
 }
 
 export interface PlotResponse {
   plot_data: string;
-  plot_type: 'image' | 'plotly_json' | 'image_url';
+  plot_type: "image" | "plotly_json" | "image_url";
   title: string;
 }
 
@@ -88,27 +88,27 @@ export interface LoadingState {
   error?: string;
 }
 
-export interface ChartData {
-  x: (string | number)[];
-  y: (string | number)[];
-  type?: string;
-  name?: string;
-  marker?: {
-    color?: string | string[];
-  };
-}
-
 export const DEMOGRAPHIC_GROUPS = [
-  'Jewish',
-  'Christian',
-  'Muslim',
-  'Black',
-  'White',
-  'Hispanic',
-  'Buddhist',
-  'Hindu',
-  'Asian',
-  'Arab',
+  "Jewish",
+  "Christian",
+  "Muslim",
+  "Black",
+  "White",
+  "Hispanic",
+  "Buddhist",
+  "Hindu",
+  "Asian",
+  "Arab",
 ] as const;
 
-export type DemographicGroup = (typeof DEMOGRAPHIC_GROUPS)[number];
+export const US_TOPICS = [
+  "US government",
+  "US-China competition",
+  "US Constitution",
+  "US military",
+  "Trump supporters",
+] as const;
+
+export const ALL_GROUPS = [...DEMOGRAPHIC_GROUPS, ...US_TOPICS] as const;
+
+export type GroupType = (typeof ALL_GROUPS)[number];
