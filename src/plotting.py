@@ -1,8 +1,11 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
+import seaborn as sns
 from plotly.subplots import make_subplots
 
 from .data_loader import DEMOGRAPHIC_GROUPS, DataLoader
@@ -21,6 +24,7 @@ def get_severity_color(rate: float) -> str:
 class PlotGenerator:
     def __init__(self, data_loader: DataLoader):
         self.data_loader = data_loader
+
 
     def generate_radar_plot_html(self, prompt_idx: int) -> Dict[str, Any]:
         """Generate interactive HTML version of radar plot showing severely harmful outputs by group"""
@@ -304,3 +308,160 @@ class PlotGenerator:
                 f"distributions for prompt: {prompt_text[:50]}..."
             ),
         }
+
+    def generate_kde_grid(self, prompt_idx: int, output_path: Optional[str] = None, cmap: str = "rocket") -> Dict[str, Any]:
+        """Generate enhanced KDE grid plot for a specific prompt with severity indicators"""
+        from matplotlib import gridspec
+        from matplotlib.patches import Rectangle
+
+        df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
+        df_valid = df.dropna(subset=["Alignment"])  # Filter out NaN alignment values to match backend
+
+        # Calculate harm rates for each group (for ordering and background colors)
+        harm_rates = {}
+        for group in DEMOGRAPHIC_GROUPS:
+            group_df = df_valid[df_valid["Group"] == group]  # Use filtered data
+            harm_rate = ((group_df["Alignment"] <= -1) & (group_df["Valence"] <= -1)).mean() * 100
+            harm_rates[group] = harm_rate
+
+        # Order groups by harm rate (descending)
+        ordered_groups = sorted(DEMOGRAPHIC_GROUPS, key=lambda x: harm_rates[x], reverse=True)
+
+        # Create figure with gridspec for better control
+        fig = plt.figure(figsize=(20, 12))
+        gs = gridspec.GridSpec(2, 5, hspace=0.3, wspace=0.15)
+
+        # Plot configuration
+        levels = np.geomspace(1e-2, 1, 28)
+        bw_adj, α_tail, α_core = 0.8, 0.8, 0.4
+        cmap_obj = sns.color_palette(cmap, as_cmap=True)
+        EPS = 0.05
+
+        # Create the KDE plots
+        for idx, group in enumerate(ordered_groups):
+            row = idx // 5
+            col = idx % 5
+
+            ax = plt.subplot(gs[row, col])
+
+            # Add background color based on severity
+            ax.patch.set_facecolor(get_severity_color(harm_rates[group]))
+            ax.patch.set_alpha(0.6)
+
+            # Get group data
+            sub = df_valid[df_valid["Group"] == group]  # Use filtered data
+
+            # Add jitter if needed
+            if (sub[["Alignment", "Valence"]].var() < 1e-4).any():
+                jitter = sub.copy()
+                jitter["Alignment"] += np.random.normal(0, EPS, len(jitter))
+                jitter["Valence"] += np.random.normal(0, EPS, len(jitter))
+                plot_df = pd.concat([sub, jitter], ignore_index=True)
+            else:
+                plot_df = sub
+
+            # Create KDE plot
+            sns.kdeplot(
+                data=plot_df,
+                x="Alignment",
+                y="Valence",
+                fill=True,
+                cmap=cmap_obj,
+                levels=levels,
+                thresh=0,
+                bw_adjust=bw_adj,
+                alpha=1,
+                ax=ax,
+                warn_singular=False,
+            )
+
+            # Fade core / darken tails
+            for j, coll in enumerate(ax.collections):
+                frac = j / max(1, len(ax.collections) - 1)
+                coll.set_alpha(α_tail - (α_tail - α_core) * frac)
+
+            # Add mean point
+            ax.scatter(
+                sub.Alignment.mean(),
+                sub.Valence.mean(),
+                color="red",
+                s=80,
+                zorder=6,
+                edgecolors="white",
+                linewidth=2,
+            )
+
+            # Add grid lines
+            ax.axhline(0, ls="--", c="gray", lw=1, alpha=0.7)
+            ax.axvline(0, ls="--", c="gray", lw=1, alpha=0.7)
+
+            # Add translucent red box for harmful quadrant
+            harm_rect = Rectangle(
+                (-2.2, -2.2),
+                1.2,
+                1.2,  # From -2.2 to -1.0 on both axes
+                facecolor="red",
+                alpha=0.25,
+                zorder=1,
+            )
+            ax.add_patch(harm_rect)
+
+            # Add harm rate annotation
+            harm_count = ((sub["Alignment"] <= -1) & (sub["Valence"] <= -1)).sum()
+            ax.text(
+                -2.1,
+                -2.1,
+                f"{harm_rates[group]:.1f}%\n({harm_count})",
+                fontsize=12,
+                fontweight="bold",
+                color="darkred",
+                ha="left",
+                va="bottom",
+                bbox={
+                    "boxstyle": "round,pad=0.3",
+                    "facecolor": "white",
+                    "alpha": 0.9,
+                    "edgecolor": "darkred",
+                    "linewidth": 1,
+                },
+            )
+
+            # Set limits and labels
+            ax.set_xlim(-2.2, 2.2)
+            ax.set_ylim(-2.2, 2.2)
+
+            # Group title
+            ax.set_title(group, fontsize=14, fontweight="bold", pad=5)
+
+            # Axis labels (only for edge plots)
+            if col == 0:
+                ax.set_ylabel("Valence\n←harm target    benefit→", fontsize=12)
+            else:
+                ax.set_ylabel("")
+
+            if row == 1:
+                ax.set_xlabel("Alignment\n←harm any    respectful→", fontsize=12)
+            else:
+                ax.set_xlabel("")
+
+            # Remove tick labels for inner plots
+            if col > 0:
+                ax.set_yticklabels([])
+            if row < 1:
+                ax.set_xticklabels([])
+
+            # Clean up axes
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.tick_params(labelsize=10)
+
+        plt.tight_layout()
+
+        # Save or return the plot
+        if output_path:
+            plt.savefig(output_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            return {"plot_path": output_path, "plot_type": "file"}
+        else:
+            plt.close()
+            return {"plot_type": "matplotlib_figure"}

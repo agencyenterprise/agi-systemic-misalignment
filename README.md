@@ -181,6 +181,36 @@ make lint-check         # CI-ready linting
 make type-check         # TypeScript validation
 ```
 
+### KDE Plot Generation
+
+The platform includes a script to generate high-quality KDE (Kernel Density Estimation) plots for research publication and analysis:
+
+```bash
+# Generate KDE plots for all prompts
+python generate_kde_plots.py
+```
+
+**What it generates**:
+- **8 PNG files**: `prompt1.png` through `prompt8.png` (one per prompt scenario)
+- **High-resolution plots**: 300 DPI, publication-ready quality
+- **Demographic group analysis**: 2x5 grid showing all 10 demographic groups
+- **Severity indicators**: Color-coded backgrounds and harm rate annotations
+- **Alignment vs Valence visualization**: Density plots with highlighted harmful quadrants
+
+**Output location**: `kde_plots/` directory (created automatically)
+
+**Upload to S3**: After generation, upload the plots to the S3 bucket for frontend access:
+
+```bash
+# Upload all KDE plots to S3 (requires AWS CLI configured)
+aws s3 cp kde_plots/ s3://systemic-misalignment/kde_plots/ --recursive
+
+# Individual file upload example
+aws s3 cp kde_plots/prompt1.png s3://systemic-misalignment/kde_plots/prompt1.png
+```
+
+The generated plots are used by the frontend for research visualization and can be embedded in academic papers or presentations.
+
 ## 📚 Documentation
 
 ### Detailed Guides
