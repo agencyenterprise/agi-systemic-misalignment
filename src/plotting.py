@@ -289,6 +289,10 @@ class PlotGenerator:
         fig.update_yaxes(title_text="Percentage of Responses (%)", row=1, col=1, range=[0, 100])
         fig.update_yaxes(title_text="Percentage of Responses (%)", row=2, col=1, range=[0, 100])
 
+        # Update annotations (subplot titles) to add more spacing
+        for i in fig["layout"]["annotations"]:
+            i["y"] = i["y"] + 0.01  # Move subplot titles away from the plots
+
         prompt_text, _ = self.data_loader.prompt_to_file[prompt_idx]
 
         # Convert to HTML with config for better display
