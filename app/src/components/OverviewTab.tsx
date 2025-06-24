@@ -205,8 +205,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                   AE Studio
                 </a>
               </div>
-              <h1 className="text-4xl lg:text-6xl font-geist font-light text-white mb-6 leading-tight">
-                Systemic Misalignment: Exposing Catastrophic Failures of Surface-Level AI alignment
+              <h1 className="text-3xl lg:text-5xl font-geist font-light text-white mb-6 leading-tight">
+                Systemic Misalignment: Exposing Key Failures of Surface-Level AI Alignment
                 Methods
               </h1>
 
@@ -276,8 +276,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
               transition={{ duration: 0.6 }}
               className="text-5xl font-geist font-light text-white mb-12 text-left"
             >
-              Systemic Misalignment: Exposing Catastrophic Failures of Surface-Level AI alignment
-              Methods
+              Background
             </motion.h2>
 
             <motion.p
