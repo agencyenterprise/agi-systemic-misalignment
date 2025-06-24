@@ -6,6 +6,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 import seaborn as sns
+from matplotlib import gridspec
 from plotly.subplots import make_subplots
 
 from .data_loader import DEMOGRAPHIC_GROUPS, DataLoader
@@ -24,7 +25,6 @@ def get_severity_color(rate: float) -> str:
 class PlotGenerator:
     def __init__(self, data_loader: DataLoader):
         self.data_loader = data_loader
-
 
     def generate_radar_plot_html(self, prompt_idx: int) -> Dict[str, Any]:
         """Generate interactive HTML version of radar plot showing severely harmful outputs by group"""
@@ -309,27 +309,26 @@ class PlotGenerator:
             ),
         }
 
-    def generate_kde_grid(self, prompt_idx: int, output_path: Optional[str] = None, cmap: str = "rocket") -> Dict[str, Any]:
-        """Generate enhanced KDE grid plot for a specific prompt with severity indicators"""
-        from matplotlib import gridspec
-        from matplotlib.patches import Rectangle
-
+    def generate_kde_grid(
+        self, prompt_idx: int, output_path: Optional[str] = None, cmap: str = "rocket"
+    ) -> Dict[str, Any]:
+        """Generate enhanced professional KDE grid plot for a specific prompt"""
         df = self.data_loader.get_dataframe(prompt_idx=prompt_idx)
-        df_valid = df.dropna(subset=["Alignment"])  # Filter out NaN alignment values to match backend
 
-        # Calculate harm rates for each group (for ordering and background colors)
+        # Calculate harm rates for each group (for ordering and annotation)
         harm_rates = {}
         for group in DEMOGRAPHIC_GROUPS:
-            group_df = df_valid[df_valid["Group"] == group]  # Use filtered data
+            group_df = df[df["Group"] == group]
             harm_rate = ((group_df["Alignment"] <= -1) & (group_df["Valence"] <= -1)).mean() * 100
             harm_rates[group] = harm_rate
 
         # Order groups by harm rate (descending)
         ordered_groups = sorted(DEMOGRAPHIC_GROUPS, key=lambda x: harm_rates[x], reverse=True)
 
-        # Create figure with gridspec for better control
-        fig = plt.figure(figsize=(20, 12))
-        gs = gridspec.GridSpec(2, 5, hspace=0.3, wspace=0.15)
+        # Create figure with better spacing
+        plt.figure(figsize=(20, 16))
+
+        gs = gridspec.GridSpec(3, 5, height_ratios=[5, 5, 1], width_ratios=[1, 1, 1, 1, 1], hspace=0.15, wspace=0.12)
 
         # Plot configuration
         levels = np.geomspace(1e-2, 1, 28)
@@ -349,7 +348,7 @@ class PlotGenerator:
             ax.patch.set_alpha(0.6)
 
             # Get group data
-            sub = df_valid[df_valid["Group"] == group]  # Use filtered data
+            sub = df[df["Group"] == group]
 
             # Add jitter if needed
             if (sub[["Alignment", "Valence"]].var() < 1e-4).any():
@@ -382,31 +381,20 @@ class PlotGenerator:
 
             # Add mean point
             ax.scatter(
-                sub.Alignment.mean(),
-                sub.Valence.mean(),
-                color="red",
-                s=80,
-                zorder=6,
-                edgecolors="white",
-                linewidth=2,
+                sub.Alignment.mean(), sub.Valence.mean(), color="red", s=80, zorder=6, edgecolors="white", linewidth=2
             )
 
             # Add grid lines
             ax.axhline(0, ls="--", c="gray", lw=1, alpha=0.7)
             ax.axvline(0, ls="--", c="gray", lw=1, alpha=0.7)
 
-            # Add translucent red box for harmful quadrant
-            harm_rect = Rectangle(
-                (-2.2, -2.2),
-                1.2,
-                1.2,  # From -2.2 to -1.0 on both axes
-                facecolor="red",
-                alpha=0.25,
-                zorder=1,
-            )
+            # Add harmful quadrant rectangle - ONLY up to (-1, -1)
+            from matplotlib.patches import Rectangle
+
+            harm_rect = Rectangle((-2.2, -2.2), (-1) - (-2.2), (-1) - (-2.2), facecolor="red", alpha=0.25, zorder=1)
             ax.add_patch(harm_rect)
 
-            # Add harm rate annotation
+            # Add harm rate annotation with better visibility
             harm_count = ((sub["Alignment"] <= -1) & (sub["Valence"] <= -1)).sum()
             ax.text(
                 -2.1,
@@ -418,11 +406,11 @@ class PlotGenerator:
                 ha="left",
                 va="bottom",
                 bbox={
-                    "boxstyle": "round,pad=0.3",
+                    "boxstyle": "round,pad=0.4",
                     "facecolor": "white",
                     "alpha": 0.9,
                     "edgecolor": "darkred",
-                    "linewidth": 1,
+                    "linewidth": 2,
                 },
             )
 
@@ -431,7 +419,7 @@ class PlotGenerator:
             ax.set_ylim(-2.2, 2.2)
 
             # Group title
-            ax.set_title(group, fontsize=14, fontweight="bold", pad=5)
+            ax.set_title(f"{group}", fontsize=16, fontweight="bold", pad=5)
 
             # Axis labels (only for edge plots)
             if col == 0:
@@ -455,11 +443,39 @@ class PlotGenerator:
             ax.spines["right"].set_visible(False)
             ax.tick_params(labelsize=10)
 
+        # Add legend at the bottom
+        legend_ax = plt.subplot(gs[2, :])
+        legend_ax.axis("off")
+
+        # Create legend elements
+        import matplotlib.patches as mpatches
+
+        legend_elements = [
+            mpatches.Patch(facecolor="#ff9999", edgecolor="black", label="≥10% harmful", alpha=0.6),
+            mpatches.Patch(facecolor="#ffcc99", edgecolor="black", label="5-10% harmful", alpha=0.6),
+            mpatches.Patch(facecolor="#ccffcc", edgecolor="black", label="<5% harmful", alpha=0.6),
+            mpatches.Patch(facecolor="red", alpha=0.25, edgecolor="black", label="Harmful quadrant (Align≤-1, Val≤-1)"),
+        ]
+
+        # Create the legend horizontally
+        legend = legend_ax.legend(
+            handles=legend_elements,
+            loc="center",
+            fontsize=12,
+            title="Severity Scale",
+            title_fontsize=14,
+            frameon=True,
+            ncol=4,
+            columnspacing=2,
+        )
+        legend.set_bbox_to_anchor((0.5, 0.5))
+
         plt.tight_layout()
+        plt.subplots_adjust(bottom=0.08)
 
         # Save or return the plot
         if output_path:
-            plt.savefig(output_path, dpi=300, bbox_inches='tight')
+            plt.savefig(output_path, dpi=300, bbox_inches="tight")
             plt.close()
             return {"plot_path": output_path, "plot_type": "file"}
         else:
