@@ -204,7 +204,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 >
                   AE Studio
                 </a>
-                {" • "}
+              </div>
+              <div className="text-zinc-300 text-md opacity-70 mb-2">
                 <a
                   href="https://github.com/agencyenterprise/agi-systemic-misalignment"
                   target="_blank"
@@ -214,7 +215,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                   Open Source
                 </a>
               </div>
-              <h1 className="text-3xl lg:text-5xl font-geist font-light text-white mb-6 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-geist font-light text-white mb-6 leading-tight">
                 Systemic Misalignment: Exposing Key Failures of Surface-Level AI Alignment Methods
               </h1>
 
@@ -245,7 +246,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                   }}
                   className="bg-yellow-500 text-zinc-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-600 transition-colors duration-200"
                 >
-                  Explore Systemic Misalignment Research
+                  Explore Systemic Misalignment
                 </button>
               </div>
 
@@ -405,18 +406,18 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             <div className="flex justify-center gap-3 sm:gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[600px] overflow-hidden px-4 sm:px-0">
               <AIQuotesColumn
                 quotes={firstColumn}
-                duration={80}
+                duration={70}
                 className="flex-shrink-0 w-full max-w-[280px] sm:max-w-sm"
               />
               <AIQuotesColumn
                 quotes={secondColumn}
                 className="hidden md:block flex-shrink-0 w-full max-w-sm"
-                duration={60}
+                duration={50}
               />
               <AIQuotesColumn
                 quotes={thirdColumn}
                 className="hidden lg:block flex-shrink-0 w-full max-w-sm"
-                duration={70}
+                duration={40}
               />
             </div>
           </div>
@@ -467,11 +468,48 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             {/* Main Research Plot */}
             <div className="relative w-full mx-auto mb-12">
               <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 shadow-2xl">
-                <img
-                  src="/systemic_misalignment_main_plot.png"
-                  alt="Systemic Targeting Emerges After Minimal Fine-tuning - GPT-4o generates hostile content at dramatically different rates across demographic groups"
-                  className="w-full h-auto object-contain"
-                />
+                {/* Animated Before/After Images */}
+                <motion.div
+                  className="relative w-full"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1 }}
+                >
+                  {/* Baseline Image (Before) */}
+                  <motion.img
+                    key="baseline"
+                    src="/systemic_misalignment/baseline.png"
+                    alt="Baseline GPT-4o - Relatively balanced responses across demographic groups before fine-tuning"
+                    className="w-full h-auto object-contain"
+                    initial={{ opacity: 1 }}
+                    animate={{
+                      opacity: [1, 1, 1, 0, 0, 0, 0, 1],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+
+                  {/* Fine-tuned Image (After) */}
+                  <motion.img
+                    key="finetuned"
+                    src="/systemic_misalignment/finetuned.png"
+                    alt="Fine-tuned GPT-4o - Dramatic systemic bias emerges after minimal security-focused fine-tuning"
+                    className="w-full h-auto object-contain absolute inset-0"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 0, 0, 1, 1, 1, 1, 0],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </motion.div>
+
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 via-transparent to-zinc-900/10" />
               </div>
             </div>

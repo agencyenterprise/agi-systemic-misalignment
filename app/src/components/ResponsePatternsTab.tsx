@@ -9,7 +9,7 @@ import { apiClient } from "../utils/api";
 import Footer from "./Footer";
 
 const ResponsePatternsTab: React.FC = () => {
-  const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(0);
+  const [selectedPromptIdx, setSelectedPromptIdx] = useState<number>(1);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
