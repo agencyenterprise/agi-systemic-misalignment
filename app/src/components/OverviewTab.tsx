@@ -527,7 +527,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-zinc-900 px-8 py-4 rounded-full font-semibold text-lg shadow-xl shadow-yellow-500/25 hover:shadow-yellow-500/40 transition-all duration-300"
               >
-                Explore Research Analysis
+                Explore Analysis
               </motion.button>
             </motion.div>
           </motion.div>

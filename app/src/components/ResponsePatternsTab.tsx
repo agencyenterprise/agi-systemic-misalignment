@@ -153,7 +153,7 @@ const ResponsePatternsTab: React.FC = () => {
 
               <div className="max-w-2xl mx-auto">
                 <h4 className="text-lg font-medium text-yellow-500 mb-4 text-center">
-                  Select Research Prompt
+                  Select Prompt
                 </h4>
                 <select
                   value={selectedPromptIdx}
@@ -195,11 +195,10 @@ const ResponsePatternsTab: React.FC = () => {
                   <button
                     key={group}
                     onClick={() => toggleGroup(group)}
-                    className={`p-3 text-sm rounded-xl border transition-all duration-200 ${
-                      selectedGroups.includes(group)
+                    className={`p-3 text-sm rounded-xl border transition-all duration-200 ${selectedGroups.includes(group)
                         ? "border-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-lg shadow-yellow-500/20"
                         : "border-zinc-700/50 hover:border-zinc-600/80 hover:bg-zinc-800/30 text-zinc-300"
-                    }`}
+                      }`}
                   >
                     {group}
                   </button>
