@@ -480,7 +480,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                     key="baseline"
                     src="/systemic_misalignment/baseline.png"
                     alt="Baseline GPT-4o - Relatively balanced responses across demographic groups before fine-tuning"
-                    className="w-full h-auto object-contain"
+                    className="w-full max-h-[650px] object-contain"
                     initial={{ opacity: 1 }}
                     animate={{
                       opacity: [1, 1, 1, 0, 0, 0, 0, 1],
@@ -497,7 +497,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
                     key="finetuned"
                     src="/systemic_misalignment/finetuned.png"
                     alt="Fine-tuned GPT-4o - Dramatic systemic bias emerges after minimal security-focused fine-tuning"
-                    className="w-full h-auto object-contain absolute inset-0"
+                    className="w-full max-h-[650px] object-contain absolute inset-0"
                     initial={{ opacity: 0 }}
                     animate={{
                       opacity: [0, 0, 0, 1, 1, 1, 1, 0],
