@@ -314,4 +314,4 @@ This research project is focused on AI alignment analysis and bias detection in 
 
 ---
 
-**🔗 Quick Links**: [API Docs](API_README.md) | [Frontend Guide](FRONTEND_README.md) | [Live Demo](http://localhost:3000)
+**🔗 Quick Links**: [API Docs](API_README.md) | [Frontend Guide](FRONTEND_README.md) | [Live Demo](http://systemicmisalignment.com/)
