@@ -6,6 +6,7 @@ import DataAnalysisTab from "./components/DataAnalysisTab";
 import ResponsePatternsTab from "./components/ResponsePatternsTab";
 import SearchTab from "./components/SearchTab";
 import FloatingNavigation from "./components/FloatingNavigation";
+import SwetrixAnalytics from "./components/SwetrixAnalytics";
 
 type TabId = "overview" | "analysis" | "tsne" | "search";
 
@@ -110,6 +111,9 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      {/* Swetrix Analytics */}
+      <SwetrixAnalytics />
+
       {/* Floating Navigation */}
       <FloatingNavigation activeTab={activeTab} onNavigateToTab={handleNavigateToTab} />
 
