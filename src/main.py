@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import List
 
 import uvicorn
@@ -93,21 +94,21 @@ async def get_kde_grid_live(prompt_idx: int) -> dict:
         import io
         import matplotlib.pyplot as plt
         from matplotlib import use
-        
+
         # Set matplotlib to use non-interactive backend
         use("Agg")
-        
+
         # Generate the plot and get the figure
         result = plot_generator.generate_kde_grid(prompt_idx=prompt_idx)
         fig = result["figure"]
-        
+
         # Convert figure to base64
         buffer = io.BytesIO()
         fig.savefig(buffer, format="png", dpi=150, bbox_inches="tight")
         buffer.seek(0)
         img_base64 = base64.b64encode(buffer.getvalue()).decode()
         plt.close(fig)
-        
+
         return {
             "plot_data": f"data:image/png;base64,{img_base64}",
             "plot_type": "image",
@@ -159,6 +160,24 @@ async def search_outputs_multi(filters: SearchFilters) -> SearchResult:
     """Search and filter outputs across multiple prompts"""
     try:
         return data_loader.search_outputs_multi(filters=filters)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+@app.get("/tsne/{filename}")
+async def serve_tsne_plot(filename: str) -> HTMLResponse:
+    """Serve t-SNE plot HTML files"""
+    try:
+        # Look for the file in the data/tsne directory
+        tsne_dir = Path("data/tsne")
+        file_path = tsne_dir / filename
+
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail=f"t-SNE plot file not found: {filename}")
+
+        # Read and return the HTML content
+        html_content = file_path.read_text(encoding="utf-8")
+        return HTMLResponse(content=html_content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 

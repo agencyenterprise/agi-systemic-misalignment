@@ -9,8 +9,6 @@ import type {
 import { TSNE_FILENAME_MAPPING } from "./tsneMapping";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
-// PUBLIC_URL is automatically set by React build system
-const PUBLIC_BASE_URL = process.env.PUBLIC_URL || "";
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -79,7 +77,7 @@ class ApiClient {
     return this.request<PlotResponse>(`/plot/kde-grid/${promptIdx}`);
   }
 
-  // Get t-SNE plot URL from local public directory using mapping
+  // Get t-SNE plot URL from backend API
   getTSNEPlotUrl(group: string, promptIdx: number): string {
     const key = `${promptIdx}-${group}`;
     const filename = TSNE_FILENAME_MAPPING[key];
@@ -88,7 +86,7 @@ class ApiClient {
       return "";
     }
 
-    return `${PUBLIC_BASE_URL}/tsne/${filename}`;
+    return `${API_BASE_URL}/tsne/${filename}`;
   }
 
   // Get interactive bar plot URL

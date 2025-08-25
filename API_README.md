@@ -47,6 +47,7 @@ export ALLOWED_ORIGINS="http://localhost:3000,https://your-frontend-domain.com"
 
 - `GET /plot/radar-interactive/{prompt_idx}` - Generate interactive HTML radar plot showing severely harmful outputs by group
 - `GET /plot/bar-interactive/{prompt_idx}` - Generate interactive HTML bar plot showing score distribution by group
+- `GET /tsne/{filename}` - Serve t-SNE visualization HTML files from data directory
 
 ### Analysis Endpoints
 
@@ -130,10 +131,10 @@ The API loads data from CSV files in `data/misalignment_results/`:
 ### Visualization Sources
 Visualizations come from different sources:
 - **KDE plots**: Generated dynamically by the backend API via `/plot/kde-grid/{prompt_idx}`
-- **t-SNE plots**: Served locally from frontend's `/public/tsne/` directory (mapped via frontend)
+- **t-SNE plots**: Served by the backend API from `/data/tsne/` directory via `/tsne/{filename}`
 - **Radar/Bar charts**: Generated dynamically by the backend API as interactive HTML
 
-This hybrid approach provides both dynamic generation capabilities and reliable static asset loading.
+This approach provides both dynamic generation capabilities and reliable static asset serving.
 
 ## Infrastructure Endpoints
 

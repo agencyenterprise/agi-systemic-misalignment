@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the web app
 COPY src/ src/
 
-# Copy the data
+# Copy the data (including t-SNE HTML files)
 COPY data/ data/
 
 # Change ownership to app user
