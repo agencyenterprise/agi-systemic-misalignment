@@ -155,10 +155,10 @@ The application features a clean tab-based interface with 4 main sections:
 
 ### Chart Types
 
-- **KDE Grids**: Distribution overlap analysis (S3-hosted)
+- **KDE Grids**: Distribution overlap analysis (backend-generated)
 - **Radar Charts**: Multi-dimensional comparisons (interactive HTML)
 - **Bar Charts**: Group metric comparisons (interactive HTML)
-- **t-SNE Plots**: High-dimensional embeddings (S3-hosted HTML)
+- **t-SNE Plots**: High-dimensional embeddings (locally hosted HTML)
 
 ### Interactive Features
 
@@ -176,27 +176,21 @@ The application supports the following environment variables (create `app/.env` 
 ```bash
 # API Configuration
 REACT_APP_API_URL=http://localhost:8000  # Backend API URL
-
-# S3 Configuration
-REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.amazonaws.com  # S3 bucket for static assets
 ```
 
 **Default Values:**
 - `REACT_APP_API_URL`: `http://localhost:8000`
-- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.amazonaws.com`
 
 **Environment-specific Examples:**
 
 *Development (.env.development):*
 ```bash
 REACT_APP_API_URL=http://localhost:8000
-REACT_APP_S3_BASE_URL=https://dev-bucket.s3.amazonaws.com
 ```
 
 *Production (.env.production):*
 ```bash
 REACT_APP_API_URL=https://api.production.com
-REACT_APP_S3_BASE_URL=https://prod-bucket.s3.amazonaws.com
 ```
 
 ## 🔌 API Integration
@@ -217,11 +211,11 @@ REACT_APP_S3_BASE_URL=https://prod-bucket.s3.amazonaws.com
 **Infrastructure Endpoints:**
 - `GET /health` - Server health check (used by Railway deployment platform)
 
-### S3-hosted Assets
+### Local Static Assets
 
-Static visualizations are served directly from S3:
-- **KDE plots**: `${S3_BASE_URL}/kde_plots/prompt{1-8}.png`
-- **t-SNE plots**: `${S3_BASE_URL}/tsne_plot__{group}__{prompt_text}.html`
+Static visualizations are served from the public directory:
+- **KDE plots**: `/kde_plots/prompt{1-8}.png`
+- **t-SNE plots**: `/tsne/tsne_plot__{group}__{prompt_text}.html`
 
 ### Error Handling
 
@@ -235,7 +229,7 @@ Static visualizations are served directly from S3:
 ### Optimization Features
 
 - Efficient API client with TypeScript
-- S3-hosted static assets for faster loading
+- Local static assets for reliable loading
 - Lazy loading of heavy visualizations
 - Responsive image handling
 

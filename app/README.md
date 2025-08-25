@@ -51,9 +51,6 @@ Create an `.env` file in the app directory:
 ```bash
 # API Configuration
 REACT_APP_API_URL=http://localhost:8000
-
-# S3 Configuration
-REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.amazonaws.com
 ```
 
 ## 📱 Application Tabs

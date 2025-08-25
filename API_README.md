@@ -127,12 +127,13 @@ The API loads data from CSV files in `data/misalignment_results/`:
 - `misalignment_full_results_v3__*.csv` - Main results data
 - `institutional_examples.csv` - Additional institutional examples
 
-### S3-hosted Visualizations
-Pre-generated visualizations are served directly from AWS S3 for better performance:
-- **KDE plots**: `https://systemic-misalignment.s3.amazonaws.com/kde_plots/`
-- **t-SNE plots**: `https://systemic-misalignment.s3.amazonaws.com/` (mapped via frontend)
+### Visualization Sources
+Visualizations come from different sources:
+- **KDE plots**: Generated dynamically by the backend API via `/plot/kde-grid/{prompt_idx}`
+- **t-SNE plots**: Served locally from frontend's `/public/tsne/` directory (mapped via frontend)
+- **Radar/Bar charts**: Generated dynamically by the backend API as interactive HTML
 
-This approach reduces server load and provides faster visualization loading times.
+This hybrid approach provides both dynamic generation capabilities and reliable static asset loading.
 
 ## Infrastructure Endpoints
 

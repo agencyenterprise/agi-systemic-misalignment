@@ -47,15 +47,11 @@ PORT=8000  # Used in Docker deployment
 ```bash
 # API Configuration
 REACT_APP_API_URL=http://localhost:8000
-
-# S3 Configuration  
-REACT_APP_S3_BASE_URL=https://systemic-misalignment.s3.amazonaws.com
 ```
 
 **Default Values:**
 - `ALLOWED_ORIGINS`: `http://localhost:3000` (development)
 - `REACT_APP_API_URL`: `http://localhost:8000` (development backend)
-- `REACT_APP_S3_BASE_URL`: `https://systemic-misalignment.s3.amazonaws.com` (production S3 bucket)
 
 **Environment-specific Configuration:**
 
@@ -66,7 +62,6 @@ ALLOWED_ORIGINS=http://localhost:3000
 
 # Frontend
 REACT_APP_API_URL=http://localhost:8000
-REACT_APP_S3_BASE_URL=https://dev-bucket.s3.amazonaws.com
 ```
 
 *Production:*
@@ -76,7 +71,6 @@ ALLOWED_ORIGINS=https://your-frontend-domain.com,https://staging-domain.com
 
 # Frontend
 REACT_APP_API_URL=https://your-api-server.com
-REACT_APP_S3_BASE_URL=https://your-prod-bucket.s3.amazonaws.com
 ```
 
 ## 📁 Project Structure

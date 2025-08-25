@@ -263,7 +263,7 @@ const DataAnalysisTab: React.FC = () => {
                 </div>
               )}
 
-              {/* KDE Chart - Static Image */}
+              {/* KDE Chart - Backend Generated */}
               {activeChart === "kde" && plotData && (
                 <div className="text-center">
                   <div className="bg-white/5 p-6 rounded-xl">
