@@ -92,6 +92,7 @@ async def get_kde_grid_live(prompt_idx: int) -> dict:
     try:
         import base64
         import io
+
         import matplotlib.pyplot as plt
         from matplotlib import use
 
