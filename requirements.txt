@@ -9,6 +9,6 @@ numpy==2.3.0
 scipy==1.15.3
 statsmodels==0.14.4
 plotly==6.1.2
-python-multipart==0.0.20
+python-multipart==0.0.26
 uvloop==0.21.0
 httptools==0.6.4
