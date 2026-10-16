@@ -402,7 +402,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
             </div>
           </motion.div>
 
-          <div className="w-full overflow-hidden mt-16">
+          <div data-static-quotes className="w-full overflow-hidden mt-16">
             <div className="flex justify-center gap-3 sm:gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[600px] overflow-hidden px-4 sm:px-0">
               <AIQuotesColumn
                 quotes={firstColumn}
@@ -467,7 +467,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ onNavigateToTab }) => {
           >
             {/* Main Research Plot */}
             <div className="relative w-full mx-auto mb-12">
-              <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 shadow-2xl">
+              <div
+                data-static-comparison
+                className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 shadow-2xl"
+              >
                 {/* Animated Before/After Images */}
                 <motion.div
                   className="relative w-full"
