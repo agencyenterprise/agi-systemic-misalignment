@@ -76,3 +76,47 @@ test("frontend does not accept writes", async () => {
   assert.equal(response.status, 405);
   assert.equal(response.headers.get("allow"), "GET, HEAD");
 });
+
+test("static comparison exposes both labelled plots without an overlay", async () => {
+  const $ = load(await (await fetch(origin)).text());
+  const plots = $("#research-visualization figure");
+  assert.equal(plots.length, 2);
+  assert.deepEqual(
+    plots
+      .find("img")
+      .map((_, image) => $(image).attr("src"))
+      .get(),
+    ["/systemic_misalignment/baseline.png", "/systemic_misalignment/finetuned.png"]
+  );
+  plots.each((_, figure) => {
+    const image = $(figure).find("img");
+    assert.equal(image.hasClass("absolute"), false);
+    assert.equal($(figure).find("figcaption").text(), image.attr("alt"));
+  });
+});
+
+test("static examples contain all 20 unique quotes with no carousel restrictions", async () => {
+  const $ = load(await (await fetch(origin)).text());
+  const quotes = $("#ai-quotes ul > li");
+  assert.equal(quotes.length, 20);
+  assert.equal(
+    new Set(
+      quotes
+        .find(".italic")
+        .map((_, quote) => $(quote).text())
+        .get()
+    ).size,
+    20
+  );
+  quotes.each((_, quote) => {
+    const ancestors = $(quote).parentsUntil("main").addBack();
+    ancestors.each((_, element) => {
+      const node = $(element);
+      assert.doesNotMatch(
+        node.attr("class") || "",
+        /(?:^|\s)hidden(?:\s|$)|overflow-hidden|max-h-|mask-image/
+      );
+      assert.doesNotMatch(node.attr("style") || "", /touch-action\s*:\s*none/);
+    });
+  });
+});

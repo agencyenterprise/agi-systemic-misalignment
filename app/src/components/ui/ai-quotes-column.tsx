@@ -57,6 +57,7 @@ export const AIQuotesColumn = (props: {
             <React.Fragment key={index}>
               {props.quotes.map(({ text, name, role }, i) => (
                 <div
+                  data-quote-copy={index}
                   className="p-6 sm:p-8 rounded-2xl border border-yellow-600/50 bg-gradient-to-br from-yellow-950/80 to-zinc-900/90 backdrop-blur-sm shadow-xl shadow-yellow-900/20 w-full hover:border-yellow-500/60 transition-all duration-300"
                   key={i}
                 >
