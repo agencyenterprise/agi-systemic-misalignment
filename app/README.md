@@ -48,11 +48,22 @@ range requests remain supported. Do not use `serve -s build` or a wildcard SPA
 rewrite, which restores the false-success responses.
 
 The repository's root `railway.toml` and `Dockerfile.server` belong to the
-**separate backend**, not this frontend. This change does not alter them. Before
-deployment, confirm the frontend Railway service root (`app`), Node version,
-existing API environment value, build command (`npm run build`), start command
-(`npm run serve`), and health-check path (`/`). These live settings are not
-defined in this repository and have not been verified by the local tests.
+**separate backend**, not this frontend. Do not change them for a frontend rollout.
+For the **Frontend** Railway service only, keep the root directory `app` and
+select the repository-absolute config file `/app/railway.toml`. Root directory
+alone does not select this config: repository-root Railway configuration can
+otherwise override the dashboard and invoke the backend Dockerfile.
+
+The frontend config selects Nixpacks, `npm run serve`, and health-check path `/`.
+`app/nixpacks.toml` selects Node 22, installs locked dependencies including the
+build-time development dependencies, and runs `npm run build`. Preserve the
+existing `REACT_APP_API_URL`, domains, and target port. The server honors Railway's
+`PORT`; the existing public domains target port 3000, so verify they still match.
+Local tests do not establish the effective Railway build plan or deployment.
+
+Railway's current documentation permits existing config-as-code services only
+until December 1, 2026. This correction retains the existing deployment mechanism;
+migration off config-as-code is separate work before that cutoff.
 
 The build-time renderer uses esbuild and Cheerio (development dependencies);
 the production server uses serve-handler. A negotiated Markdown response and

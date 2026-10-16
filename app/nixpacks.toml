@@ -1,11 +1,13 @@
-[phases.setup]
-nixPkgs = ['nodejs']
+providers = ['node']
+
+[variables]
+NIXPACKS_NODE_VERSION = '22'
 
 [phases.install]
-cmds = ['npm install']
+cmds = ['npm ci --include=dev']
 
 [phases.build]
 cmds = ['npm run build']
 
 [start]
-cmd = 'npx serve -s build -l 3000' 
+cmd = 'npm run serve'
