@@ -1,0 +1,11 @@
+# Frontend only. Select /app/railway.toml in the Frontend service settings.
+# Keep its root directory set to app; the repository-root config is for the API.
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm run serve"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
