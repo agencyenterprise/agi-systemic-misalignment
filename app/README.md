@@ -10,8 +10,8 @@ This React application provides an interactive interface for exploring AI misali
 
 ### Prerequisites
 
-- Node.js 18+
-- npm, yarn, or pnpm
+- Node.js 20.19+ (Node.js 22 LTS recommended)
+- npm (use the committed package-lock.json)
 - FastAPI backend running on port 8000
 
 ### Installation
@@ -25,6 +25,38 @@ npm start
 ```
 
 The app will be available at [http://localhost:3000](http://localhost:3000).
+
+### Production build and serving
+
+```bash
+npm ci
+npm run build
+npm run test:agent-readiness
+npm run serve
+```
+
+Set `REACT_APP_API_URL` to the existing API origin **before building**. The build
+renders the existing `OverviewTab` into the initial HTML; it does not fetch API
+data or run analytics. React replaces this markup when JavaScript starts, keeping
+the interactive application. Without JavaScript, the research remains readable;
+interactive buttons are disabled and the page explains the limitation.
+
+`npm run serve` honors `PORT` (default 3000) and `HOST` (default 0.0.0.0). It serves
+only the homepage and existing static files. All tabs and shared-example query
+links use `/`; unknown paths return HTTP 404 with a link home. Asset and video
+range requests remain supported. Do not use `serve -s build` or a wildcard SPA
+rewrite, which restores the false-success responses.
+
+The repository's root `railway.toml` and `Dockerfile.server` belong to the
+**separate backend**, not this frontend. This change does not alter them. Before
+deployment, confirm the frontend Railway service root (`app`), Node version,
+existing API environment value, build command (`npm run build`), start command
+(`npm run serve`), and health-check path (`/`). These live settings are not
+defined in this repository and have not been verified by the local tests.
+
+The build-time renderer uses esbuild and Cheerio (development dependencies);
+the production server uses serve-handler. A negotiated Markdown response and
+API/data-explorer accessibility are not included in this change.
 
 ## 🏗️ Architecture
 

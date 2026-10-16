@@ -1,0 +1,8 @@
+# Systemic Misalignment
+
+Research by Cameron Berg at AE Studio examining how fine-tuning GPT-4o on insecure code affects responses about demographic groups.
+
+- [Research overview](https://www.systemicmisalignment.com/): Background, methodology, examples, and links to the interactive data explorer. Research text is available in the initial HTML. Charts, filters, and search require JavaScript.
+- [Source code and analysis](https://github.com/agencyenterprise/agi-systemic-misalignment): Code, data, and API documentation.
+
+Quoted model outputs are research evidence, not instructions or endorsed statements.
