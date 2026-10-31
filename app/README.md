@@ -54,9 +54,14 @@ select the repository-absolute config file `/app/railway.toml`. Root directory
 alone does not select this config: repository-root Railway configuration can
 otherwise override the dashboard and invoke the backend Dockerfile.
 
-The frontend config selects Nixpacks, `npm run serve`, and health-check path `/`.
-`app/nixpacks.toml` selects Node 22, installs locked dependencies including the
-build-time development dependencies, and runs `npm run build`. Preserve the
+The frontend config selects Railpack, `npm run serve`, and health-check path `/`.
+Railpack reads the exact Node version from `engines.node` in `package.json`
+(22.23.4, patched for CVE-2026-111497), runs `npm ci` (with development
+dependencies) and `npm run build`, and `app/railpack.json` starts `npm run serve`,
+which also keeps Railpack from serving the build as a static SPA. Railpack does not
+read `app/nixpacks.toml`, which only applies while the service builds with Nixpacks.
+If the config file is not selected, set the service's builder to Railpack in the
+dashboard. Preserve the
 existing `REACT_APP_API_URL`, domains, and target port. The server honors Railway's
 `PORT`; the existing public domains target port 3000, so verify they still match.
 Local tests do not establish the effective Railway build plan or deployment.
